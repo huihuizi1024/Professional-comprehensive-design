@@ -81,9 +81,9 @@ CREATE TABLE IF NOT EXISTS express_orders (
 
 -- 插入测试数据
 INSERT INTO users (username, password, phone, real_name, user_type, status) VALUES
-('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iwy8pQ5O', '13800138000', '管理员', 0, 1),
-('courier1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iwy8pQ5O', '13800138001', '快递员1', 1, 1),
-('user1', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iwy8pQ5O', '13800138002', '用户1', 0, 1);
+('admin', '$2b$10$SIuQXUW2IH7NxO57b/EPjulaEN7tlu3zy6nVPgW2gJKBPiQTwhIh.', '13800138000', '管理员', 0, 1),
+('courier1', '$2b$10$SIuQXUW2IH7NxO57b/EPjulaEN7tlu3zy6nVPgW2gJKBPiQTwhIh.', '13800138001', '快递员1', 1, 1),
+('user1', '$2b$10$SIuQXUW2IH7NxO57b/EPjulaEN7tlu3zy6nVPgW2gJKBPiQTwhIh.', '13800138002', '用户1', 0, 1);
 
 -- 密码都是：123456
 
@@ -96,4 +96,3 @@ INSERT INTO compartments (cabinet_id, compartment_no, status, has_item) VALUES
 (1, 5, 1, 0), (1, 6, 1, 0), (1, 7, 1, 0), (1, 8, 1, 0),
 (2, 1, 1, 0), (2, 2, 1, 0), (2, 3, 1, 0), (2, 4, 1, 0),
 (2, 5, 1, 0), (2, 6, 1, 0), (2, 7, 1, 0), (2, 8, 1, 0);
-

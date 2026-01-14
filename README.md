@@ -58,34 +58,44 @@
 - JDK 1.8+
 - Maven 3.6+
 - Node.js 16+
-- MySQL 8.0+
+- MySQL 8.0+（或使用 Docker 运行 MySQL）
 
 ### 数据库配置
 
-1. 创建MySQL数据库：
-```sql
-CREATE DATABASE express_cabinet DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
+推荐使用 Docker（无需本机安装 MySQL），会自动执行初始化脚本。
 
-2. 执行初始化脚本：
 ```bash
-mysql -u root -p express_cabinet < database/init.sql
+cd Professional-comprehensive-design
+docker run --name express-mysql \
+  -e MYSQL_ROOT_PASSWORD=root \
+  -p 3306:3306 \
+  -v "$(pwd)/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
+  -d mysql:8.0
 ```
 
-或者直接在MySQL客户端中执行 `database/init.sql` 文件。
+验证数据库与表是否创建成功：
+
+```bash
+docker exec express-mysql mysql -uroot -proot -e "SHOW DATABASES; USE express_cabinet; SHOW TABLES;"
+```
 
 ### 后端启动
 
-1. 进入后端目录：
+方式一：一键启动（推荐）
+
+- macOS / Linux：
+
 ```bash
-cd backend
+chmod +x start.sh
+./start.sh
 ```
 
-2. 修改数据库配置（如需要）：
-编辑 `src/main/resources/application.yml`，修改数据库连接信息。
+- Windows：双击 `一键启动.bat`
 
-3. 启动后端服务：
+方式二：手动启动后端
+
 ```bash
+cd backend
 mvn spring-boot:run
 ```
 
@@ -93,18 +103,11 @@ mvn spring-boot:run
 
 ### 前端启动
 
-1. 进入前端目录：
+手动启动前端：
+
 ```bash
 cd frontend
-```
-
-2. 安装依赖：
-```bash
 npm install
-```
-
-3. 启动开发服务器：
-```bash
 npm run dev
 ```
 
@@ -294,4 +297,3 @@ Content-Type: application/json
 ## 许可证
 
 本项目仅用于学习和教学目的。
-
