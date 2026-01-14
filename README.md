@@ -151,123 +151,110 @@ npm run dev
 
 ## API接口文档
 
+### 基本约定
+
+- 基础路径：`/api`
+- 返回结构：`{ code: number, message: string, data: any }`
+- 请求头（登录后）：`Authorization: Bearer <token>`
+
 ### 认证接口
 
-#### 用户注册
-```
-POST /api/auth/register
-Content-Type: application/json
-
-{
-  "username": "test",
-  "password": "123456",
-  "phone": "13800138000",
-  "realName": "测试用户",
-  "userType": 0
-}
-```
-
-#### 用户登录
-```
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "username": "admin",
-  "password": "123456"
-}
-```
+| 接口名称 | 方法 | 路径 | 是否需要登录 | 请求参数（JSON） | 返回 data |
+|---|---|---|---|---|---|
+| 用户注册 | POST | `/api/auth/register` | 否 | `username`(必填)、`password`(必填)、`phone`(必填)、`realName`(可选)、`userType`(可选，0普通用户/1快递员) | `userId`、`username`、`userType`、`token` |
+| 用户登录 | POST | `/api/auth/login` | 否 | `username`(必填)、`password`(必填) | `userId`、`username`、`userType`、`token` |
 
 ### 快递柜接口
 
-#### 获取所有快递柜
-```
-GET /api/cabinets
-Authorization: Bearer {token}
-```
-
-#### 获取快递柜详情
-```
-GET /api/cabinets/{id}
-Authorization: Bearer {token}
-```
-
-#### 创建快递柜
-```
-POST /api/cabinets
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "cabinetCode": "CAB003",
-  "location": "北京市朝阳区XX街道XX号",
-  "totalCompartments": 8
-}
-```
-
-#### 更新快递柜状态
-```
-PUT /api/cabinets/{id}/status
-Authorization: Bearer {token}
-Content-Type: application/json
-
-{
-  "status": 0
-}
-```
-
-#### 获取可用仓门
-```
-GET /api/cabinets/{cabinetId}/compartments/available
-Authorization: Bearer {token}
-```
-
-#### 远程开仓
-```
-POST /api/cabinets/compartments/{compartmentId}/open
-Authorization: Bearer {token}
-```
+| 接口名称 | 方法 | 路径 | 是否需要登录 | 路径/请求参数 | 返回 data |
+|---|---|---|---|---|---|
+| 获取快递柜列表 | GET | `/api/cabinets` | 是 | 无 | `Cabinet[]` |
+| 获取快递柜详情 | GET | `/api/cabinets/{id}` | 是 | `id`(路径参数) | `Cabinet` |
+| 按编号查询快递柜 | GET | `/api/cabinets/code/{cabinetCode}` | 是 | `cabinetCode`(路径参数) | `Cabinet` |
+| 获取仓门列表 | GET | `/api/cabinets/{cabinetId}/compartments` | 是 | `cabinetId`(路径参数) | `Compartment[]` |
+| 获取可用仓门 | GET | `/api/cabinets/{cabinetId}/compartments/available` | 是 | `cabinetId`(路径参数) | `Compartment[]` |
+| 创建快递柜 | POST | `/api/cabinets` | 是 | JSON：`cabinetCode`(必填)、`location`(可选)、`totalCompartments`(必填)、`powerConsumption`(可选)、`status`(可选，0禁用/1启用) | `Cabinet` |
+| 更新快递柜状态 | PUT | `/api/cabinets/{id}/status` | 是 | 路径：`id`；JSON：`status`(必填，0/1) | `Cabinet` |
+| 更新仓门状态 | PUT | `/api/cabinets/compartments/{compartmentId}/status` | 是 | 路径：`compartmentId`；JSON：`status`(必填，0故障/1正常) | `Compartment` |
+| 远程开仓（模拟） | POST | `/api/cabinets/compartments/{compartmentId}/open` | 是 | `compartmentId`(路径参数) | `string`（固定为“开仓成功”） |
 
 ### 订单接口
 
-#### 根据手机号获取订单
-```
-GET /api/orders/phone/{phone}
-Authorization: Bearer {token}
-```
+| 接口名称 | 方法 | 路径 | 是否需要登录 | 路径/请求参数 | 返回 data |
+|---|---|---|---|---|---|
+| 按手机号查询订单 | GET | `/api/orders/phone/{phone}` | 是 | `phone`(路径参数) | `ExpressOrder[]` |
+| 按用户ID查询订单 | GET | `/api/orders/user/{userId}` | 是 | `userId`(路径参数) | `ExpressOrder[]` |
+| 按取件码查询订单 | GET | `/api/orders/pick-code/{pickCode}` | 是 | `pickCode`(路径参数) | `ExpressOrder` |
+| 创建订单 | POST | `/api/orders` | 是 | JSON：`orderNo`(必填)、`cabinetId`(必填)、`compartmentId`(必填)、`receiverName`(必填)、`receiverPhone`(必填)、`receiverUserId`(可选)、`courierId`(可选)、`senderName`(可选)、`senderPhone`(可选)、`orderType`(必填，0入柜/1寄存/2发件) | `ExpressOrder`（后端生成 `pickCode` 等字段） |
+| 取件 | POST | `/api/orders/pick-up` | 是 | JSON：`pickCode`(必填) | `ExpressOrder` |
 
-#### 根据取件码获取订单
-```
-GET /api/orders/pick-code/{pickCode}
-Authorization: Bearer {token}
-```
+### 数据库表结构
 
-#### 创建订单
-```
-POST /api/orders
-Authorization: Bearer {token}
-Content-Type: application/json
+数据库初始化脚本：[init.sql](file:///Users/hhhh/Desktop/课程资料/专业综合设计/Professional-comprehensive-design/database/init.sql)（字符集 `utf8mb4`）。
 
-{
-  "orderNo": "SF1234567890",
-  "cabinetId": 1,
-  "compartmentId": 1,
-  "receiverName": "张三",
-  "receiverPhone": "13800138000",
-  "orderType": 0
-}
-```
+#### users（用户表）
 
-#### 取件
-```
-POST /api/orders/pick-up
-Authorization: Bearer {token}
-Content-Type: application/json
+| 字段 | 类型 | 约束/默认 | 说明 |
+|---|---|---|---|
+| id | BIGINT | PK，自增 | 主键 |
+| username | VARCHAR(50) | UNIQUE，NOT NULL | 用户名 |
+| password | VARCHAR(255) | NOT NULL | 密码（BCrypt） |
+| phone | VARCHAR(20) | UNIQUE，NOT NULL | 手机号 |
+| real_name | VARCHAR(50) | 可空 | 真实姓名 |
+| user_type | TINYINT | NOT NULL，默认 0 | 用户类型：0普通用户，1快递员 |
+| status | TINYINT | NOT NULL，默认 1 | 状态：0禁用，1启用 |
+| created_at | DATETIME | 默认当前时间 | 创建时间 |
+| updated_at | DATETIME | 默认当前时间，自动更新 | 更新时间 |
 
-{
-  "pickCode": "123456"
-}
-```
+#### cabinets（快递柜表）
+
+| 字段 | 类型 | 约束/默认 | 说明 |
+|---|---|---|---|
+| id | BIGINT | PK，自增 | 主键 |
+| cabinet_code | VARCHAR(50) | UNIQUE，NOT NULL | 快递柜编号 |
+| location | VARCHAR(200) | 可空 | 位置 |
+| status | TINYINT | NOT NULL，默认 1 | 状态：0禁用，1启用 |
+| total_compartments | INT | NOT NULL，默认 8 | 总仓数 |
+| power_consumption | DECIMAL(10,2) | 默认 0 | 日用电量（度） |
+| created_at | DATETIME | 默认当前时间 | 创建时间 |
+| updated_at | DATETIME | 默认当前时间，自动更新 | 更新时间 |
+
+#### compartments（仓门表）
+
+| 字段 | 类型 | 约束/默认 | 说明 |
+|---|---|---|---|
+| id | BIGINT | PK，自增 | 主键 |
+| cabinet_id | BIGINT | NOT NULL，FK→cabinets.id | 快递柜ID |
+| compartment_no | INT | NOT NULL，(cabinet_id, compartment_no) 唯一 | 仓门编号 |
+| status | TINYINT | NOT NULL，默认 1 | 状态：0故障/禁用，1正常 |
+| has_item | TINYINT | NOT NULL，默认 0 | 是否有物品：0无，1有 |
+| temperature | DECIMAL(5,2) | 可空 | 温度（部分仓有） |
+| humidity | DECIMAL(5,2) | 可空 | 湿度（部分仓有） |
+| created_at | DATETIME | 默认当前时间 | 创建时间 |
+| updated_at | DATETIME | 默认当前时间，自动更新 | 更新时间 |
+
+#### express_orders（快递订单表）
+
+| 字段 | 类型 | 约束/默认 | 说明 |
+|---|---|---|---|
+| id | BIGINT | PK，自增 | 主键 |
+| order_no | VARCHAR(50) | UNIQUE，NOT NULL | 快递单号 |
+| cabinet_id | BIGINT | NOT NULL，FK→cabinets.id | 快递柜ID |
+| compartment_id | BIGINT | NOT NULL，FK→compartments.id | 仓门ID |
+| sender_name | VARCHAR(50) | 可空 | 发件人姓名 |
+| sender_phone | VARCHAR(20) | 可空 | 发件人手机号 |
+| receiver_name | VARCHAR(50) | NOT NULL | 收件人姓名 |
+| receiver_phone | VARCHAR(20) | NOT NULL | 收件人手机号 |
+| receiver_user_id | BIGINT | 可空，FK→users.id | 收件人用户ID |
+| courier_id | BIGINT | 可空，FK→users.id | 快递员ID |
+| pick_code | VARCHAR(10) | NOT NULL | 取件码 |
+| order_type | TINYINT | NOT NULL，默认 0 | 订单类型：0入柜，1寄存，2发件 |
+| status | TINYINT | NOT NULL，默认 0 | 状态：0待取件，1已取件，2已超时 |
+| put_in_time | DATETIME | 可空 | 放入时间 |
+| pick_up_time | DATETIME | 可空 | 取件时间 |
+| expire_time | DATETIME | 可空 | 过期时间 |
+| created_at | DATETIME | 默认当前时间 | 创建时间 |
+| updated_at | DATETIME | 默认当前时间，自动更新 | 更新时间 |
 
 ## 开发计划
 
