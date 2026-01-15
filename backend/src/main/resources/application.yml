@@ -3,10 +3,16 @@ spring:
     name: express-cabinet-backend
   
   datasource:
-    url: jdbc:mysql://localhost:3306/express_cabinet?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/express_cabinet?useUnicode=true&characterEncoding=utf8&connectionCollation=utf8mb4_general_ci&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      data-source-properties:
+        useUnicode: true
+        characterEncoding: utf8
+        connectionCollation: utf8mb4_general_ci
+      connection-init-sql: SET NAMES utf8mb4
   
   jpa:
     hibernate:

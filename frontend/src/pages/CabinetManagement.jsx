@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Button, Tag, Modal, Form, Input, InputNumber, message, Space, Popconfirm } from 'antd'
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { PlusOutlined, EditOutlined, DeleteOutlined, AppstoreOutlined } from '@ant-design/icons'
 import api from '../utils/api'
 
 function CabinetManagement() {
@@ -164,8 +164,10 @@ function CabinetManagement() {
 
   return (
     <div>
-      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
-        <h2>快递柜管理</h2>
+      <div className="page-header-title">
+        <AppstoreOutlined /> 智能柜组管理
+      </div>
+      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'flex-end' }}>
         <Button
           type="primary"
           icon={<PlusOutlined />}

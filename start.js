@@ -16,6 +16,68 @@ function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+async function getListeningPids(port) {
+  if (isWindows) {
+    const res = await spawnCapture('netstat', ['-ano', '-p', 'tcp'])
+    if (res.code !== 0) return []
+    const lines = res.stdout.split(/\r?\n/)
+    const pids = new Set()
+    for (const line of lines) {
+      const trimmed = line.trim()
+      if (!trimmed) continue
+      const parts = trimmed.split(/\s+/)
+      if (parts.length < 5) continue
+      const proto = parts[0]
+      if (proto.toUpperCase() !== 'TCP') continue
+      const local = parts[1]
+      const state = parts[3]
+      const pid = parts[4]
+      if (!local || !pid) continue
+      if (!local.endsWith(`:${port}`)) continue
+      if (String(state).toUpperCase() !== 'LISTENING') continue
+      pids.add(Number(pid))
+    }
+    return Array.from(pids).filter((n) => Number.isFinite(n) && n > 0)
+  }
+
+  const lsof = await spawnCapture('lsof', ['-ti', `tcp:${port}`])
+  if (lsof.code === 0) {
+    return lsof.stdout
+      .split(/\r?\n/)
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n) && n > 0)
+  }
+  const fuser = await spawnCapture('fuser', ['-n', 'tcp', String(port)])
+  if (fuser.code === 0) {
+    return fuser.stdout
+      .split(/\s+/)
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n) && n > 0)
+  }
+  return []
+}
+
+async function killPids(pids) {
+  for (const pid of pids) {
+    if (!pid) continue
+    if (isWindows) {
+      await spawnCapture('taskkill', ['/PID', String(pid), '/F', '/T'])
+    } else {
+      await spawnCapture('kill', ['-9', String(pid)])
+    }
+  }
+}
+
+async function waitPortFree(port, timeoutMs) {
+  const deadline = Date.now() + timeoutMs
+  while (Date.now() < deadline) {
+    const pids = await getListeningPids(port)
+    if (pids.length === 0) return
+    await delay(500)
+  }
+  throw new Error(`等待端口释放超时：${port}`)
+}
+
 function spawnCapture(command, args, options = {}) {
   return new Promise((resolve) => {
     let resolved = false
@@ -194,6 +256,9 @@ function httpRequest({ method, url, headers = {}, body }) {
         })
       }
     )
+    req.setTimeout(5000, () => {
+      req.destroy(new Error('请求超时'))
+    })
     req.on('error', reject)
     if (body) req.write(body)
     req.end()
@@ -242,6 +307,30 @@ async function smokeTestBackend() {
   }
   logOk(`后端接口正常：/api/cabinets 返回 ${count} 条数据`)
   return { cabinetsCount: count }
+}
+
+async function isExpressCabinetBackendRunning() {
+  try {
+    const loginRes = await httpRequest({
+      method: 'POST',
+      url: 'http://localhost:8080/api/auth/login',
+      headers: { 'Content-Type': 'application/json' },
+      body: Buffer.from(JSON.stringify({ username: 'admin', password: '123456' }))
+    })
+    const loginBody = JSON.parse(loginRes.body.toString('utf8'))
+    const token = loginBody?.data?.token
+    if (!token) return false
+
+    const cabinetsRes = await httpRequest({
+      method: 'GET',
+      url: 'http://localhost:8080/api/cabinets',
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const cabinetsBody = JSON.parse(cabinetsRes.body.toString('utf8'))
+    return cabinetsBody?.code === 200
+  } catch (e) {
+    return false
+  }
 }
 
 function createPrefixedLineWriter(prefix) {
@@ -326,6 +415,21 @@ async function main() {
 
   const mysql = await ensureMySqlContainer({ rootDir })
   logOk(`MySQL已就绪：容器=${mysql.containerName} 端口=${mysql.mysqlPort}`)
+
+  logStep('检查后端是否已运行（8080端口）')
+  const existingBackendPids = await getListeningPids(8080)
+  if (existingBackendPids.length > 0) {
+    const looksLikeOurBackend = await isExpressCabinetBackendRunning()
+    if (!looksLikeOurBackend) {
+      throw new Error('检测到8080端口已被其他程序占用，无法启动后端（请先关闭占用8080的程序）')
+    }
+    logWarn(`检测到后端已在运行（PID: ${existingBackendPids.join(', ')}），将自动停止并重新启动`)
+    await killPids(existingBackendPids)
+    await waitPortFree(8080, 20_000)
+    logOk('已停止旧后端进程')
+  } else {
+    logOk('后端未运行')
+  }
 
   logStep('启动后端（Spring Boot）')
   const backend = spawnLongRunning(backendRun.command, backendRun.args, { cwd: backendDir }, { prefix: '[backend] ' })
