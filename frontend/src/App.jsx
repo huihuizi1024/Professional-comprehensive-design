@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ConfigProvider, theme } from 'antd'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import CabinetManagement from './pages/CabinetManagement'
@@ -35,9 +36,32 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <ConfigProvider
+        theme={{
+          algorithm: theme.darkAlgorithm,
+          token: {
+            colorPrimary: '#00f3ff', // Neon Blue
+            colorBgContainer: '#112240',
+            colorBgLayout: '#0a192f',
+            borderRadius: 2,
+            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+          },
+          components: {
+            Layout: {
+              headerBg: '#0a192f',
+              siderBg: '#112240',
+            },
+            Menu: {
+              darkItemBg: '#112240',
+              itemSelectedBg: 'rgba(0, 243, 255, 0.1)',
+            }
+          }
+        }}
+      >
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </ConfigProvider>
     </BrowserRouter>
   )
 }

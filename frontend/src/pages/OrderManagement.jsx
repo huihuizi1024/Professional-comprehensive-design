@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Table, Tag, Input, Button, Space, message } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
+import { SearchOutlined, FileTextOutlined } from '@ant-design/icons'
 import api from '../utils/api'
 
 function OrderManagement() {
@@ -104,8 +104,10 @@ function OrderManagement() {
 
   return (
     <div>
-      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'space-between' }}>
-        <h2>订单管理</h2>
+      <div className="page-header-title">
+        <FileTextOutlined /> 物流订单追踪
+      </div>
+      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'flex-end' }}>
         <Space>
           <Input
             placeholder="输入手机号搜索"
