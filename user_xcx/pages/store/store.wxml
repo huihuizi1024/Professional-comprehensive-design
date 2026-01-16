@@ -1,0 +1,59 @@
+<navigation-bar title="存件" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="form-card">
+      <view class="form-title">填写快递信息</view>
+      
+      <view class="form-item">
+        <text class="label">收件人姓名</text>
+        <input 
+          class="input" 
+          placeholder="请输入收件人姓名" 
+          value="{{receiverName}}"
+          bindinput="onReceiverNameInput"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="label">收件人手机号</text>
+        <input 
+          class="input" 
+          type="number" 
+          placeholder="请输入收件人手机号" 
+          value="{{receiverPhone}}"
+          bindinput="onReceiverPhoneInput"
+          maxlength="11"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="label">快递公司</text>
+        <input 
+          class="input" 
+          placeholder="请输入快递公司" 
+          value="{{expressCompany}}"
+          bindinput="onExpressCompanyInput"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="label">快递单号</text>
+        <input 
+          class="input" 
+          placeholder="请输入快递单号" 
+          value="{{expressNumber}}"
+          bindinput="onExpressNumberInput"
+        />
+      </view>
+
+      <button class="btn-submit" bindtap="handleSubmit" loading="{{loading}}">确认存件</button>
+    </view>
+
+    <view class="tips">
+      <view class="tips-title">温馨提示</view>
+      <view class="tips-item">1. 请确保收件人信息准确无误</view>
+      <view class="tips-item">2. 存件成功后请妥善保管取件码</view>
+      <view class="tips-item">3. 取件码是取件的唯一凭证</view>
+    </view>
+  </view>
+</scroll-view>

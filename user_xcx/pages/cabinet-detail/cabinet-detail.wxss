@@ -1,0 +1,154 @@
+.scrollarea {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.cabinet-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  color: #fff;
+  margin-bottom: 30rpx;
+}
+
+.cabinet-name {
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 30rpx;
+}
+
+.cabinet-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15rpx;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+}
+
+.info-row .label {
+  opacity: 0.8;
+  min-width: 100rpx;
+}
+
+.info-row .value {
+  font-weight: 500;
+}
+
+.info-row .status-1 {
+  color: #a5d6a7;
+}
+
+.info-row .status-0 {
+  color: #ef9a9a;
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 25rpx;
+  padding-bottom: 15rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.compartment-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.compartment-item {
+  aspect-ratio: 1;
+  border-radius: 15rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+}
+
+.compartment-item.status-0 {
+  background-color: #e8f5e9;
+  border: 2rpx solid #4caf50;
+}
+
+.compartment-item.status-1 {
+  background-color: #ffebee;
+  border: 2rpx solid #f44336;
+}
+
+.compartment-number {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+}
+
+.compartment-status {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.compartment-item.status-0 .compartment-status {
+  color: #4caf50;
+}
+
+.compartment-item.status-1 .compartment-status {
+  color: #f44336;
+}
+
+.available-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20rpx;
+}
+
+.available-item {
+  aspect-ratio: 1;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 15rpx rgba(102, 126, 234, 0.3);
+}
+
+.available-item .compartment-number {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 10rpx;
+}
+
+.tap-hint {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}

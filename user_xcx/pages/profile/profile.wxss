@@ -1,0 +1,147 @@
+.scrollarea {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 20rpx;
+}
+
+.user-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.user-avatar {
+  width: 100rpx;
+  height: 100rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 25rpx;
+}
+
+.avatar-icon {
+  font-size: 50rpx;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+
+.user-phone {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-logout {
+  width: 140rpx;
+  height: 60rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  padding: 0;
+  line-height: 60rpx;
+}
+
+.btn-logout::after {
+  border: none;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 15rpx;
+}
+
+.btn-login {
+  width: 100rpx;
+  height: 60rpx;
+  background-color: #fff;
+  color: #667eea;
+  font-size: 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  padding: 0;
+  line-height: 60rpx;
+}
+
+.btn-login::after {
+  border: none;
+}
+
+.btn-register {
+  width: 100rpx;
+  height: 60rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 24rpx;
+  border-radius: 30rpx;
+  border: none;
+  padding: 0;
+  line-height: 60rpx;
+}
+
+.btn-register::after {
+  border: none;
+}
+
+.menu-section {
+  background-color: #fff;
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+.menu-title {
+  font-size: 28rpx;
+  color: #999;
+  padding: 25rpx 30rpx 15rpx;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.menu-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  font-size: 40rpx;
+  color: #ccc;
+}
