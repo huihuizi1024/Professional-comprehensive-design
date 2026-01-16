@@ -4,8 +4,8 @@
 
 - 数据库：MySQL 8.0
 - 默认库名：`express_cabinet`
-- 初始化脚本：`database/init.sql`（字符集 `utf8mb4`）
-- 后端连接配置：`backend/src/main/resources/application.yml`
+- 初始化脚本：`server/database/init.sql`（字符集 `utf8mb4`）
+- 后端连接配置：`server/backend/src/main/resources/application.yml`
 
 ## 快速初始化（Docker）
 
@@ -15,7 +15,7 @@
 docker run --name express-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -v "$(pwd)/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
+  -v "$(pwd)/server/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
   -d mysql:8.0
 ```
 
@@ -90,4 +90,3 @@ docker exec express-mysql mysql -uroot -proot -e "SHOW DATABASES; USE express_ca
 | expire_time | DATETIME | 可空 | 过期时间 |
 | created_at | DATETIME | 默认当前时间 | 创建时间 |
 | updated_at | DATETIME | 默认当前时间，自动更新 | 更新时间 |
-

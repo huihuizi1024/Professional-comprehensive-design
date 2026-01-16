@@ -24,21 +24,7 @@
 
 ```
 源代码/
-├── backend/                 # 后端项目
-│   ├── src/
-│   │   └── main/
-│   │       ├── java/com/express/cabinet/
-│   │       │   ├── controller/    # 控制器层
-│   │       │   ├── service/       # 服务层
-│   │       │   ├── repository/    # 数据访问层
-│   │       │   ├── entity/        # 实体类
-│   │       │   ├── dto/           # 数据传输对象
-│   │       │   ├── util/          # 工具类
-│   │       │   └── config/        # 配置类
-│   │       └── resources/
-│   │           └── application.yml
-│   └── pom.xml
-├── frontend/               # 前端项目
+├── web/                    # Web 管理端（React + Vite）
 │   ├── src/
 │   │   ├── pages/         # 页面组件
 │   │   ├── components/    # 通用组件
@@ -47,8 +33,15 @@
 │   │   └── App.jsx
 │   ├── package.json
 │   └── vite.config.js
-└── database/              # 数据库脚本
-    └── init.sql
+├── app-user/               # 用户端小程序（预留目录）
+├── app-server/             # 快递员端小程序（预留目录）
+└── server/                 # 服务端（共享后端 + 数据库脚本）
+    ├── backend/            # Spring Boot 后端
+    │   ├── src/main/java/com/express/cabinet/...
+    │   ├── src/main/resources/application.yml
+    │   └── pom.xml
+    └── database/           # MySQL 初始化脚本
+        └── init.sql
 ```
 
 ## 快速开始
@@ -72,7 +65,7 @@ cd Professional-comprehensive-design
 docker run --name express-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -v "$(pwd)/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
+  -v "$(pwd)/server/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
   -d mysql:8.0
 ```
 
@@ -92,7 +85,7 @@ node start.js
 
 它会自动完成：
 - 检查 Docker 环境
-- 创建/启动 MySQL 容器 `express-mysql`，并执行 `database/init.sql` 初始化库表与测试数据
+- 创建/启动 MySQL 容器 `express-mysql`，并执行 `server/database/init.sql` 初始化库表与测试数据
 - 启动后端（Spring Boot）与前端（Vite）
 - 运行冒烟测试（登录 + 调用核心接口）
 - 最后输出所有服务的端口与访问地址
@@ -105,14 +98,14 @@ node start.js
 docker run --name express-mysql \
   -e MYSQL_ROOT_PASSWORD=root \
   -p 3306:3306 \
-  -v "$(pwd)/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
+  -v "$(pwd)/server/database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro" \
   -d mysql:8.0
 ```
 
 #### 2) 启动后端
 
 ```bash
-cd backend
+cd server/backend
 mvn spring-boot:run
 ```
 
@@ -121,7 +114,7 @@ mvn spring-boot:run
 #### 3) 启动前端
 
 ```bash
-cd frontend
+cd web
 npm install
 npm run dev
 ```
@@ -133,7 +126,7 @@ npm run dev
 ### 数据库连接配置
 
 后端数据库连接配置文件位置：
-- `backend/src/main/resources/application.yml`
+- `server/backend/src/main/resources/application.yml`
 
 默认配置：
 - 主机：`localhost`
@@ -146,7 +139,7 @@ npm run dev
 ### 前端代理配置
 
 前端开发环境通过 Vite Proxy 将 `/api` 转发到后端：
-- `frontend/vite.config.js` 中的 `server.proxy['/api']`
+- `web/vite.config.js` 中的 `server.proxy['/api']`
 
 ## 功能模块
 
@@ -195,22 +188,22 @@ npm run dev
 
 #### 1) 启动入口
 
-- 启动类：`backend/src/main/java/com/express/cabinet/ExpressCabinetApplication.java`
+- 启动类：`server/backend/src/main/java/com/express/cabinet/ExpressCabinetApplication.java`
 - 说明：启动 Spring Boot 应用，加载 `application.yml` 中的数据源、端口、JWT 等配置
 
 #### 2) 统一返回结构
 
-- `backend/src/main/java/com/express/cabinet/dto/ApiResponse.java`
+- `server/backend/src/main/java/com/express/cabinet/dto/ApiResponse.java`
 - 作用：对所有接口返回进行统一封装
   - 成功：`ApiResponse.success(data)` 或 `ApiResponse.success(message, data)`
   - 失败：`ApiResponse.error(message)`（当前默认业务错误统一返回 code=500）
 
 #### 3) 认证模块
 
-- 控制器：`backend/src/main/java/com/express/cabinet/controller/AuthController.java`
+- 控制器：`server/backend/src/main/java/com/express/cabinet/controller/AuthController.java`
   - `POST /api/auth/register`：调用 `AuthService.register` 完成注册并返回 token
   - `POST /api/auth/login`：调用 `AuthService.login` 完成登录并返回 token
-- 服务：`backend/src/main/java/com/express/cabinet/service/AuthService.java`
+- 服务：`server/backend/src/main/java/com/express/cabinet/service/AuthService.java`
   - `register(RegisterRequest request)`
     - 校验用户名/手机号是否存在（Repository 的 existsByXxx）
     - 使用 BCrypt 对密码加密后入库
@@ -220,7 +213,7 @@ npm run dev
     - 使用 BCrypt 校验密码
     - 校验用户状态（status=0 禁用）
     - 生成 JWT 并返回 `{ userId, username, userType, token }`
-- JWT 工具：`backend/src/main/java/com/express/cabinet/util/JwtUtil.java`
+- JWT 工具：`server/backend/src/main/java/com/express/cabinet/util/JwtUtil.java`
   - `generateToken(userId, username)`：生成 HS512 签名的 token（claims 包含 userId/username）
   - `parseToken(token)`：解析 token 得到 claims（未做统一鉴权拦截时，主要用于扩展）
   - `getUserIdFromToken(token)`：从 token 中取出 userId
@@ -228,7 +221,7 @@ npm run dev
 
 #### 4) 快递柜模块
 
-- 控制器：`backend/src/main/java/com/express/cabinet/controller/CabinetController.java`
+- 控制器：`server/backend/src/main/java/com/express/cabinet/controller/CabinetController.java`
   - `GET /api/cabinets`：查询快递柜列表（JPA findAll）
   - `GET /api/cabinets/{id}`：按 ID 查询（不存在抛异常，返回 code=500）
   - `GET /api/cabinets/code/{cabinetCode}`：按编号查询
@@ -238,7 +231,7 @@ npm run dev
   - `PUT /api/cabinets/{id}/status`：启用/禁用快递柜
   - `PUT /api/cabinets/compartments/{compartmentId}/status`：设置仓门状态（故障/正常）
   - `POST /api/cabinets/compartments/{compartmentId}/open`：模拟开仓（仅校验仓门状态）
-- 服务：`backend/src/main/java/com/express/cabinet/service/CabinetService.java`
+- 服务：`server/backend/src/main/java/com/express/cabinet/service/CabinetService.java`
   - `createCabinet(Cabinet cabinet)`
     - 检查 cabinetCode 唯一性
     - 保存快递柜
@@ -253,13 +246,13 @@ npm run dev
 
 #### 5) 订单模块
 
-- 控制器：`backend/src/main/java/com/express/cabinet/controller/ExpressOrderController.java`
+- 控制器：`server/backend/src/main/java/com/express/cabinet/controller/ExpressOrderController.java`
   - `GET /api/orders/phone/{phone}`：按收件人手机号查订单
   - `GET /api/orders/user/{userId}`：按收件人用户 ID 查订单
   - `GET /api/orders/pick-code/{pickCode}`：按取件码查订单
   - `POST /api/orders`：创建订单（后端生成 pickCode，且占用仓门）
   - `POST /api/orders/pick-up`：取件（更新订单状态，释放仓门）
-- 服务：`backend/src/main/java/com/express/cabinet/service/ExpressOrderService.java`
+- 服务：`server/backend/src/main/java/com/express/cabinet/service/ExpressOrderService.java`
   - `createOrder(ExpressOrder order)`
     - 校验仓门存在、status=1、hasItem=0
     - 生成 6 位数字取件码（避免重复）
@@ -273,36 +266,36 @@ npm run dev
 
 #### 6) 跨域（CORS）
 
-- `backend/src/main/java/com/express/cabinet/config/CorsConfig.java`
+- `server/backend/src/main/java/com/express/cabinet/config/CorsConfig.java`
 - 说明：当前配置为允许所有来源/头/方法（开发环境方便调试）。如需更严格控制，可按域名白名单配置并结合 Spring Security 做统一鉴权。
 
 ### 前端（React + Vite）
 
 #### 1) 路由与访问控制
 
-- `frontend/src/App.jsx`
+- `web/src/App.jsx`
   - `PrivateRoute`：若无 user（未登录）则跳转 `/login`
   - 主布局路由：`/` 下包含仪表盘、快递柜管理、订单管理页面
 
 #### 2) 登录态与请求封装
 
-- `frontend/src/utils/api.js`
+- `web/src/utils/api.js`
   - 创建 Axios 实例：`baseURL: '/api'`（由 Vite Proxy 转发到后端）
   - 响应拦截：遇到 401 清理 token 并跳转登录页
-- `frontend/src/context/AuthContext.jsx`
+- `web/src/context/AuthContext.jsx`
   - `login(username, password)`：调用 `/auth/login` 获取 token，写入 localStorage，并设置默认请求头 Authorization
   - `logout()`：清理本地登录信息并移除默认 Authorization
 
 #### 3) 页面功能概览
 
-- `frontend/src/pages/Dashboard.jsx`
+- `web/src/pages/Dashboard.jsx`
   - 并发请求快递柜列表与“示例手机号订单”，计算统计卡片数据
-- `frontend/src/pages/CabinetManagement.jsx`
+- `web/src/pages/CabinetManagement.jsx`
   - 快递柜列表 + 仓门列表（展开行）
   - 新增快递柜：提交表单调用 `POST /cabinets`
   - 启用/禁用：调用 `PUT /cabinets/{id}/status`
   - 开仓：调用 `POST /cabinets/compartments/{id}/open`
-- `frontend/src/pages/OrderManagement.jsx`
+- `web/src/pages/OrderManagement.jsx`
   - 按手机号查询订单：调用 `GET /orders/phone/{phone}`
   - 默认展示初始化脚本中的示例手机号订单数据（便于演示）
 
@@ -312,7 +305,7 @@ npm run dev
 - 工作流（从上到下）：
   - 检查 Node.js、npm、Docker 是否可用
   - 若前端未安装依赖则自动执行 `npm install`
-  - 创建/启动 MySQL 容器 `express-mysql`（数据卷持久化，挂载 `database/init.sql` 自动初始化）
+  - 创建/启动 MySQL 容器 `express-mysql`（数据卷持久化，挂载 `server/database/init.sql` 自动初始化）
   - 启动后端（Maven Wrapper：Windows 使用 `mvnw.cmd`，macOS/Linux 使用 `sh mvnw`）
   - 启动前端（Vite dev server）
   - 等待后端与前端 HTTP 就绪后执行冒烟测试（登录 + 访问核心接口）

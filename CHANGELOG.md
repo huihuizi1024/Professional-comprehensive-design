@@ -1,5 +1,10 @@
 # 更新日志
 
+## 2026-01-16
+
+- 调整工程目录结构：`web/`（管理端）、`app-user/`（用户端预留）、`app-server/`（快递员端预留）、`server/`（后端+数据库脚本）
+- 同步更新一键启动脚本 `start.js` 以适配新目录路径
+
 ## 2026-01-15
 
 - 新增全平台一键启动脚本 `start.js`：自动启动 MySQL（Docker）+ 后端 + 前端
@@ -13,4 +18,3 @@
 - 优化 Windows 启动脚本 一键启动.bat（环境检查、自动安装前端依赖）
 - 修复 MySQL 连接报错（allowPublicKeyRetrieval）
 - 修复测试账号密码与 BCrypt 校验不一致问题（更新 init.sql 哈希）
-
