@@ -40,7 +40,7 @@ async function getListeningPids(port) {
     return Array.from(pids).filter((n) => Number.isFinite(n) && n > 0)
   }
 
-  const lsof = await spawnCapture('lsof', ['-ti', `tcp:${port}`])
+  const lsof = await spawnCapture('lsof', ['-nP', `-iTCP:${port}`, '-sTCP:LISTEN', '-t'])
   if (lsof.code === 0) {
     return lsof.stdout
       .split(/\r?\n/)
@@ -57,14 +57,95 @@ async function getListeningPids(port) {
   return []
 }
 
-async function killPids(pids) {
+async function getPidCommandLine(pid) {
+  if (!pid) return ''
+  if (isWindows) {
+    const ps = await spawnCapture('powershell', [
+      '-NoProfile',
+      '-Command',
+      `(Get-CimInstance Win32_Process -Filter "ProcessId=${pid}").CommandLine`
+    ])
+    if (ps.code === 0) return ps.stdout.trim()
+    return ''
+  }
+  const res = await spawnCapture('ps', ['-p', String(pid), '-o', 'command='])
+  if (res.code === 0) return res.stdout.trim()
+  return ''
+}
+
+async function describeListeningProcesses(pids) {
+  const list = []
   for (const pid of pids) {
-    if (!pid) continue
-    if (isWindows) {
-      await spawnCapture('taskkill', ['/PID', String(pid), '/F', '/T'])
-    } else {
-      await spawnCapture('kill', ['-9', String(pid)])
+    const cmd = await getPidCommandLine(pid)
+    list.push({ pid, cmd })
+  }
+  return list
+}
+
+function formatProcessList(processes) {
+  return processes
+    .map((p) => {
+      const cmd = p.cmd ? p.cmd.replace(/\s+/g, ' ').trim() : ''
+      return cmd ? `PID ${p.pid}: ${cmd}` : `PID ${p.pid}`
+    })
+    .join('\n')
+}
+
+function looksLikeExpressCabinetBackendByCmdline({ backendDir, cmdline }) {
+  if (!cmdline) return false
+  const normalized = cmdline.replace(/\\/g, '/').toLowerCase()
+  const backendNormalized = backendDir.replace(/\\/g, '/').toLowerCase()
+  const needles = [
+    'com.express.cabinet.expresscabinetapplication',
+    'expresscabinetapplication',
+    'express-cabinet-backend',
+    'spring-boot:run',
+    '/backend/',
+    backendNormalized
+  ]
+  return needles.some((n) => normalized.includes(n))
+}
+
+async function looksLikeExpressCabinetBackendByHttp() {
+  try {
+    const res = await httpRequest({ method: 'GET', url: 'http://localhost:8080/api/cabinets' })
+    if (res.statusCode <= 0) return false
+    const contentType = String(res.headers['content-type'] || '')
+    if (!contentType.toLowerCase().includes('application/json')) return false
+    const bodyText = res.body.toString('utf8')
+    const json = JSON.parse(bodyText)
+    return typeof json?.code === 'number' && 'message' in json && 'data' in json
+  } catch (e) {
+    return false
+  }
+}
+
+async function looksLikeExpressCabinetBackend({ backendDir, pids }) {
+  const processes = await describeListeningProcesses(pids)
+  if (processes.some((p) => looksLikeExpressCabinetBackendByCmdline({ backendDir, cmdline: p.cmd }))) return true
+  return looksLikeExpressCabinetBackendByHttp()
+}
+
+async function stopPids(pids) {
+  const unique = Array.from(new Set(pids)).filter((n) => Number.isFinite(n) && n > 0)
+  if (unique.length === 0) return
+  if (isWindows) {
+    for (const pid of unique) {
+      await spawnCapture('taskkill', ['/PID', String(pid), '/T'])
     }
+    await delay(800)
+    for (const pid of unique) {
+      await spawnCapture('taskkill', ['/PID', String(pid), '/F', '/T'])
+    }
+    return
+  }
+
+  for (const pid of unique) {
+    await spawnCapture('kill', ['-15', String(pid)])
+  }
+  await delay(1000)
+  for (const pid of unique) {
+    await spawnCapture('kill', ['-9', String(pid)])
   }
 }
 
@@ -164,6 +245,39 @@ async function getContainerRunning(containerName) {
   return { exists: true, running }
 }
 
+async function ensureLocalMySqlReady() {
+  const host = 'localhost'
+  const port = '3306'
+  const user = 'root'
+  const password = 'root'
+  const database = 'express_cabinet'
+
+  logStep('检查本地 MySQL 环境')
+  const version = await spawnCapture('mysql', ['--version'])
+  if (version.code !== 0) {
+    throw new Error('未检测到 mysql 客户端，请安装 MySQL 或使用 Docker 启动数据库。')
+  }
+
+  const resDb = await spawnCapture(
+    'mysql',
+    ['-h', host, '-P', port, '-u', user, `-p${password}`, '--default-character-set=utf8mb4', '-e', `SHOW DATABASES LIKE '${database}';`]
+  )
+  if (resDb.code !== 0) {
+    throw new Error('无法连接本地 MySQL，请确认服务已启动且账号密码与 backend/src/main/resources/application.yml 中配置一致。')
+  }
+
+  if (!resDb.stdout.includes(database)) {
+    throw new Error(
+      '本地 MySQL 已就绪，但尚未初始化 express_cabinet 数据库。\n' +
+        '请在项目根目录执行：\n' +
+        'mysql -uroot -p --default-character-set=utf8mb4 < database/init.sql'
+    )
+  }
+
+  logOk('检测到本地 MySQL 已存在 express_cabinet 数据库，将直接使用。')
+  return { containerName: 'local-mysql', mysqlPort: port, rootPassword: password }
+}
+
 async function ensureMySqlContainer({ rootDir }) {
   const containerName = 'express-mysql'
   const volumeName = 'express-mysql-data'
@@ -177,8 +291,13 @@ async function ensureMySqlContainer({ rootDir }) {
   const dockerHostPath = initSqlPath.replace(/\\/g, '/')
 
   logStep('检查Docker环境')
-  await ensureDockerReady()
-  logOk('Docker环境正常')
+  try {
+    await ensureDockerReady()
+    logOk('Docker环境正常')
+  } catch (e) {
+    logWarn('未检测到可用的 Docker，尝试使用本地已安装的 MySQL。')
+    return ensureLocalMySqlReady()
+  }
 
   logStep('准备MySQL Docker数据卷')
   await ensureVolume(volumeName)
@@ -309,30 +428,6 @@ async function smokeTestBackend() {
   return { cabinetsCount: count }
 }
 
-async function isExpressCabinetBackendRunning() {
-  try {
-    const loginRes = await httpRequest({
-      method: 'POST',
-      url: 'http://localhost:8080/api/auth/login',
-      headers: { 'Content-Type': 'application/json' },
-      body: Buffer.from(JSON.stringify({ username: 'admin', password: '123456' }))
-    })
-    const loginBody = JSON.parse(loginRes.body.toString('utf8'))
-    const token = loginBody?.data?.token
-    if (!token) return false
-
-    const cabinetsRes = await httpRequest({
-      method: 'GET',
-      url: 'http://localhost:8080/api/cabinets',
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    const cabinetsBody = JSON.parse(cabinetsRes.body.toString('utf8'))
-    return cabinetsBody?.code === 200
-  } catch (e) {
-    return false
-  }
-}
-
 function createPrefixedLineWriter(prefix) {
   let buf = ''
   return (chunk) => {
@@ -423,14 +518,29 @@ async function main() {
   logStep('检查后端是否已运行（8080端口）')
   const existingBackendPids = await getListeningPids(8080)
   if (existingBackendPids.length > 0) {
-    const looksLikeOurBackend = await isExpressCabinetBackendRunning()
+    const looksLikeOurBackend = await looksLikeExpressCabinetBackend({ backendDir, pids: existingBackendPids })
     if (!looksLikeOurBackend) {
-      throw new Error('检测到8080端口已被其他程序占用，无法启动后端（请先关闭占用8080的程序）')
+      const processes = await describeListeningProcesses(existingBackendPids)
+      const details = formatProcessList(processes)
+      if (process.env.EXPRESS_CABINET_FORCE_KILL_8080 === '1') {
+        logWarn('检测到8080端口被占用，但已开启强制释放端口，将尝试结束占用进程')
+        if (details) logWarn(`占用详情：\n${details}`)
+        await stopPids(existingBackendPids)
+        await waitPortFree(8080, 20_000)
+        logOk('已强制释放8080端口')
+      } else {
+        const extra = details
+          ? `\n\n占用详情：\n${details}\n\n如需强制结束占用进程后继续启动，可临时设置环境变量：\nEXPRESS_CABINET_FORCE_KILL_8080=1`
+          : '\n\n如需强制结束占用进程后继续启动，可临时设置环境变量：\nEXPRESS_CABINET_FORCE_KILL_8080=1'
+        throw new Error(`检测到8080端口已被其他程序占用，无法启动后端（请先关闭占用8080的程序）${extra}`)
+      }
     }
-    logWarn(`检测到后端已在运行（PID: ${existingBackendPids.join(', ')}），将自动停止并重新启动`)
-    await killPids(existingBackendPids)
-    await waitPortFree(8080, 20_000)
-    logOk('已停止旧后端进程')
+    if (looksLikeOurBackend) {
+      logWarn(`检测到后端已在运行（PID: ${existingBackendPids.join(', ')}），将自动停止并重新启动`)
+      await stopPids(existingBackendPids)
+      await waitPortFree(8080, 20_000)
+      logOk('已停止旧后端进程')
+    }
   } else {
     logOk('后端未运行')
   }
