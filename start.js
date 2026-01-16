@@ -263,14 +263,14 @@ async function ensureLocalMySqlReady() {
     ['-h', host, '-P', port, '-u', user, `-p${password}`, '--default-character-set=utf8mb4', '-e', `SHOW DATABASES LIKE '${database}';`]
   )
   if (resDb.code !== 0) {
-    throw new Error('无法连接本地 MySQL，请确认服务已启动且账号密码与 backend/src/main/resources/application.yml 中配置一致。')
+    throw new Error('无法连接本地 MySQL，请确认服务已启动且账号密码与 server/backend/src/main/resources/application.yml 中配置一致。')
   }
 
   if (!resDb.stdout.includes(database)) {
     throw new Error(
-      '本地 MySQL 已就绪，但尚未初始化 express_cabinet 数据库。\n' +
+        '本地 MySQL 已就绪，但尚未初始化 express_cabinet 数据库。\n' +
         '请在项目根目录执行：\n' +
-        'mysql -uroot -p --default-character-set=utf8mb4 < database/init.sql'
+        'mysql -uroot -p --default-character-set=utf8mb4 < server/database/init.sql'
     )
   }
 
@@ -284,7 +284,7 @@ async function ensureMySqlContainer({ rootDir }) {
   const rootPassword = 'root'
   const mysqlPort = '3306'
 
-  const initSqlPath = path.resolve(rootDir, 'database', 'init.sql')
+  const initSqlPath = path.resolve(rootDir, 'server', 'database', 'init.sql')
   if (!fs.existsSync(initSqlPath)) {
     throw new Error(`未找到初始化脚本：${initSqlPath}`)
   }
@@ -496,8 +496,8 @@ function resolveBackendRunCommand({ backendDir }) {
 
 async function main() {
   const rootDir = path.resolve(__dirname)
-  const backendDir = path.resolve(rootDir, 'backend')
-  const frontendDir = path.resolve(rootDir, 'frontend')
+  const backendDir = path.resolve(rootDir, 'server', 'backend')
+  const frontendDir = path.resolve(rootDir, 'web')
   const npm = resolveCommand('npm')
   const backendRun = resolveBackendRunCommand({ backendDir })
 
