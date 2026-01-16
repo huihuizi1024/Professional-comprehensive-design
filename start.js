@@ -385,14 +385,18 @@ async function ensureFrontendDeps({ npm, frontendDir }) {
 
 function resolveBackendRunCommand({ backendDir }) {
   if (isWindows) {
-    const p = path.resolve(backendDir, 'mvnw.cmd')
-    if (!fs.existsSync(p)) throw new Error(`未找到Maven Wrapper：${p}`)
-    return { command: p, args: ['spring-boot:run'] }
+    const wrapperCmd = path.resolve(backendDir, 'mvnw.cmd')
+    if (fs.existsSync(wrapperCmd)) {
+      return { command: wrapperCmd, args: ['spring-boot:run'] }
+    }
+    throw new Error(`未找到Maven Wrapper：${wrapperCmd}`)
   }
 
-  const p = path.resolve(backendDir, 'mvnw')
-  if (!fs.existsSync(p)) throw new Error(`未找到Maven Wrapper：${p}`)
-  return { command: 'sh', args: [p, 'spring-boot:run'] }
+  const wrapperSh = path.resolve(backendDir, 'mvnw')
+  if (fs.existsSync(wrapperSh)) {
+    return { command: 'sh', args: [wrapperSh, 'spring-boot:run'] }
+  }
+  return { command: 'mvn', args: ['spring-boot:run'] }
 }
 
 async function main() {
@@ -496,4 +500,3 @@ main().catch((err) => {
   }
   process.exit(1)
 })
-
