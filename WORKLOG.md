@@ -9,16 +9,18 @@
 ### 1) 工程结构与基础环境
 
 - 完成工程目录结构与基础配置梳理：
-  - `backend/`：Spring Boot 后端
-  - `frontend/`：React + Vite 前端
-  - `database/`：MySQL 初始化脚本
-- 明确后端配置入口：`backend/src/main/resources/application.yml`（端口、数据源、JWT 等）。
+  - `server/backend/`：Spring Boot 后端
+  - `web/`：Web 管理端（React + Vite）
+  - `server/database/`：MySQL 初始化脚本
+  - `app-user/`：用户端小程序（预留目录）
+  - `app-server/`：快递员端小程序（预留目录）
+- 明确后端配置入口：`server/backend/src/main/resources/application.yml`（端口、数据源、JWT 等）。
 
 ### 2) 数据库与初始化脚本
 
 - 基于 MySQL 8.0 设计并初始化核心业务表：
   - `users`、`cabinets`、`compartments`、`express_orders`
-- 提供 `database/init.sql`，包含建库建表与演示数据/测试账号，保证新环境可快速初始化并演示。
+- 提供 `server/database/init.sql`，包含建库建表与演示数据/测试账号，保证新环境可快速初始化并演示。
 
 ### 3) 后端（Spring Boot + JPA）核心模块
 
@@ -66,4 +68,3 @@
   - 定位根因：MySQL 会话连接字符集为 latin1，导致初始化脚本中的中文写入后变为乱码
   - 修复方式：初始化脚本增加 `SET NAMES utf8mb4`，并对已落库的乱码数据进行修复还原
   - 修复结果：后端接口返回 `location` 为正常中文，前端表格位置列显示正常
-
