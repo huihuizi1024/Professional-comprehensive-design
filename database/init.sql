@@ -5,6 +5,8 @@ USE express_cabinet;
 
 SET NAMES utf8mb4;
 
+SET NAMES utf8mb4;
+
 -- 用户表（普通用户和快递员）
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
