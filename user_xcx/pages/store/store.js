@@ -80,13 +80,13 @@ Page({
 
     try {
       const res = await service.order.create({
+        orderNo: this.data.expressNumber, // 快递单号对应orderNo
         receiverName: this.data.receiverName,
         receiverPhone: this.data.receiverPhone,
-        expressCompany: this.data.expressCompany,
-        expressNumber: this.data.expressNumber,
         cabinetId: this.data.cabinetId,
         compartmentId: this.data.compartmentId,
-        senderId: app.globalData.userId
+        orderType: 1, // 用户寄存
+        status: 0 // 待取件
       })
 
       wx.hideLoading()

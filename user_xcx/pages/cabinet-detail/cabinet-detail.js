@@ -51,9 +51,9 @@ Page({
   },
 
   onCompartmentTap(e) {
-    const { id, status } = e.currentTarget.dataset
+    const { id, status, hasItem } = e.currentTarget.dataset
     
-    if (status === 1) {
+    if (hasItem === 1) {
       wx.showToast({
         title: '该格口已被占用',
         icon: 'none'

@@ -23,16 +23,17 @@
       <view class="section-title">格口列表</view>
       <view class="compartment-grid">
         <view 
-          class="compartment-item status-{{item.status}}" 
+          class="compartment-item status-{{item.hasItem}}" 
           wx:for="{{compartments}}" 
           wx:key="id"
           data-id="{{item.id}}"
           data-status="{{item.status}}"
+          data-has-item="{{item.hasItem}}"
           bindtap="onCompartmentTap"
         >
-          <view class="compartment-number">{{item.number}}</view>
+          <view class="compartment-number">{{item.compartmentNo}}</view>
           <view class="compartment-status">
-            {{item.status === 0 ? '空闲' : '占用'}}
+            {{item.hasItem === 0 ? '空闲' : '占用'}}
           </view>
         </view>
       </view>
