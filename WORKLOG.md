@@ -68,3 +68,11 @@
   - 定位根因：MySQL 会话连接字符集为 latin1，导致初始化脚本中的中文写入后变为乱码
   - 修复方式：初始化脚本增加 `SET NAMES utf8mb4`，并对已落库的乱码数据进行修复还原
   - 修复结果：后端接口返回 `location` 为正常中文，前端表格位置列显示正常
+
+## 2026-01-18 功能修复与体验优化
+
+- 修复“新增快递柜”提交后前端提示成功但数据库未落库的问题：
+  - 后端：`CabinetService.createCabinet` 增加参数校验，并为 `status/totalCompartments/powerConsumption` 设置默认值，避免非空字段为 null 导致事务回滚
+  - 前端：创建请求补齐 `status/powerConsumption`，并对 `cabinetCode` 做 trim，减少输入误差
+- 统一前端对业务错误的处理：Axios 响应拦截器基于 `ApiResponse.code` 判断成功与否（code!=200 视为失败），避免后端业务异常返回 HTTP 200 时前端误报“创建成功”
+- 排查并定位 Docker 启动 MySQL 容器失败（init.sql 挂载 not a directory）：结论为旧容器绑定了错误的宿主机路径（`.../database/init.sql`），处理方式为删除旧容器并按正确路径 `server/database/init.sql` 重新创建
