@@ -37,13 +37,19 @@ function CabinetManagement() {
 
   const handleCreateCabinet = async (values) => {
     try {
-      await api.post('/cabinets', values)
+      const payload = {
+        ...values,
+        cabinetCode: String(values?.cabinetCode || '').trim(),
+        status: 1,
+        powerConsumption: 0
+      }
+      await api.post('/cabinets', payload)
       message.success('创建成功')
       setModalVisible(false)
       form.resetFields()
       fetchCabinets()
     } catch (error) {
-      message.error(error.response?.data?.message || '创建失败')
+      message.error(error.response?.data?.message || error.message || '创建失败')
     }
   }
 

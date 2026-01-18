@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,12 +45,32 @@ public class CabinetService {
 
     @Transactional
     public Cabinet createCabinet(Cabinet cabinet) {
+        if (cabinet == null) {
+            throw new RuntimeException("参数不能为空");
+        }
+        if (cabinet.getCabinetCode() == null || cabinet.getCabinetCode().trim().isEmpty()) {
+            throw new RuntimeException("快递柜编号不能为空");
+        }
+        cabinet.setCabinetCode(cabinet.getCabinetCode().trim());
+
+        if (cabinet.getStatus() == null) {
+            cabinet.setStatus(1);
+        }
+        if (cabinet.getTotalCompartments() == null) {
+            cabinet.setTotalCompartments(8);
+        }
+        if (cabinet.getTotalCompartments() <= 0) {
+            throw new RuntimeException("总仓数必须大于0");
+        }
+        if (cabinet.getPowerConsumption() == null) {
+            cabinet.setPowerConsumption(BigDecimal.ZERO);
+        }
+
         if (cabinetRepository.findByCabinetCode(cabinet.getCabinetCode()).isPresent()) {
             throw new RuntimeException("快递柜编号已存在");
         }
         Cabinet saved = cabinetRepository.save(cabinet);
-        
-        // 创建仓门
+
         for (int i = 1; i <= saved.getTotalCompartments(); i++) {
             Compartment compartment = new Compartment();
             compartment.setCabinetId(saved.getId());
@@ -59,7 +79,7 @@ public class CabinetService {
             compartment.setHasItem(0);
             compartmentRepository.save(compartment);
         }
-        
+
         return saved;
     }
 
