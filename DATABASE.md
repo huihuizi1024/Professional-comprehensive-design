@@ -7,6 +7,10 @@
 - 初始化脚本：`server/database/init.sql`（字符集 `utf8mb4`）
 - 后端连接配置：`server/backend/src/main/resources/application.yml`
 
+## 应用层约定（API 写入）
+
+- 创建快递柜（`POST /api/cabinets`）时，若未提供 `status/totalCompartments/powerConsumption`，后端会默认设置为 `1/8/0`，避免非空字段为 null 导致写入失败
+
 ## 快速初始化（Docker）
 
 在项目根目录执行：

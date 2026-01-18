@@ -9,7 +9,8 @@
   - `200`：成功
   - `500`：业务异常或参数错误（message 为错误原因）
 
-说明：
+注意：
+- 当前实现中业务异常可能仍返回 HTTP 200，但 `code=500`；客户端应以 `code` 判断业务成功/失败（Web 端已做统一拦截处理）。
 - 当前版本已生成 JWT token，但后端未对所有接口做统一的鉴权拦截；前端页面访问控制主要由前端路由守卫实现。后续如补齐服务端鉴权，建议统一在后端增加拦截器/过滤器校验 `Authorization`。
 
 ## 认证接口
@@ -53,7 +54,7 @@ curl -X POST "http://localhost:8080/api/auth/login" \
 | 按编号查询快递柜 | GET | `/api/cabinets/code/{cabinetCode}` | 是 | `cabinetCode`(路径参数) | `Cabinet` |
 | 获取仓门列表 | GET | `/api/cabinets/{cabinetId}/compartments` | 是 | `cabinetId`(路径参数) | `Compartment[]` |
 | 获取可用仓门 | GET | `/api/cabinets/{cabinetId}/compartments/available` | 是 | `cabinetId`(路径参数) | `Compartment[]` |
-| 创建快递柜 | POST | `/api/cabinets` | 是 | JSON：`cabinetCode`(必填)、`location`(可选)、`totalCompartments`(必填)、`powerConsumption`(可选)、`status`(可选，0禁用/1启用) | `Cabinet` |
+| 创建快递柜 | POST | `/api/cabinets` | 是 | JSON：`cabinetCode`(必填)、`location`(可选)、`totalCompartments`(可选，默认8)、`powerConsumption`(可选，默认0)、`status`(可选，默认1；0禁用/1启用) | `Cabinet` |
 | 更新快递柜状态 | PUT | `/api/cabinets/{id}/status` | 是 | 路径：`id`；JSON：`status`(必填，0/1) | `Cabinet` |
 | 更新仓门状态 | PUT | `/api/cabinets/compartments/{compartmentId}/status` | 是 | 路径：`compartmentId`；JSON：`status`(必填，0故障/1正常) | `Compartment` |
 | 远程开仓（模拟） | POST | `/api/cabinets/compartments/{compartmentId}/open` | 是 | `compartmentId`(路径参数) | `string`（固定为“开仓成功”） |

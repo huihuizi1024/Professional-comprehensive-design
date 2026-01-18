@@ -196,7 +196,7 @@ npm run dev
 - `server/backend/src/main/java/com/express/cabinet/dto/ApiResponse.java`
 - 作用：对所有接口返回进行统一封装
   - 成功：`ApiResponse.success(data)` 或 `ApiResponse.success(message, data)`
-  - 失败：`ApiResponse.error(message)`（当前默认业务错误统一返回 code=500）
+  - 失败：`ApiResponse.error(message)`（当前默认业务错误统一返回 code=500，HTTP 状态码仍可能为 200，建议客户端以 code 判断业务成功/失败）
 
 #### 3) 认证模块
 
@@ -281,7 +281,7 @@ npm run dev
 
 - `web/src/utils/api.js`
   - 创建 Axios 实例：`baseURL: '/api'`（由 Vite Proxy 转发到后端）
-  - 响应拦截：遇到 401 清理 token 并跳转登录页
+  - 响应拦截：当 `ApiResponse.code != 200` 视为业务失败并抛出错误；遇到 401 清理 token 并跳转登录页
 - `web/src/context/AuthContext.jsx`
   - `login(username, password)`：调用 `/auth/login` 获取 token，写入 localStorage，并设置默认请求头 Authorization
   - `logout()`：清理本地登录信息并移除默认 Authorization
@@ -342,10 +342,15 @@ npm run dev
    - 停止本机已安装的 MySQL 服务或其它占用 3306 的容器/服务
    - 使用 `docker ps` 查看是否已有 MySQL 容器在运行
 
-2. 后端启动报错 `JAVA_HOME not found`  
+2. Docker MySQL 启动失败（init.sql 挂载报错 not a directory）  
+   - 常见原因：旧容器绑定了错误的宿主机路径或文件/目录类型不匹配
+   - 处理方式：删除旧容器并重建（不会删除数据卷）：`docker rm -f express-mysql`，然后重新执行 `node start.js`
+   - 确认初始化脚本路径为：`server/database/init.sql`
+
+3. 后端启动报错 `JAVA_HOME not found`  
    - 配置系统环境变量 `JAVA_HOME` 并重启终端
 
-3. 前端依赖安装慢或失败  
+4. 前端依赖安装慢或失败  
    - 可切换 npm 源或使用更稳定的网络环境后重试
 
 ## 许可证
