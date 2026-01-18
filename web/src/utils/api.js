@@ -9,7 +9,15 @@ const api = axios.create({
 })
 
 api.interceptors.response.use(
-  response => response,
+  response => {
+    const payload = response?.data
+    if (payload && typeof payload.code === 'number' && payload.code !== 200) {
+      const err = new Error(payload.message || '请求失败')
+      err.response = response
+      return Promise.reject(err)
+    }
+    return response
+  },
   error => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token')
