@@ -81,8 +81,10 @@ Page({
     try {
       const res = await service.order.create({
         orderNo: this.data.expressNumber, // 快递单号对应orderNo
+        expressCompany: this.data.expressCompany,
         receiverName: this.data.receiverName,
         receiverPhone: this.data.receiverPhone,
+        receiverUserId: app.globalData.userId,
         cabinetId: this.data.cabinetId,
         compartmentId: this.data.compartmentId,
         orderType: 1, // 用户寄存

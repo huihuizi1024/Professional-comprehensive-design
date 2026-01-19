@@ -52,6 +52,7 @@ public class ExpressOrderService {
         order.setStatus(0);
         order.setPutInTime(LocalDateTime.now());
         order.setExpireTime(LocalDateTime.now().plusDays(3));
+        order.setCompartmentNo(compartment.getCompartmentNo());
 
         ExpressOrder saved = expressOrderRepository.save(order);
 

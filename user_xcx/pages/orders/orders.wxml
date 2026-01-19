@@ -10,7 +10,7 @@
         bindtap="onOrderTap"
       >
         <view class="order-header">
-          <view class="order-company">{{item.expressCompany}}</view>
+          <view class="order-company">{{item.expressCompany || ''}}</view>
           <view class="order-status status-{{item.status}}">
             {{item.status === 0 ? '待取件' : item.status === 1 ? '已取件' : '已过期'}}
           </view>
@@ -19,7 +19,7 @@
         <view class="order-content">
           <view class="order-row">
             <text class="label">快递单号：</text>
-            <text class="value">{{item.expressNumber}}</text>
+            <text class="value">{{item.orderNo}}</text>
           </view>
           <view class="order-row">
             <text class="label">收件人：</text>
@@ -31,15 +31,15 @@
           </view>
           <view class="order-row">
             <text class="label">快递柜：</text>
-            <text class="value">{{item.cabinetName}}</text>
+            <text class="value">快递柜 {{item.cabinetId}}</text>
           </view>
           <view class="order-row">
             <text class="label">格口：</text>
-            <text class="value">{{item.compartmentNumber}}</text>
+            <text class="value">{{item.compartmentNo}}</text>
           </view>
           <view class="order-row">
             <text class="label">存入时间：</text>
-            <text class="value">{{item.createTime}}</text>
+            <text class="value">{{item.putInTime || item.createdAt}}</text>
           </view>
         </view>
 

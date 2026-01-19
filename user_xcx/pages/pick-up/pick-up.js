@@ -43,7 +43,7 @@ Page({
       if (res.code === 200) {
         wx.showModal({
           title: '取件成功',
-          content: `格口 ${res.data.compartmentNumber} 已打开，请取出快递`,
+          content: `格口 ${res.data.compartmentNo} 已打开，请取出快递`,
           showCancel: false,
           success: () => {
             this.setData({ pickCode: '' })
@@ -72,7 +72,7 @@ Page({
         const order = res.data
         wx.showModal({
           title: '快递信息',
-          content: `快递公司：${order.expressCompany}\n快递单号：${order.expressNumber}\n收件人：${order.receiverName}\n存入时间：${order.createTime}`,
+          content: `快递公司：${order.expressCompany || ''}\n快递单号：${order.orderNo}\n收件人：${order.receiverName}\n存入时间：${order.putInTime || order.createdAt}`,
           showCancel: false
         })
       }
