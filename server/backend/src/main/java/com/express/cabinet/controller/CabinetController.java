@@ -68,6 +68,17 @@ public class CabinetController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ApiResponse<Cabinet> updateCabinet(@PathVariable Long id, @RequestBody Cabinet update) {
+        return ApiResponse.success("更新成功", cabinetService.updateCabinet(id, update));
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> deleteCabinet(@PathVariable Long id) {
+        cabinetService.deleteCabinet(id);
+        return ApiResponse.success("删除成功");
+    }
+
     @PutMapping("/compartments/{compartmentId}/status")
     public ApiResponse<Compartment> updateCompartmentStatus(@PathVariable Long compartmentId, @RequestBody Map<String, Integer> request) {
         try {
