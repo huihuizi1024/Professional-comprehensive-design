@@ -104,9 +104,18 @@ docker run --name express-mysql \
 
 #### 2) 启动后端
 
+Windows（PowerShell）：
+
 ```bash
 cd server/backend
-mvn spring-boot:run
+.\mvnw.cmd spring-boot:run
+```
+
+macOS/Linux：
+
+```bash
+cd server/backend
+./mvnw spring-boot:run
 ```
 
 后端服务将在 `http://localhost:8080` 启动。
@@ -154,12 +163,18 @@ npm run dev
 - 快递柜状态管理（启用/禁用）
 - 仓门管理
 - 远程开仓功能
+- 附近快递柜搜索
+- 快递柜距离排序
 
 ### 3. 订单管理
 - 订单列表查看
 - 订单搜索（按手机号）
 - 订单状态查看
 - 取件码管理
+- 取件码核验
+- 快递员投递
+- 我的订单（按登录用户）
+- 我的投递单（按登录快递员）
 
 ### 4. Web管理平台
 - 仪表盘统计
@@ -170,17 +185,16 @@ npm run dev
 
 系统初始化时会创建以下测试账号：
 
-| 用户名 | 密码 | 类型 | 说明 |
+| 用户名 | 密码 | 角色 | 说明 |
 |--------|------|------|------|
-| admin | 123456 | 普通用户 | 管理员账号 |
-| courier1 | 123456 | 快递员 | 快递员账号 |
-| user1 | 123456 | 普通用户 | 普通用户账号 |
+| admin | 123456 | 管理员 | 管理接口通过 `username=admin` 判断 |
+| courier1 | 123456 | 快递员（userType=1） | 快递员账号 |
+| user1 | 123456 | 普通用户（userType=0） | 普通用户账号 |
 
 ## 文档
 
 - API 接口文档：[`API.md`](./API.md)
 - 数据库文档（初始化、连接、表结构）：[`DATABASE.md`](./DATABASE.md)
-- 个人工作内容记录：[`WORKLOG.md`](./WORKLOG.md)
 
 ## 核心代码与方法说明
 
@@ -229,10 +243,14 @@ npm run dev
   - `GET /api/cabinets`：查询快递柜列表（JPA findAll）
   - `GET /api/cabinets/{id}`：按 ID 查询（不存在抛异常，返回 code=500）
   - `GET /api/cabinets/code/{cabinetCode}`：按编号查询
+  - `GET /api/cabinets/nearby?latitude=...&longitude=...&radius=...`：附近快递柜（radius 单位 km，可选）
+  - `GET /api/cabinets/sort-by-distance?latitude=...&longitude=...`：按距离排序返回快递柜列表
   - `GET /api/cabinets/{cabinetId}/compartments`：查询该柜的全部仓门
   - `GET /api/cabinets/{cabinetId}/compartments/available`：查询可用仓门（status=1 且 hasItem=0）
   - `POST /api/cabinets`：创建快递柜，并按 totalCompartments 自动生成仓门记录
   - `PUT /api/cabinets/{id}/status`：启用/禁用快递柜
+  - `PUT /api/cabinets/{id}`：更新快递柜信息
+  - `DELETE /api/cabinets/{id}`：删除快递柜
   - `PUT /api/cabinets/compartments/{compartmentId}/status`：设置仓门状态（故障/正常）
   - `POST /api/cabinets/compartments/{compartmentId}/open`：模拟开仓（仅校验仓门状态）
 - 服务：`server/backend/src/main/java/com/express/cabinet/service/CabinetService.java`
@@ -247,6 +265,10 @@ npm run dev
     - 仓门不存在：抛异常
     - 仓门 status=0：抛异常
     - 其余情况：视为“模拟开仓成功”（真实硬件可在这里对接）
+  - `findNearbyCabinets(latitude, longitude, radius)`
+    - 基于快递柜经纬度计算距离（Haversine），按半径筛选
+  - `sortCabinetsByDistance(latitude, longitude)`
+    - 基于快递柜经纬度计算距离（Haversine），返回按距离排序的列表
 
 #### 5) 订单模块
 
@@ -254,10 +276,14 @@ npm run dev
   - `GET /api/orders`：查询订单列表
   - `GET /api/orders/phone/{phone}`：按收件人手机号查订单
   - `GET /api/orders/user/{userId}`：按收件人用户 ID 查订单
+  - `GET /api/orders/me?status=...`：我的订单（可按状态筛选）
+  - `GET /api/orders/courier/me?status=...`：我的投递单（仅快递员）
   - `GET /api/orders/cabinet/{cabinetId}`：按快递柜查询订单
   - `GET /api/orders/status/{status}`：按状态查询订单（0待取/1已取/2超时）
   - `GET /api/orders/pick-code/{pickCode}`：按取件码查订单
+  - `POST /api/orders/verify-pick-code`：取件码核验
   - `POST /api/orders`：创建订单（后端生成 pickCode，且占用仓门）
+  - `POST /api/orders/courier/deliver`：快递员投递（自动关联 courierId）
   - `POST /api/orders/pick-up`：取件（更新订单状态，释放仓门）
 - 服务：`server/backend/src/main/java/com/express/cabinet/service/ExpressOrderService.java`
   - `createOrder(ExpressOrder order)`
@@ -272,6 +298,8 @@ npm run dev
     - 到期自动判定为超时并更新 status=2
     - 更新订单为 status=1，并写入取件时间
     - 将对应仓门 hasItem 置回 0
+  - `verifyPickCode(pickCode)`
+    - 校验取件码对应订单存在且可取件（未取且未超时）
 
 #### 6) 统计接口
 
@@ -330,7 +358,10 @@ npm run dev
 ### 已完成功能
 - [x] 用户认证系统
 - [x] 快递柜基础管理
+- [x] 附近快递柜搜索与距离排序
 - [x] 订单基础管理
+- [x] 取件码核验
+- [x] 基础统计接口与仪表盘
 - [x] Web管理平台基础功能
 
 ### 待开发功能
@@ -341,7 +372,7 @@ npm run dev
 - [ ] 人脸识别开柜功能
 - [ ] 温湿度传感器数据采集
 - [ ] 电表数据采集
-- [ ] 统计分析功能完善
+- [ ] 统计分析功能完善（趋势/报表等）
 
 ## 注意事项
 
