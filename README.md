@@ -165,7 +165,6 @@ npm run dev
 - 仪表盘统计
 - 快递柜管理
 - 订单管理
-- 用户管理
 
 ## 测试账号
 
@@ -216,9 +215,13 @@ npm run dev
     - 生成 JWT 并返回 `{ userId, username, userType, token }`
 - JWT 工具：`server/backend/src/main/java/com/express/cabinet/util/JwtUtil.java`
   - `generateToken(userId, username)`：生成 HS512 签名的 token（claims 包含 userId/username）
-  - `parseToken(token)`：解析 token 得到 claims（未做统一鉴权拦截时，主要用于扩展）
+  - `parseToken(token)`：解析 token 得到 claims
   - `getUserIdFromToken(token)`：从 token 中取出 userId
+  - `getUsernameFromToken(token)`：从 token 中取出 username
   - `isTokenExpired(token)`：判断 token 是否过期（解析异常视为过期）
+- 鉴权拦截：`server/backend/src/main/java/com/express/cabinet/config/JwtAuthInterceptor.java`
+  - 说明：除登录/注册外接口统一校验 `Authorization: Bearer <token>`；未登录返回 `code=401`
+- 登录态查询：`GET /api/auth/me`：返回当前登录用户信息 `{ userId, username, phone, realName, userType, status }`
 
 #### 4) 快递柜模块
 
@@ -248,27 +251,37 @@ npm run dev
 #### 5) 订单模块
 
 - 控制器：`server/backend/src/main/java/com/express/cabinet/controller/ExpressOrderController.java`
+  - `GET /api/orders`：查询订单列表
   - `GET /api/orders/phone/{phone}`：按收件人手机号查订单
   - `GET /api/orders/user/{userId}`：按收件人用户 ID 查订单
+  - `GET /api/orders/cabinet/{cabinetId}`：按快递柜查询订单
+  - `GET /api/orders/status/{status}`：按状态查询订单（0待取/1已取/2超时）
   - `GET /api/orders/pick-code/{pickCode}`：按取件码查订单
   - `POST /api/orders`：创建订单（后端生成 pickCode，且占用仓门）
   - `POST /api/orders/pick-up`：取件（更新订单状态，释放仓门）
 - 服务：`server/backend/src/main/java/com/express/cabinet/service/ExpressOrderService.java`
   - `createOrder(ExpressOrder order)`
     - 校验仓门存在、status=1、hasItem=0
+    - 校验订单号唯一性、快递柜存在且启用、仓门与快递柜匹配
     - 生成 6 位数字取件码（避免重复）
     - 设置订单状态 status=0、放入时间、过期时间（默认 +3 天）
     - 保存订单后将仓门 hasItem 置为 1
   - `pickUpOrder(pickCode)`
     - 校验取件码存在
     - 已取件/已超时：抛异常
+    - 到期自动判定为超时并更新 status=2
     - 更新订单为 status=1，并写入取件时间
     - 将对应仓门 hasItem 置回 0
 
-#### 6) 跨域（CORS）
+#### 6) 统计接口
+
+- 控制器：`server/backend/src/main/java/com/express/cabinet/controller/StatsController.java`
+  - `GET /api/stats`：返回快递柜数量、订单总量、待取/已取/超时数量等聚合数据
+
+#### 7) 跨域（CORS）
 
 - `server/backend/src/main/java/com/express/cabinet/config/CorsConfig.java`
-- 说明：当前配置为允许所有来源/头/方法（开发环境方便调试）。如需更严格控制，可按域名白名单配置并结合 Spring Security 做统一鉴权。
+- 说明：跨域来源白名单从 `application.yml` 的 `cors.allowed-origins` 读取（默认 `http://localhost:3000,http://localhost:5173`）。
 
 ### 前端（React + Vite）
 
@@ -290,7 +303,7 @@ npm run dev
 #### 3) 页面功能概览
 
 - `web/src/pages/Dashboard.jsx`
-  - 并发请求快递柜列表与“示例手机号订单”，计算统计卡片数据
+  - 调用 `GET /api/stats` 获取统计数据并渲染统计卡片
 - `web/src/pages/CabinetManagement.jsx`
   - 快递柜列表 + 仓门列表（展开行）
   - 新增快递柜：提交表单调用 `POST /cabinets`
