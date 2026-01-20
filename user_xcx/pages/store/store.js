@@ -95,18 +95,55 @@ Page({
       this.setData({ loading: false })
       
       if (res.code === 200) {
-        wx.showModal({
-          title: '存件成功',
-          content: `取件码：${res.data.pickCode}`,
-          showCancel: false,
+        // 确保取件码存在
+        const pickCode = res.data.pickCode || '未知取件码'
+        
+        // 先显示取件码
+        wx.showToast({
+          title: `存件成功，取件码：${pickCode}`,
+          icon: 'success',
+          duration: 3000, // 显示3秒
           success: () => {
-            wx.navigateBack()
+            // 3秒后自动返回
+            setTimeout(() => {
+              wx.navigateBack()
+            }, 3000)
           }
         })
+        
+        // 如果用户选择分享，则显示分享选项
+        setTimeout(() => {
+          wx.showModal({
+            title: '是否分享取件码？',
+            content: `取件码：${pickCode}`,
+            showCancel: true,
+            cancelText: '取消',
+            confirmText: '分享',
+            success: (result) => {
+              if (result.confirm) {
+                this.sharePickCode(pickCode)
+              }
+            }
+          })
+        }, 1000) // 1秒后显示分享选项
       }
     } catch (error) {
       wx.hideLoading()
       this.setData({ loading: false })
     }
+  },
+
+  // 分享取件码
+  sharePickCode(pickCode) {
+    // 复制取件码到剪贴板
+    wx.setClipboardData({
+      data: pickCode,
+      success: () => {
+        wx.showToast({ title: '取件码已复制到剪贴板，可分享给他人', icon: 'success' })
+      },
+      fail: () => {
+        wx.showToast({ title: '复制失败', icon: 'none' })
+      }
+    })
   }
 })

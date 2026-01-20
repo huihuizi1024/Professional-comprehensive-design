@@ -1,13 +1,27 @@
 const BASE_URL = 'http://localhost:8080/api'
 
+// 过滤掉值为null或undefined的参数
+function filterParams(params) {
+  const filtered = {}
+  for (const key in params) {
+    if (params.hasOwnProperty(key) && params[key] != null) {
+      filtered[key] = params[key]
+    }
+  }
+  return filtered
+}
+
 function request(url, method = 'GET', data = {}) {
   return new Promise((resolve, reject) => {
     const token = wx.getStorageSync('token') || ''
     
+    // 过滤掉null或undefined的参数
+    const filteredData = filterParams(data)
+    
     wx.request({
       url: BASE_URL + url,
       method: method,
-      data: data,
+      data: filteredData,
       header: {
         'Content-Type': 'application/json',
         'Authorization': token ? `Bearer ${token}` : ''

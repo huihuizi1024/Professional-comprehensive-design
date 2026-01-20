@@ -58,6 +58,18 @@ Page({
     })
   },
 
+  goToEditProfile() {
+    wx.navigateTo({
+      url: '/pages/edit-profile/edit-profile'
+    })
+  },
+
+  goToSendExpress() {
+    wx.navigateTo({
+      url: '/pages/send-express/send-express'
+    })
+  },
+
   handleLogout() {
     wx.showModal({
       title: '提示',

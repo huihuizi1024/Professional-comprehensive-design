@@ -5,7 +5,15 @@ Page({
   data: {
     orders: [],
     loading: false,
-    currentTab: 0
+    currentTab: 0,
+    currentStatus: null,
+    searchKeyword: '',
+    statusOptions: [
+      { value: null, text: '全部订单' },
+      { value: 0, text: '待取件' },
+      { value: 1, text: '已取件' },
+      { value: 2, text: '已过期' }
+    ]
   },
 
   onLoad() {
@@ -16,7 +24,7 @@ Page({
     this.loadOrders()
   },
 
-  async loadOrders() {
+  async loadOrders(status = this.data.currentStatus) {
     this.setData({ loading: true })
 
     try {
@@ -34,17 +42,56 @@ Page({
         return
       }
 
+      // 使用getByUserId API获取所有订单，然后在前端进行筛选
       const res = await service.order.getByUserId(userId)
       
       if (res.code === 200) {
+        let filteredOrders = res.data
+        
+        // 按状态筛选
+        if (status !== null && status !== undefined) {
+          filteredOrders = filteredOrders.filter(order => order.status === status)
+        }
+        
+        // 搜索功能
+        if (this.data.searchKeyword) {
+          const keyword = this.data.searchKeyword.toLowerCase()
+          filteredOrders = filteredOrders.filter(order => 
+            order.orderNo.toLowerCase().includes(keyword) ||
+            order.receiverName.toLowerCase().includes(keyword) ||
+            order.pickCode.includes(keyword)
+          )
+        }
+        
         this.setData({
-          orders: res.data,
-          loading: false
+          orders: filteredOrders,
+          loading: false,
+          currentStatus: status
         })
       }
     } catch (error) {
       this.setData({ loading: false })
+      wx.showToast({ title: '获取订单失败', icon: 'none' })
     }
+  },
+
+  onStatusChange(e) {
+    const status = e.currentTarget.dataset.status
+    this.setData({ currentStatus: status })
+    this.loadOrders(status)
+  },
+
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value })
+  },
+
+  onSearch() {
+    this.loadOrders()
+  },
+
+  onClearSearch() {
+    this.setData({ searchKeyword: '' })
+    this.loadOrders()
   },
 
   onTabChange(e) {

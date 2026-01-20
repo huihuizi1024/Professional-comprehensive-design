@@ -1,6 +1,40 @@
 <navigation-bar title="我的订单" back="{{true}}" color="black" background="#FFF"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
   <view class="container">
+    <!-- 搜索框 -->
+    <view class="search-section">
+      <view class="search-input-wrapper">
+        <input 
+          class="search-input" 
+          placeholder="搜索订单号、取件码或收件人" 
+          value="{{searchKeyword}}" 
+          bindinput="onSearchInput"
+        />
+        <view class="search-actions">
+          <text class="search-btn" bindtap="onSearch">搜索</text>
+          <text 
+            class="clear-btn" 
+            bindtap="onClearSearch" 
+            wx:if="{{searchKeyword}}"
+          >×</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 状态筛选 -->
+    <view class="filter-section">
+      <view 
+        class="filter-item" 
+        wx:for="{{statusOptions}}" 
+        wx:key="value"
+        data-status="{{item.value}}"
+        class="filter-item {{currentStatus === item.value ? 'active' : ''}}"
+        bindtap="onStatusChange"
+      >
+        {{item.text}}
+      </view>
+    </view>
+
     <view class="order-list">
       <view 
         class="order-item" 

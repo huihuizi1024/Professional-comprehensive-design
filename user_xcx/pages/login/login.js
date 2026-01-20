@@ -65,7 +65,7 @@ Page({
         })
         
         setTimeout(() => {
-          wx.redirectTo({
+          wx.switchTab({
             url: '/pages/cabinets/cabinets'
           })
         }, 1500)

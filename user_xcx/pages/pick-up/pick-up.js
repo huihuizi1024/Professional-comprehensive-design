@@ -1,9 +1,13 @@
 const service = require('../../utils/service.js')
+const app = getApp()
 
 Page({
   data: {
     pickCode: '',
-    loading: false
+    loading: false,
+    userOrders: [],
+    showOrdersList: false,
+    cabinetId: null
   },
 
   onPickCodeInput(e) {
@@ -79,5 +83,146 @@ Page({
     } catch (error) {
       wx.hideLoading()
     }
+  },
+
+  // 扫码功能
+  handleScan() {
+    wx.scanCode({
+      onlyFromCamera: false,
+      success: (res) => {
+        // 解析扫码结果，假设格式为 "cabinet_123" 或包含 cabinetId 的 JSON
+        let cabinetId = null
+        
+        try {
+          // 尝试解析 JSON
+          const scanData = JSON.parse(res.result)
+          cabinetId = scanData.cabinetId
+        } catch (e) {
+          // 如果不是 JSON，尝试从字符串中提取 cabinetId
+          const match = res.result.match(/cabinet_(\d+)/)
+          if (match && match[1]) {
+            cabinetId = match[1]
+          }
+        }
+        
+        if (cabinetId) {
+          this.setData({ cabinetId: cabinetId })
+          this.loadUserOrdersInCabinet(cabinetId)
+        } else {
+          wx.showToast({ title: '无效的快递柜二维码', icon: 'none' })
+        }
+      },
+      fail: (error) => {
+        wx.showToast({ title: '扫码失败', icon: 'none' })
+      }
+    })
+  },
+
+  // 加载用户在该快递柜的所有待取件订单
+  async loadUserOrdersInCabinet(cabinetId) {
+    wx.showLoading({ title: '加载中...' })
+    
+    try {
+      const userId = app.globalData.userId
+      if (!userId) {
+        wx.hideLoading()
+        wx.showToast({ title: '请先登录', icon: 'none' })
+        return
+      }
+      
+      // 获取用户所有待取件订单
+      const ordersRes = await service.order.getMyOrders(0) // 0: 待取件
+      
+      if (ordersRes.code === 200) {
+        // 筛选出该快递柜的订单
+        const cabinetOrders = ordersRes.data.filter(order => 
+          order.cabinetId === parseInt(cabinetId)
+        )
+        
+        wx.hideLoading()
+        
+        if (cabinetOrders.length > 0) {
+          this.setData({
+            userOrders: cabinetOrders,
+            showOrdersList: true
+          })
+        } else {
+          wx.showToast({ title: '该快递柜暂无您的待取件快递', icon: 'none' })
+        }
+      }
+    } catch (error) {
+      wx.hideLoading()
+      wx.showToast({ title: '加载订单失败', icon: 'none' })
+    }
+  },
+
+  // 打开单个格口
+  async openCompartment(e) {
+    const { compartmentId, pickCode } = e.currentTarget.dataset
+    
+    wx.showLoading({ title: '开仓中...' })
+    
+    try {
+      // 使用取件码开仓
+      const res = await service.order.pickUp(pickCode)
+      
+      wx.hideLoading()
+      
+      if (res.code === 200) {
+        wx.showToast({ title: '格口已打开', icon: 'success' })
+        
+        // 更新订单状态
+        const updatedOrders = this.data.userOrders.filter(order => order.pickCode !== pickCode)
+        this.setData({ userOrders: updatedOrders })
+      }
+    } catch (error) {
+      wx.hideLoading()
+      wx.showToast({ title: '开仓失败', icon: 'none' })
+    }
+  },
+
+  // 批量开仓
+  async openAllCompartments() {
+    const { userOrders } = this.data
+    
+    if (userOrders.length === 0) {
+      wx.showToast({ title: '没有待开仓的订单', icon: 'none' })
+      return
+    }
+    
+    wx.showLoading({ title: '批量开仓中...' })
+    
+    let successCount = 0
+    let failedCount = 0
+    
+    try {
+      for (const order of userOrders) {
+        try {
+          await service.order.pickUp(order.pickCode)
+          successCount++
+        } catch (error) {
+          failedCount++
+        }
+      }
+      
+      wx.hideLoading()
+      
+      wx.showModal({
+        title: '批量开仓完成',
+        content: `成功打开 ${successCount} 个格口，失败 ${failedCount} 个`,
+        showCancel: false,
+        success: () => {
+          this.setData({ userOrders: [], showOrdersList: false })
+        }
+      })
+    } catch (error) {
+      wx.hideLoading()
+      wx.showToast({ title: '批量开仓失败', icon: 'none' })
+    }
+  },
+
+  // 关闭订单列表
+  closeOrdersList() {
+    this.setData({ showOrdersList: false, userOrders: [] })
   }
 })

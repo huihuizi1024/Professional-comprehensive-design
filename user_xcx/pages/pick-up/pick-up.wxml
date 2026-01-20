@@ -23,7 +23,8 @@
       <view class="button-group">
         <button class="btn-query" bindtap="handleQuery">查询快递</button>
         <button class="btn-pickup" bindtap="handlePickUp" loading="{{loading}}">确认取件</button>
-      </view>
+        <button class="btn-scan" bindtap="handleScan">扫码取件</button>
+    </view>
     </view>
 
     <view class="tips">

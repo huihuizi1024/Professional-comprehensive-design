@@ -8,11 +8,36 @@
     "pages/store/store",
     "pages/pick-up/pick-up",
     "pages/orders/orders",
-    "pages/profile/profile"
+    "pages/profile/profile",
+    "pages/send-express/send-express",
+    "pages/edit-profile/edit-profile"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationStyle": "default"
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/cabinets/cabinets",
+        "text": "快递柜"
+      },
+      {
+        "pagePath": "pages/pick-up/pick-up",
+        "text": "取件"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",

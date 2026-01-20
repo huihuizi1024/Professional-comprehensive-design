@@ -8,6 +8,20 @@ module.exports = {
     
     login(data) {
       return api.post('/auth/login', data)
+    },
+    
+    getMe() {
+      return api.get('/auth/me')
+    }
+  },
+  
+  user: {
+    getMe() {
+      return api.get('/auth/me')
+    },
+    
+    updateMe(data) {
+      return api.put('/users/me', data)
     }
   },
   
@@ -32,6 +46,14 @@ module.exports = {
       return api.get(`/cabinets/${cabinetId}/compartments/available`)
     },
     
+    getNearby(latitude, longitude, radius) {
+      return api.get('/cabinets/nearby', { latitude, longitude, radius })
+    },
+    
+    sortByDistance(latitude, longitude) {
+      return api.get('/cabinets/sort-by-distance', { latitude, longitude })
+    },
+    
     openCompartment(compartmentId) {
       return api.post(`/cabinets/compartments/${compartmentId}/open`)
     }
@@ -44,6 +66,10 @@ module.exports = {
     
     getByUserId(userId) {
       return api.get(`/orders/user/${userId}`)
+    },
+    
+    getMyOrders(status) {
+      return api.get('/orders/me', { status })
     },
     
     getByPickCode(pickCode) {

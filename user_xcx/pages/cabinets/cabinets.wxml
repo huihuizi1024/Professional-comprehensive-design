@@ -14,6 +14,17 @@
         </view>
         <text class="action-text">我的订单</text>
       </view>
+      <view class="action-item" bindtap="getCurrentLocation">
+        <view class="action-icon">
+          <text class="icon">📍</text>
+        </view>
+        <text class="action-text">附近快递柜</text>
+      </view>
+    </view>
+
+    <!-- 定位提示 -->
+    <view class="location-tip" wx:if="{{showLocationTip}}">
+      <text class="tip-text">已显示附近快递柜</text>
     </view>
 
     <view class="section-title">附近快递柜</view>
