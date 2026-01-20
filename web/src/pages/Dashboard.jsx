@@ -6,16 +6,25 @@ import {
   CheckCircleOutlined, 
   ClockCircleOutlined,
   ThunderboltOutlined,
-  DatabaseOutlined
+  DatabaseOutlined,
+  WarningOutlined,
+  StopOutlined
 } from '@ant-design/icons'
 import api from '../utils/api'
 
 function Dashboard() {
   const [stats, setStats] = useState({
     totalCabinets: 0,
+    enabledCabinets: 0,
+    disabledCabinets: 0,
+    totalCompartments: 0,
+    faultCompartments: 0,
+    occupiedCompartments: 0,
+    totalPowerConsumption: 0,
     totalOrders: 0,
     completedOrders: 0,
-    pendingOrders: 0
+    pendingOrders: 0,
+    timeoutOrders: 0
   })
   const [loading, setLoading] = useState(true)
 
@@ -25,19 +34,20 @@ function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const [cabinetsRes, ordersRes] = await Promise.all([
-        api.get('/cabinets'),
-        api.get('/orders/phone/13800138002') // Note: In a real app, this should probably be a general stats API
-      ])
-      
-      const cabinets = cabinetsRes.data.data || []
-      const orders = ordersRes.data.data || []
-      
+      const statsRes = await api.get('/stats')
+      const data = statsRes.data.data || {}
       setStats({
-        totalCabinets: cabinets.length,
-        totalOrders: orders.length,
-        completedOrders: orders.filter(o => o.status === 1).length,
-        pendingOrders: orders.filter(o => o.status === 0).length
+        totalCabinets: data.totalCabinets ?? 0,
+        enabledCabinets: data.enabledCabinets ?? 0,
+        disabledCabinets: data.disabledCabinets ?? 0,
+        totalCompartments: data.totalCompartments ?? 0,
+        faultCompartments: data.faultCompartments ?? 0,
+        occupiedCompartments: data.occupiedCompartments ?? 0,
+        totalPowerConsumption: Number(data.totalPowerConsumption ?? 0),
+        totalOrders: data.totalOrders ?? 0,
+        completedOrders: data.completedOrders ?? 0,
+        pendingOrders: data.pendingOrders ?? 0,
+        timeoutOrders: data.timeoutOrders ?? 0
       })
     } catch (error) {
       console.error('获取统计数据失败:', error)
@@ -88,7 +98,7 @@ function Dashboard() {
         <Col xs={24} sm={12} lg={6}>
           <StatCard
             title="在线柜组"
-            value={stats.totalCabinets}
+            value={stats.enabledCabinets}
             prefix={<AppstoreOutlined />}
             color="#00f3ff"
             suffix="组"
@@ -119,6 +129,45 @@ function Dashboard() {
             prefix={<ClockCircleOutlined />}
             color="#ff0055"
             suffix="单"
+          />
+        </Col>
+      </Row>
+
+      <Row gutter={[24, 24]} style={{ marginTop: '24px' }}>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard
+            title="禁用柜组"
+            value={stats.disabledCabinets}
+            prefix={<StopOutlined />}
+            color="#ff9900"
+            suffix="组"
+          />
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard
+            title="仓门故障"
+            value={stats.faultCompartments}
+            prefix={<WarningOutlined />}
+            color="#ff0055"
+            suffix="个"
+          />
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard
+            title="在库仓门"
+            value={stats.occupiedCompartments}
+            prefix={<DatabaseOutlined />}
+            color="#00ff9d"
+            suffix="个"
+          />
+        </Col>
+        <Col xs={24} sm={12} lg={6}>
+          <StatCard
+            title="日用电量"
+            value={stats.totalPowerConsumption}
+            prefix={<ThunderboltOutlined />}
+            color="#00f3ff"
+            suffix="度"
           />
         </Col>
       </Row>

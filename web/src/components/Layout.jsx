@@ -7,7 +7,8 @@ import {
   FileTextOutlined,
   LogoutOutlined,
   UserOutlined,
-  RocketOutlined
+  RocketOutlined,
+  TeamOutlined
 } from '@ant-design/icons'
 import { useAuth } from '../context/AuthContext'
 
@@ -20,6 +21,8 @@ function Layout() {
   const {
     token: { colorBgContainer, colorPrimary },
   } = theme.useToken()
+
+  const isAdmin = user?.username === 'admin'
 
   const menuItems = [
     {
@@ -36,7 +39,16 @@ function Layout() {
       key: '/orders',
       icon: <FileTextOutlined />,
       label: '物流追踪', // Renamed from "Order Management"
-    }
+    },
+    ...(isAdmin
+      ? [
+          {
+            key: '/users',
+            icon: <TeamOutlined />,
+            label: '用户/骑手'
+          }
+        ]
+      : [])
   ]
 
   const handleLogout = () => {

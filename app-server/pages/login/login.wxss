@@ -1,0 +1,43 @@
+.container {
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  margin-top: 100rpx;
+  margin-bottom: 80rpx;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+.form {
+  width: 100%;
+}
+
+.input-group {
+  margin-bottom: 40rpx;
+}
+
+.label {
+  display: block;
+  margin-bottom: 20rpx;
+  font-size: 32rpx;
+  color: #333;
+}
+
+.input {
+  border: 1px solid #ccc;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 32rpx;
+}
+
+.btn-login {
+  margin-top: 60rpx;
+  width: 100%;
+}

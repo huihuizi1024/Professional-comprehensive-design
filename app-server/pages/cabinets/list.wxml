@@ -1,0 +1,22 @@
+<view class="container">
+  <view class="header">
+    <text class="title">附近快递柜</text>
+    <text class="subtitle">请选择一个快递柜进行投递</text>
+  </view>
+
+  <scroll-view scroll-y class="list">
+    <block wx:if="{{cabinets.length > 0}}">
+      <view class="item" wx:for="{{cabinets}}" wx:key="id" bindtap="selectCabinet" data-id="{{item.id}}" data-code="{{item.cabinetCode}}">
+        <view class="item-header">
+          <text class="item-title">{{item.cabinetCode}}</text>
+          <text class="item-status {{item.status === 1 ? 'status-active' : 'status-inactive'}}">{{item.status === 1 ? '正常' : '维护中'}}</text>
+        </view>
+        <view class="item-location">📍 {{item.location || '未知位置'}}</view>
+        <view class="item-info">总格口: {{item.totalCompartments}}</view>
+      </view>
+    </block>
+    <view wx:else class="empty">
+      <text>暂无附近的快递柜</text>
+    </view>
+  </scroll-view>
+</view>

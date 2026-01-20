@@ -28,6 +28,12 @@ public class Cabinet {
     @Column(name = "power_consumption", precision = 10, scale = 2)
     private BigDecimal powerConsumption;
 
+    @Column(precision = 10, scale = 6)
+    private Double latitude;
+
+    @Column(precision = 10, scale = 6)
+    private Double longitude;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
