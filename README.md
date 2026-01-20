@@ -180,6 +180,7 @@ npm run dev
 
 - API 接口文档：[`API.md`](./API.md)
 - 数据库文档（初始化、连接、表结构）：[`DATABASE.md`](./DATABASE.md)
+- 个人工作内容记录：[`WORKLOG.md`](./WORKLOG.md)
 
 ## 核心代码与方法说明
 

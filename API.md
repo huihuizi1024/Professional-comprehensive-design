@@ -15,37 +15,6 @@
 - 当前实现中业务异常可能仍返回 HTTP 200，但 `code=500`；客户端应以 `code` 判断业务成功/失败（Web 端已做统一拦截处理）。
 - 后端已对除 `/api/auth/login`、`/api/auth/register` 外的接口做统一鉴权拦截；请求需携带 `Authorization: Bearer <token>`，否则返回 `code=401`。
 
-## 数据字典
-
-### 用户类型（userType）
-
-| 值 | 含义 |
-|---|---|
-| 0 | 普通用户 |
-| 1 | 快递员 |
-
-### 快递柜/仓门状态
-
-| 字段 | 值 | 含义 |
-|---|---:|---|
-| Cabinet.status | 0 | 禁用 |
-| Cabinet.status | 1 | 启用 |
-| Compartment.status | 0 | 故障/禁用 |
-| Compartment.status | 1 | 正常 |
-| Compartment.hasItem | 0 | 空仓 |
-| Compartment.hasItem | 1 | 有物品 |
-
-### 订单状态与类型
-
-| 字段 | 值 | 含义 |
-|---|---:|---|
-| ExpressOrder.status | 0 | 待取件 |
-| ExpressOrder.status | 1 | 已取件 |
-| ExpressOrder.status | 2 | 已超时 |
-| ExpressOrder.orderType | 0 | 快递入柜（快递员投递） |
-| ExpressOrder.orderType | 1 | 用户寄存 |
-| ExpressOrder.orderType | 2 | 用户发件 |
-
 ## 认证接口
 
 | 接口名称 | 方法 | 路径 | 是否需要登录 | 请求参数（JSON） | 返回 data |
