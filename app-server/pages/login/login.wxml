@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="header">
+    <text class="title">快递员登录</text>
+  </view>
+  
+  <view class="form">
+    <view class="input-group">
+      <text class="label">账号</text>
+      <input class="input" placeholder="请输入用户名" bindinput="onUsernameInput" value="{{username}}" />
+    </view>
+    
+    <view class="input-group">
+      <text class="label">密码</text>
+      <input class="input" placeholder="请输入密码" password="true" bindinput="onPasswordInput" value="{{password}}" />
+    </view>
+    
+    <button class="btn-login" type="primary" bindtap="handleLogin">登录</button>
+  </view>
+</view>
