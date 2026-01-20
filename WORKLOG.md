@@ -76,3 +76,17 @@
   - 前端：创建请求补齐 `status/powerConsumption`，并对 `cabinetCode` 做 trim，减少输入误差
 - 统一前端对业务错误的处理：Axios 响应拦截器基于 `ApiResponse.code` 判断成功与否（code!=200 视为失败），避免后端业务异常返回 HTTP 200 时前端误报“创建成功”
 - 排查并定位 Docker 启动 MySQL 容器失败（init.sql 挂载 not a directory）：结论为旧容器绑定了错误的宿主机路径（`.../database/init.sql`），处理方式为删除旧容器并按正确路径 `server/database/init.sql` 重新创建
+
+## 2026-01-20 Web 登录态持久化与启动故障修复、后端接口完善与鉴权补齐
+
+- 完善 Web 端 token 登录态持久化：启动时从 localStorage 恢复 token/user，并设置 Axios 默认 Authorization
+- 增加 JWT 过期校验与自动清理：token 缺失或过期时清除本地缓存并回到未登录态
+- 修复前端无法启动（Vite 编译失败）：解决 AuthContext 中重复声明 helper 函数导致的 `Identifier has already been declared`
+- 优化路由守卫体验：增加 loading 状态避免刷新时鉴权初始化未完成导致的误跳转
+- 补齐服务端 JWT 鉴权：增加拦截器统一校验 `Authorization: Bearer <token>`，默认保护除登录/注册外的所有接口
+- 新增登录态查询接口：`GET /api/auth/me` 返回当前登录用户信息
+- 补齐订单查询与统计接口：新增订单全量/按柜/按状态查询，以及 `GET /api/stats` 聚合统计
+- 完善订单创建/取件关键校验：补齐订单号唯一性、柜/仓匹配、快递柜禁用限制、到期超时判定等
+- 统一异常返回结构：参数校验/鉴权失败/通用异常统一封装为 `ApiResponse`
+- 收紧跨域配置：CORS 不再放开所有来源，改为读取 `application.yml` 的白名单配置
+- 完善文档与演示：API 增加数据字典与权限说明；仪表盘改用 `GET /api/stats` 获取统计数据
