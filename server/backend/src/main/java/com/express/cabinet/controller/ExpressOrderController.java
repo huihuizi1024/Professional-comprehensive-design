@@ -71,6 +71,16 @@ public class ExpressOrderController {
         }
     }
 
+    @PostMapping("/verify-pick-code")
+    public ApiResponse<ExpressOrder> verifyPickCode(@RequestBody Map<String, String> request) {
+        try {
+            String pickCode = request.get("pickCode");
+            return ApiResponse.success("核验成功", expressOrderService.verifyPickCode(pickCode));
+        } catch (Exception e) {
+            return ApiResponse.error(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ApiResponse<ExpressOrder> createOrder(@RequestBody ExpressOrder order) {
         try {

@@ -39,6 +39,23 @@ public class CabinetController {
         }
     }
 
+    @GetMapping("/nearby")
+    public ApiResponse<List<Cabinet>> getNearbyCabinets(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam(required = false) Double radius
+    ) {
+        return ApiResponse.success(cabinetService.findNearbyCabinets(latitude, longitude, radius));
+    }
+
+    @GetMapping("/sort-by-distance")
+    public ApiResponse<List<Cabinet>> sortCabinetsByDistance(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude
+    ) {
+        return ApiResponse.success(cabinetService.sortCabinetsByDistance(latitude, longitude));
+    }
+
     @GetMapping("/{cabinetId}/compartments")
     public ApiResponse<List<Compartment>> getCompartments(@PathVariable Long cabinetId) {
         return ApiResponse.success(cabinetService.getCompartmentsByCabinetId(cabinetId));

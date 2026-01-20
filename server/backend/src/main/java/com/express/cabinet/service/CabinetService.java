@@ -142,5 +142,48 @@ public class CabinetService {
         // 模拟开仓操作
         // 实际应该调用硬件接口
     }
+
+    public List<Cabinet> findNearbyCabinets(Double latitude, Double longitude, Double radius) {
+        if (latitude == null || longitude == null) {
+            throw new RuntimeException("经纬度不能为空");
+        }
+        // 默认半径 5km
+        double searchRadius = (radius == null || radius <= 0) ? 5.0 : radius;
+
+        return cabinetRepository.findAll().stream()
+                .filter(c -> {
+                    if (c.getLatitude() == null || c.getLongitude() == null) return false;
+                    double dist = getDistance(latitude, longitude, c.getLatitude(), c.getLongitude());
+                    return dist <= searchRadius;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Cabinet> sortCabinetsByDistance(Double latitude, Double longitude) {
+        if (latitude == null || longitude == null) {
+            throw new RuntimeException("经纬度不能为空");
+        }
+        return cabinetRepository.findAll().stream()
+                .sorted((c1, c2) -> {
+                    double d1 = (c1.getLatitude() == null || c1.getLongitude() == null) ? Double.MAX_VALUE :
+                            getDistance(latitude, longitude, c1.getLatitude(), c1.getLongitude());
+                    double d2 = (c2.getLatitude() == null || c2.getLongitude() == null) ? Double.MAX_VALUE :
+                            getDistance(latitude, longitude, c2.getLatitude(), c2.getLongitude());
+                    return Double.compare(d1, d2);
+                })
+                .collect(Collectors.toList());
+    }
+
+    // 计算两点距离（Haversine公式），返回单位：公里
+    private double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        double R = 6371; // 地球半径 km
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
 }
 
