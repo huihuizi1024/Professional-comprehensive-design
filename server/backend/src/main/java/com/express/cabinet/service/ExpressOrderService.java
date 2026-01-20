@@ -70,6 +70,26 @@ public class ExpressOrderService {
         return order;
     }
 
+    public ExpressOrder verifyPickCode(String pickCode) {
+        ExpressOrder order = getOrderByPickCode(pickCode);
+        
+        if (order.getStatus() == 1) {
+            throw new RuntimeException("快递已被取走");
+        }
+        
+        if (order.getStatus() == 2) {
+            throw new RuntimeException("快递已超时");
+        }
+
+        if (order.getExpireTime() != null && order.getExpireTime().isBefore(LocalDateTime.now())) {
+            order.setStatus(2);
+            expressOrderRepository.save(order);
+            throw new RuntimeException("快递已超时");
+        }
+        
+        return order;
+    }
+
     @Transactional
     public ExpressOrder createOrder(ExpressOrder order) {
         if (order == null) {

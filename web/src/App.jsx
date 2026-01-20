@@ -5,6 +5,7 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import CabinetManagement from './pages/CabinetManagement'
 import OrderManagement from './pages/OrderManagement'
+import UsersManagement from './pages/UsersManagement'
 import Layout from './components/Layout'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
@@ -35,6 +36,7 @@ function AppRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="cabinets" element={<CabinetManagement />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route path="users" element={<UsersManagement />} />
       </Route>
     </Routes>
   )

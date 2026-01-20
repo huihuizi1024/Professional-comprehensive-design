@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS cabinets (
     status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：0-禁用，1-启用',
     total_compartments INT NOT NULL DEFAULT 8 COMMENT '总仓数',
     power_consumption DECIMAL(10,2) DEFAULT 0 COMMENT '日用电量（度）',
+    latitude DECIMAL(10,6) COMMENT '纬度',
+    longitude DECIMAL(10,6) COMMENT '经度',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_cabinet_code (cabinet_code),
@@ -91,9 +93,9 @@ INSERT INTO users (username, password, phone, real_name, user_type, status) VALU
 
 -- 密码都是：123456
 
-INSERT INTO cabinets (cabinet_code, location, status, total_compartments) VALUES
-('CAB001', '北京市朝阳区XX街道XX号', 1, 8),
-('CAB002', '北京市海淀区XX街道XX号', 1, 8);
+INSERT INTO cabinets (cabinet_code, location, status, total_compartments, latitude, longitude) VALUES
+('CAB001', '北京市朝阳区XX街道XX号', 1, 8, 39.904200, 116.407400),
+('CAB002', '北京市海淀区XX街道XX号', 1, 8, 39.989600, 116.316800);
 
 INSERT INTO compartments (cabinet_id, compartment_no, status, has_item) VALUES
 (1, 1, 1, 0), (1, 2, 1, 0), (1, 3, 1, 0), (1, 4, 1, 0),
