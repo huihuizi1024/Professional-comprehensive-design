@@ -1,0 +1,8 @@
+<view wx:for="{{orders}}" wx:key="id" class="order">
+  <view>柜体：{{item.cabinetId}}</view>
+  <view>仓门：{{item.compartmentId}}</view>
+  <view>发件人：{{item.senderName}} {{item.senderPhone}}</view>
+  <button data-id="{{item.compartmentId}}" bindtap="pickup">
+    开仓取件
+  </button>
+</view>
