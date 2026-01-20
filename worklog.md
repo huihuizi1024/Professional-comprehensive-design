@@ -115,7 +115,6 @@ cd "e:\professional_design\project3\Professional-comprehensive-design\server\bac
 ### 功能问题修复
 - **订单显示问题**：修复订单页面字段映射，确保快递单号、格口等信息完整显示
 - **订单创建问题**：添加receiverUserId字段设置，确保订单与用户关联
-- **取件功能问题**：修复取件页面格口号显示逻辑
 - **数据传递问题**：确保订单创建时传递完整的快递公司信息
 
 ### 技术改进
