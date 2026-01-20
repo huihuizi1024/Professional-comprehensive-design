@@ -4,6 +4,7 @@ import com.express.cabinet.entity.Cabinet;
 import com.express.cabinet.entity.Compartment;
 import com.express.cabinet.repository.CabinetRepository;
 import com.express.cabinet.repository.CompartmentRepository;
+import com.express.cabinet.repository.ExpressOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 public class CabinetService {
     private final CabinetRepository cabinetRepository;
     private final CompartmentRepository compartmentRepository;
+    private final ExpressOrderRepository expressOrderRepository;
 
     public List<Cabinet> getAllCabinets() {
         return cabinetRepository.findAll();
@@ -85,6 +87,9 @@ public class CabinetService {
 
     @Transactional
     public Cabinet updateCabinetStatus(Long id, Integer status) {
+        if (status == null || (status != 0 && status != 1)) {
+            throw new RuntimeException("状态参数不正确");
+        }
         Cabinet cabinet = getCabinetById(id);
         cabinet.setStatus(status);
         return cabinetRepository.save(cabinet);
@@ -92,10 +97,39 @@ public class CabinetService {
 
     @Transactional
     public Compartment updateCompartmentStatus(Long compartmentId, Integer status) {
+        if (status == null || (status != 0 && status != 1)) {
+            throw new RuntimeException("状态参数不正确");
+        }
         Compartment compartment = compartmentRepository.findById(compartmentId)
                 .orElseThrow(() -> new RuntimeException("仓门不存在"));
         compartment.setStatus(status);
         return compartmentRepository.save(compartment);
+    }
+
+    @Transactional
+    public Cabinet updateCabinet(Long id, Cabinet update) {
+        if (update == null) {
+            throw new RuntimeException("参数不能为空");
+        }
+        Cabinet cabinet = getCabinetById(id);
+
+        if (update.getLocation() != null) {
+            cabinet.setLocation(update.getLocation());
+        }
+        if (update.getPowerConsumption() != null) {
+            cabinet.setPowerConsumption(update.getPowerConsumption());
+        }
+        return cabinetRepository.save(cabinet);
+    }
+
+    @Transactional
+    public void deleteCabinet(Long id) {
+        Cabinet cabinet = getCabinetById(id);
+        if (!expressOrderRepository.findByCabinetId(id).isEmpty()) {
+            throw new RuntimeException("该快递柜存在关联订单，无法删除");
+        }
+        compartmentRepository.deleteByCabinetId(id);
+        cabinetRepository.delete(cabinet);
     }
 
     @Transactional

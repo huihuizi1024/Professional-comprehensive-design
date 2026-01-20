@@ -25,19 +25,13 @@ function Dashboard() {
 
   const fetchStats = async () => {
     try {
-      const [cabinetsRes, ordersRes] = await Promise.all([
-        api.get('/cabinets'),
-        api.get('/orders/phone/13800138002') // Note: In a real app, this should probably be a general stats API
-      ])
-      
-      const cabinets = cabinetsRes.data.data || []
-      const orders = ordersRes.data.data || []
-      
+      const statsRes = await api.get('/stats')
+      const data = statsRes.data.data || {}
       setStats({
-        totalCabinets: cabinets.length,
-        totalOrders: orders.length,
-        completedOrders: orders.filter(o => o.status === 1).length,
-        pendingOrders: orders.filter(o => o.status === 0).length
+        totalCabinets: data.totalCabinets ?? 0,
+        totalOrders: data.totalOrders ?? 0,
+        completedOrders: data.completedOrders ?? 0,
+        pendingOrders: data.pendingOrders ?? 0
       })
     } catch (error) {
       console.error('获取统计数据失败:', error)
