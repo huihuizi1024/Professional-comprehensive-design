@@ -44,6 +44,12 @@ public class JwtUtil {
         return Long.valueOf(claims.get("userId").toString());
     }
 
+    public String getUsernameFromToken(String token) {
+        Claims claims = parseToken(token);
+        Object username = claims.get("username");
+        return username == null ? null : username.toString();
+    }
+
     public boolean isTokenExpired(String token) {
         try {
             Claims claims = parseToken(token);

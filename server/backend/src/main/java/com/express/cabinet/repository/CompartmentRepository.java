@@ -11,5 +11,10 @@ public interface CompartmentRepository extends JpaRepository<Compartment, Long> 
     List<Compartment> findByCabinetId(Long cabinetId);
     Optional<Compartment> findByCabinetIdAndCompartmentNo(Long cabinetId, Integer compartmentNo);
     List<Compartment> findByCabinetIdAndStatus(Long cabinetId, Integer status);
+    void deleteByCabinetId(Long cabinetId);
+
+    long countByStatus(Integer status);
+
+    long countByHasItem(Integer hasItem);
 }
 

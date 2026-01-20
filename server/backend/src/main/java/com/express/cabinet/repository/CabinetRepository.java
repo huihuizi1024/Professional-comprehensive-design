@@ -8,5 +8,7 @@ import java.util.Optional;
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet, Long> {
     Optional<Cabinet> findByCabinetCode(String cabinetCode);
+
+    long countByStatus(Integer status);
 }
 

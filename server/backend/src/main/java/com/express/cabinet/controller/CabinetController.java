@@ -39,6 +39,23 @@ public class CabinetController {
         }
     }
 
+    @GetMapping("/nearby")
+    public ApiResponse<List<Cabinet>> getNearbyCabinets(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude,
+            @RequestParam(required = false) Double radius
+    ) {
+        return ApiResponse.success(cabinetService.findNearbyCabinets(latitude, longitude, radius));
+    }
+
+    @GetMapping("/sort-by-distance")
+    public ApiResponse<List<Cabinet>> sortCabinetsByDistance(
+            @RequestParam Double latitude,
+            @RequestParam Double longitude
+    ) {
+        return ApiResponse.success(cabinetService.sortCabinetsByDistance(latitude, longitude));
+    }
+
     @GetMapping("/{cabinetId}/compartments")
     public ApiResponse<List<Compartment>> getCompartments(@PathVariable Long cabinetId) {
         return ApiResponse.success(cabinetService.getCompartmentsByCabinetId(cabinetId));
@@ -66,6 +83,17 @@ public class CabinetController {
         } catch (Exception e) {
             return ApiResponse.error(e.getMessage());
         }
+    }
+
+    @PutMapping("/{id}")
+    public ApiResponse<Cabinet> updateCabinet(@PathVariable Long id, @RequestBody Cabinet update) {
+        return ApiResponse.success("更新成功", cabinetService.updateCabinet(id, update));
+    }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<String> deleteCabinet(@PathVariable Long id) {
+        cabinetService.deleteCabinet(id);
+        return ApiResponse.success("删除成功");
     }
 
     @PutMapping("/compartments/{compartmentId}/status")

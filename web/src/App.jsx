@@ -1,15 +1,23 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { ConfigProvider, theme } from 'antd'
+import { ConfigProvider, theme, Spin } from 'antd'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import CabinetManagement from './pages/CabinetManagement'
 import OrderManagement from './pages/OrderManagement'
+import UsersManagement from './pages/UsersManagement'
 import Layout from './components/Layout'
 import { AuthProvider, useAuth } from './context/AuthContext'
 
 function PrivateRoute({ children }) {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh' }}>
+        <Spin size="large" />
+      </div>
+    )
+  }
   return user ? children : <Navigate to="/login" />
 }
 
@@ -28,6 +36,7 @@ function AppRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="cabinets" element={<CabinetManagement />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route path="users" element={<UsersManagement />} />
       </Route>
     </Routes>
   )
