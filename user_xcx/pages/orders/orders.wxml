@@ -1,4 +1,4 @@
-<navigation-bar title="我的订单" back="{{true}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="我的订单" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
   <view class="container">
     <!-- 搜索框 -->

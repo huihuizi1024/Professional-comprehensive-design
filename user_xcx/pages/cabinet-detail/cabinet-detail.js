@@ -28,8 +28,16 @@ Page({
       ])
 
       if (cabinetRes.code === 200) {
+        // 映射字段名，适配前端显示
+        const mappedCabinet = {
+          id: cabinetRes.data.id,
+          name: cabinetRes.data.cabinetCode || cabinetRes.data.name,
+          code: cabinetRes.data.cabinetCode || cabinetRes.data.code,
+          address: cabinetRes.data.location || cabinetRes.data.address,
+          status: cabinetRes.data.status
+        }
         this.setData({
-          cabinet: cabinetRes.data,
+          cabinet: mappedCabinet,
           loading: false
         })
       }
@@ -41,8 +49,15 @@ Page({
       }
 
       if (availableRes.code === 200) {
+        // 映射字段名，确保compartmentNo字段存在
+        const mappedAvailable = availableRes.data.map(item => ({
+          id: item.id,
+          compartmentNo: item.compartmentNo || item.number || item.id,
+          status: item.status,
+          hasItem: item.hasItem || 0
+        }))
         this.setData({
-          availableCompartments: availableRes.data
+          availableCompartments: mappedAvailable
         })
       }
     } catch (error) {

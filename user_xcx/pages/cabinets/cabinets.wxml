@@ -1,30 +1,17 @@
-<navigation-bar title="快递柜列表" back="{{false}}" color="black" background="#FFF"></navigation-bar>
+<navigation-bar title="快递柜列表" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
   <view class="container">
-    <view class="quick-actions">
-      <view class="action-item" bindtap="goToPickUp">
-        <view class="action-icon">
-          <text class="icon">📦</text>
-        </view>
-        <text class="action-text">我要取件</text>
-      </view>
-      <view class="action-item" bindtap="goToOrders">
-        <view class="action-icon">
-          <text class="icon">📋</text>
-        </view>
-        <text class="action-text">我的订单</text>
-      </view>
-      <view class="action-item" bindtap="getCurrentLocation">
-        <view class="action-icon">
-          <text class="icon">📍</text>
-        </view>
-        <text class="action-text">附近快递柜</text>
-      </view>
-    </view>
-
     <!-- 定位提示 -->
     <view class="location-tip" wx:if="{{showLocationTip}}">
       <text class="tip-text">已显示附近快递柜</text>
+    </view>
+
+    <!-- 获取附近快递柜按钮 -->
+    <view class="location-button-container">
+      <button class="location-button" bindtap="getCurrentLocation">
+        <text class="location-icon">📍</text>
+        <text>获取附近快递柜</text>
+      </button>
     </view>
 
     <view class="section-title">附近快递柜</view>

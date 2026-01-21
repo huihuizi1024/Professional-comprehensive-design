@@ -41,19 +41,19 @@ Page({
       this.showLoginTip()
       return
     }
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/orders/orders'
     })
   },
 
   goToPickUp() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/pick-up/pick-up'
     })
   },
 
   goToCabinets() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/cabinets/cabinets'
     })
   },

@@ -4,7 +4,7 @@
 }
 
 .container {
-  padding: 40rpx 30rpx;
+  padding: 20rpx;
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 88rpx);
@@ -12,10 +12,10 @@
 
 .pick-up-card {
   background-color: #fff;
-  border-radius: 30rpx;
-  padding: 50rpx 40rpx;
-  margin-bottom: 30rpx;
-  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.2);
+  border-radius: 20rpx;
+  padding: 30rpx 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -64,7 +64,8 @@
 
 .button-group {
   display: flex;
-  gap: 20rpx;
+  flex-direction: column;
+  gap: 15rpx;
 }
 
 .btn-query {
