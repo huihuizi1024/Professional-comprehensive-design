@@ -42,6 +42,17 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/sms/send")
+    public ApiResponse<Map<String, Object>> sendSms(@RequestBody Map<String, Object> body) {
+        try {
+            String phone = body == null ? null : String.valueOf(body.get("phone"));
+            Map<String, Object> result = authService.sendSmsCode(phone);
+            return ApiResponse.success("验证码已发送", result);
+        } catch (Exception e) {
+            return ApiResponse.error(e.getMessage());
+        }
+    }
+
     @GetMapping("/me")
     public ApiResponse<Map<String, Object>> me(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute(JwtAuthInterceptor.REQ_ATTR_USER_ID);
@@ -56,4 +67,3 @@ public class AuthController {
         return ApiResponse.success(data);
     }
 }
-

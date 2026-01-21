@@ -25,7 +25,7 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         }
 
         String uri = request.getRequestURI();
-        if (uri.startsWith("/api/auth/login") || uri.startsWith("/api/auth/register")) {
+        if (uri.startsWith("/api/auth/login") || uri.startsWith("/api/auth/register") || uri.startsWith("/api/auth/sms/send")) {
             return true;
         }
 
@@ -65,4 +65,3 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
         return true;
     }
 }
-
