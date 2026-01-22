@@ -1,0 +1,5 @@
+<view class="container">
+  <view class="card" bindtap="scanCabinet">📦 投递快递</view>
+  <view class="card" bindtap="viewOrders">🚚 待取件</view>
+  <view class="card logout" bindtap="logout">退出登录</view>
+</view>
