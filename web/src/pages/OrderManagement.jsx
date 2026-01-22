@@ -2,20 +2,35 @@ import React, { useEffect, useState } from 'react'
 import { Table, Tag, Input, Button, Space, message } from 'antd'
 import { SearchOutlined, FileTextOutlined } from '@ant-design/icons'
 import api from '../utils/api'
+import { useAuth } from '../context/AuthContext'
 
 function OrderManagement() {
+  const { user } = useAuth()
+  const isAdmin = user?.username === 'admin'
+  const isCourier = user?.userType === 1
+  const isUser = !isAdmin && !isCourier
+
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchPhone, setSearchPhone] = useState('')
 
   useEffect(() => {
-    fetchOrders()
-  }, [])
+    fetchOrders(searchPhone)
+    const interval = setInterval(() => fetchOrders(searchPhone), 5000)
+    return () => clearInterval(interval)
+  }, [searchPhone])
 
   const fetchOrders = async (phone = '') => {
     setLoading(true)
     try {
-      const url = phone ? `/orders/phone/${phone}` : '/orders/phone/13800138002'
+      let url = '/orders'
+      if (isUser) {
+        url = '/orders/me'
+      } else if (phone) {
+        url = `/orders/phone/${phone}`
+      }
+      // If Admin/Courier and no phone, fetch all (/orders)
+
       const response = await api.get(url)
       setOrders(response.data.data || [])
     } catch (error) {
@@ -26,11 +41,7 @@ function OrderManagement() {
   }
 
   const handleSearch = () => {
-    if (searchPhone) {
-      fetchOrders(searchPhone)
-    } else {
-      fetchOrders()
-    }
+    fetchOrders(searchPhone)
   }
 
   const columns = [
@@ -107,24 +118,26 @@ function OrderManagement() {
       <div className="page-header-title">
         <FileTextOutlined /> 物流订单追踪
       </div>
-      <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-        <Space>
-          <Input
-            placeholder="输入手机号搜索"
-            value={searchPhone}
-            onChange={(e) => setSearchPhone(e.target.value)}
-            style={{ width: 200 }}
-            onPressEnter={handleSearch}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearch}
-          >
-            搜索
-          </Button>
-        </Space>
-      </div>
+      {!isUser && (
+        <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'flex-end' }}>
+          <Space>
+            <Input
+              placeholder="输入手机号搜索"
+              value={searchPhone}
+              onChange={(e) => setSearchPhone(e.target.value)}
+              style={{ width: 200 }}
+              onPressEnter={handleSearch}
+            />
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              onClick={handleSearch}
+            >
+              搜索
+            </Button>
+          </Space>
+        </div>
+      )}
 
       <Table
         columns={columns}

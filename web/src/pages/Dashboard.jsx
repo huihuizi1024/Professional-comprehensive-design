@@ -30,6 +30,9 @@ function Dashboard() {
 
   useEffect(() => {
     fetchStats()
+    // Poll every 5 seconds
+    const interval = setInterval(fetchStats, 5000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchStats = async () => {

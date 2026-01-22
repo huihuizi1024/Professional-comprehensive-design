@@ -2,17 +2,31 @@ import React, { useEffect, useState } from 'react'
 import { Table, Button, Tag, Modal, Form, Input, InputNumber, message, Space, Popconfirm } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, AppstoreOutlined } from '@ant-design/icons'
 import api from '../utils/api'
+import { useAuth } from '../context/AuthContext'
 
 function CabinetManagement() {
+  const { user } = useAuth()
+  const isAdmin = user?.username === 'admin'
+  const isCourier = user?.userType === 1
+
   const [cabinets, setCabinets] = useState([])
   const [compartments, setCompartments] = useState([])
+  const [currentCabinet, setCurrentCabinet] = useState(null)
+  const [compartmentModalVisible, setCompartmentModalVisible] = useState(false)
   const [loading, setLoading] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [form] = Form.useForm()
 
   useEffect(() => {
     fetchCabinets()
-  }, [])
+    const interval = setInterval(() => {
+      fetchCabinets()
+      if (currentCabinet && compartmentModalVisible) {
+        fetchCompartments(currentCabinet.id)
+      }
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [currentCabinet, compartmentModalVisible])
 
   const fetchCabinets = async () => {
     setLoading(true)
@@ -33,6 +47,13 @@ function CabinetManagement() {
     } catch (error) {
       message.error('获取仓门列表失败')
     }
+  }
+
+  const handleViewCompartments = (record) => {
+    setCurrentCabinet(record)
+    setCompartments([])
+    setCompartmentModalVisible(true)
+    fetchCompartments(record.id)
   }
 
   const handleCreateCabinet = async (values) => {
@@ -63,11 +84,12 @@ function CabinetManagement() {
     }
   }
 
-  const handleOpenCompartment = async (compartmentId) => {
+  const handleOpenCompartment = async (compartmentId, cabinetId) => {
     try {
       await api.post(`/cabinets/compartments/${compartmentId}/open`)
       message.success('开仓成功')
-      fetchCabinets()
+      // Refresh compartments for this cabinet
+      fetchCompartments(cabinetId)
     } catch (error) {
       message.error(error.response?.data?.message || '开仓失败')
     }
@@ -88,6 +110,19 @@ function CabinetManagement() {
       title: '总仓数',
       dataIndex: 'totalCompartments',
       key: 'totalCompartments'
+    },
+    {
+      title: '空闲仓数',
+      dataIndex: 'availableCompartments',
+      key: 'availableCompartments',
+      render: (count) => {
+        const displayCount = count !== undefined && count !== null ? count : 0
+        return (
+          <Tag color={displayCount > 0 ? 'green' : 'red'}>
+            {displayCount}
+          </Tag>
+        )
+      }
     },
     {
       title: '日用电量(度)',
@@ -111,16 +146,18 @@ function CabinetManagement() {
         <Space>
           <Button 
             type="link" 
-            onClick={() => fetchCompartments(record.id)}
+            onClick={() => handleViewCompartments(record)}
           >
             查看仓门
           </Button>
-          <Button
-            type="link"
-            onClick={() => handleStatusChange(record.id, record.status)}
-          >
-            {record.status === 1 ? '禁用' : '启用'}
-          </Button>
+          {isAdmin && (
+            <Button
+              type="link"
+              onClick={() => handleStatusChange(record.id, record.status)}
+            >
+              {record.status === 1 ? '禁用' : '启用'}
+            </Button>
+          )}
         </Space>
       )
     }
@@ -156,14 +193,16 @@ function CabinetManagement() {
       title: '操作',
       key: 'action',
       render: (_, record) => (
-        <Button
-          type="primary"
-          size="small"
-          onClick={() => handleOpenCompartment(record.id)}
-          disabled={record.status === 0}
-        >
-          开仓
-        </Button>
+        (isAdmin || isCourier) && (
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => handleOpenCompartment(record.id, record.cabinetId)}
+            disabled={record.status === 0}
+          >
+            开仓
+          </Button>
+        )
       )
     }
   ]
@@ -174,13 +213,15 @@ function CabinetManagement() {
         <AppstoreOutlined /> 智能柜组管理
       </div>
       <div style={{ marginBottom: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => setModalVisible(true)}
-        >
-          新增快递柜
-        </Button>
+        {isAdmin && (
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => setModalVisible(true)}
+          >
+            新增快递柜
+          </Button>
+        )}
       </div>
 
       <Table
@@ -188,21 +229,23 @@ function CabinetManagement() {
         dataSource={cabinets}
         rowKey="id"
         loading={loading}
-        expandable={{
-          expandedRowRender: (record) => {
-            const cabinetCompartments = compartments.filter(c => c.cabinetId === record.id)
-            return (
-              <Table
-                columns={compartmentColumns}
-                dataSource={cabinetCompartments}
-                rowKey="id"
-                pagination={false}
-                size="small"
-              />
-            )
-          }
-        }}
       />
+
+      <Modal
+        title={`仓门列表 - ${currentCabinet?.cabinetCode || ''}`}
+        open={compartmentModalVisible}
+        onCancel={() => setCompartmentModalVisible(false)}
+        footer={null}
+        width={800}
+      >
+        <Table
+          columns={compartmentColumns}
+          dataSource={compartments}
+          rowKey="id"
+          pagination={false}
+          size="small"
+        />
+      </Modal>
 
       <Modal
         title="新增快递柜"

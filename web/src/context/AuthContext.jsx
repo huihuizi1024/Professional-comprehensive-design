@@ -440,11 +440,13 @@ export function AuthProvider({ children }) {
     localStorage.setItem('user', JSON.stringify({
       userId: data.userId,
       username: data.username,
+      phone: data.phone,
       userType: data.userType
     }))
     setUser({
       userId: data.userId,
       username: data.username,
+      phone: data.phone,
       userType: data.userType
     })
     api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`

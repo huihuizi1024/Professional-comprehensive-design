@@ -1,3 +1,4 @@
+// 如果在真机调试，请将 localhost 替换为电脑的局域网 IP 地址 (例如 http://192.168.1.5:8080/api)
 const BASE_URL = 'http://localhost:8080/api'
 
 // 过滤掉值为null或undefined的参数

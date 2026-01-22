@@ -23,6 +23,8 @@ function Layout() {
   } = theme.useToken()
 
   const isAdmin = user?.username === 'admin'
+  const isCourier = user?.userType === 1
+  const isUser = !isAdmin && !isCourier
 
   const menuItems = [
     {
@@ -30,11 +32,11 @@ function Layout() {
       icon: <DashboardOutlined />,
       label: '态势感知', // Renamed from "Dashboard" for tech feel
     },
-    {
+    ...(!isUser ? [{
       key: '/cabinets',
       icon: <AppstoreOutlined />,
       label: '智能柜组', // Renamed from "Cabinet Management"
-    },
+    }] : []),
     {
       key: '/orders',
       icon: <FileTextOutlined />,
