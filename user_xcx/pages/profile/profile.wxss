@@ -1,0 +1,154 @@
+.scrollarea {
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.container {
+  padding: 15rpx;
+}
+
+.user-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15rpx;
+  padding: 30rpx 20rpx;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.user-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.avatar-icon {
+  font-size: 40rpx;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-size: 28rpx;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.user-phone {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-logout {
+  width: 120rpx;
+  height: 50rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 25rpx;
+  border: none;
+  padding: 0;
+  line-height: 50rpx;
+}
+
+.btn-logout::after {
+  border: none;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 12rpx;
+}
+
+.btn-login {
+  width: 90rpx;
+  height: 50rpx;
+  background-color: #fff;
+  color: #667eea;
+  font-size: 22rpx;
+  border-radius: 25rpx;
+  border: none;
+  padding: 0;
+  line-height: 50rpx;
+}
+
+.btn-login::after {
+  border: none;
+}
+
+.btn-register {
+  width: 90rpx;
+  height: 50rpx;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 25rpx;
+  border: none;
+  padding: 0;
+  line-height: 50rpx;
+}
+
+.btn-register::after {
+  border: none;
+}
+
+.menu-section {
+  background-color: #fff;
+  border-radius: 15rpx;
+  margin-bottom: 15rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+
+.menu-content {
+  padding: 5rpx 0;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25rpx 30rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-item:active {
+  background-color: #f8f8f8;
+}
+
+.menu-item-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-icon {
+  font-size: 32rpx;
+  margin-right: 24rpx;
+  width: 36rpx;
+  text-align: center;
+}
+
+.menu-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+.menu-arrow {
+  font-size: 32rpx;
+  color: #ccc;
+  line-height: 1;
+}

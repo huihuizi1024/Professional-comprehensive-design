@@ -1,0 +1,47 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/cabinets/cabinets",
+    "pages/cabinet-detail/cabinet-detail",
+    "pages/store/store",
+    "pages/pick-up/pick-up",
+    "pages/orders/orders",
+    "pages/profile/profile",
+    "pages/send-express/send-express",
+    "pages/edit-profile/edit-profile"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#f7f7f7",
+    "navigationStyle": "custom"
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#f5f5f5",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/cabinets/cabinets",
+        "text": "快递柜"
+      },
+      {
+        "pagePath": "pages/pick-up/pick-up",
+        "text": "取件"
+      },
+      {
+        "pagePath": "pages/orders/orders",
+        "text": "订单"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

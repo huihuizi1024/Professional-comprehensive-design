@@ -1,0 +1,95 @@
+<navigation-bar title="我的订单" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
+  <view class="container">
+    <!-- 搜索框 -->
+    <view class="search-section">
+      <view class="search-input-wrapper">
+        <input 
+          class="search-input" 
+          placeholder="搜索订单号、取件码或收件人" 
+          value="{{searchKeyword}}" 
+          bindinput="onSearchInput"
+        />
+        <view class="search-actions">
+          <text class="search-btn" bindtap="onSearch">搜索</text>
+          <text 
+            class="clear-btn" 
+            bindtap="onClearSearch" 
+            wx:if="{{searchKeyword}}"
+          >×</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 状态筛选 -->
+    <view class="filter-section">
+      <view 
+        class="filter-item" 
+        wx:for="{{statusOptions}}" 
+        wx:key="value"
+        data-status="{{item.value}}"
+        class="filter-item {{currentStatus === item.value ? 'active' : ''}}"
+        bindtap="onStatusChange"
+      >
+        {{item.text}}
+      </view>
+    </view>
+
+    <view class="order-list">
+      <view 
+        class="order-item" 
+        wx:for="{{orders}}" 
+        wx:key="id"
+        data-pick-code="{{item.pickCode}}"
+        bindtap="onOrderTap"
+      >
+        <view class="order-header">
+          <view class="order-company">{{item.expressCompany || ''}}</view>
+          <view class="order-status status-{{item.status}}">
+            {{item.status === 0 ? '待取件' : item.status === 1 ? '已取件' : '已过期'}}
+          </view>
+        </view>
+
+        <view class="order-content">
+          <view class="order-row">
+            <text class="label">快递单号：</text>
+            <text class="value">{{item.orderNo}}</text>
+          </view>
+          <view class="order-row">
+            <text class="label">收件人：</text>
+            <text class="value">{{item.receiverName}}</text>
+          </view>
+          <view class="order-row">
+            <text class="label">手机号：</text>
+            <text class="value">{{item.receiverPhone}}</text>
+          </view>
+          <view class="order-row">
+            <text class="label">快递柜：</text>
+            <text class="value">快递柜 {{item.cabinetId}}</text>
+          </view>
+          <view class="order-row">
+            <text class="label">格口：</text>
+            <text class="value">{{item.compartmentNo}}</text>
+          </view>
+          <view class="order-row">
+            <text class="label">存入时间：</text>
+            <text class="value">{{item.putInTime || item.createdAt}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <view class="pick-code">
+            <text class="pick-code-label">取件码：</text>
+            <text class="pick-code-value">{{item.pickCode}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{orders.length === 0 && !loading}}" class="empty">
+        <text class="empty-icon">📦</text>
+        <text class="empty-text">暂无订单</text>
+        <button class="btn-pickup" bindtap="goToPickUp">去取件</button>
+      </view>
+    </view>
+  </view>
+</scroll-view>

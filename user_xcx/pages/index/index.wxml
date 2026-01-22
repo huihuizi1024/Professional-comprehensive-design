@@ -1,0 +1,13 @@
+<navigation-bar title="智能快递柜" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
+<view class="splash-container">
+  <view class="logo">
+    <text class="logo-icon">📦</text>
+  </view>
+  <view class="title">智能快递柜</view>
+  <view class="subtitle">便捷存取，服务贴心</view>
+  <view class="loading">
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+  </view>
+</view>

@@ -1,0 +1,50 @@
+<navigation-bar title="快递柜列表" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
+  <view class="container">
+    <!-- 定位提示 -->
+    <view class="location-tip" wx:if="{{showLocationTip}}">
+      <text class="tip-text">已显示附近快递柜</text>
+    </view>
+
+    <!-- 获取附近快递柜按钮 -->
+    <view class="location-button-container">
+      <button class="location-button" bindtap="getCurrentLocation">
+        <text class="location-icon">📍</text>
+        <text>获取附近快递柜</text>
+      </button>
+    </view>
+
+    <view class="section-title">附近快递柜</view>
+
+    <view class="cabinet-list">
+      <view 
+        class="cabinet-item" 
+        wx:for="{{cabinets}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onCabinetTap"
+      >
+        <view class="cabinet-info">
+          <view class="cabinet-name">{{item.name}}</view>
+          <view class="cabinet-code">编号：{{item.code}}</view>
+          <view class="cabinet-address">
+            <text class="address-icon">📍</text>
+            <text>{{item.address}}</text>
+          </view>
+        </view>
+        <view class="cabinet-status">
+          <view class="status-badge status-{{item.status}}">
+            {{item.status === 1 ? '正常' : '维护中'}}
+          </view>
+          <view class="available-count">
+            可用格口：{{item.availableCompartments || 0}}
+          </view>
+        </view>
+      </view>
+
+      <view wx:if="{{cabinets.length === 0 && !loading}}" class="empty">
+        <text class="empty-text">暂无快递柜</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>

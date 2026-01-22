@@ -21,6 +21,9 @@ public class ExpressOrder {
     @Column(name = "compartment_id", nullable = false)
     private Long compartmentId;
 
+    @Column(name = "compartment_no")
+    private Integer compartmentNo;
+
     @Column(name = "sender_name", length = 50)
     private String senderName;
 

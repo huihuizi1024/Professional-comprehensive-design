@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "快递柜详情",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "navigation-bar": "/components/navigation-bar/navigation-bar"
+  }
+}
