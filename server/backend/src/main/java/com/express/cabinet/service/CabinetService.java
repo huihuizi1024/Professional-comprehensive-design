@@ -87,6 +87,22 @@ public class CabinetService {
             compartment.setCompartmentNo(i);
             compartment.setStatus(1);
             compartment.setHasItem(0);
+            
+            // Assign size based on compartment number pattern
+            // For 8 compartments: 1-2 Large, 3-5 Medium, 6-8 Small
+            // For others: Default to Medium (1)
+            if (saved.getTotalCompartments() == 8) {
+                if (i <= 2) {
+                    compartment.setSizeType(2); // Large
+                } else if (i <= 5) {
+                    compartment.setSizeType(1); // Medium
+                } else {
+                    compartment.setSizeType(0); // Small
+                }
+            } else {
+                compartment.setSizeType(1); // Default Medium
+            }
+            
             compartmentRepository.save(compartment);
         }
 

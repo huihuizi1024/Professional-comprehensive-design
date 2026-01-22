@@ -31,7 +31,10 @@
           data-has-item="{{item.hasItem}}"
           bindtap="onCompartmentTap"
         >
-          <view class="compartment-number">{{item.compartmentNo}}</view>
+          <view class="compartment-number">{{item.compartmentNo}}号</view>
+          <view class="compartment-size" wx:if="{{item.sizeType === 0}}">小号 (信件/钥匙)</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 1}}">中号 (鞋盒/背包)</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 2}}">大号 (行李/大件)</view>
           <view class="compartment-status">
             {{item.hasItem === 0 ? '空闲' : '占用'}}
           </view>
@@ -50,7 +53,10 @@
           data-status="{{item.status}}"
           bindtap="onCompartmentTap"
         >
-          <view class="compartment-number">{{item.compartmentNo}}</view>
+          <view class="compartment-number">{{item.compartmentNo}}号</view>
+          <view class="compartment-size" wx:if="{{item.sizeType === 0}}">小号</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 1}}">中号</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 2}}">大号</view>
           <text class="tap-hint">点击存件</text>
         </view>
         

@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS compartments (
     compartment_no INT NOT NULL COMMENT '仓门编号（1-8）',
     status TINYINT NOT NULL DEFAULT 1 COMMENT '状态：0-故障/禁用，1-正常',
     has_item TINYINT NOT NULL DEFAULT 0 COMMENT '是否有物品：0-无，1-有',
+    size_type TINYINT NOT NULL DEFAULT 1 COMMENT '尺寸：0-小, 1-中, 2-大',
     temperature DECIMAL(5,2) COMMENT '温度（部分仓有）',
     humidity DECIMAL(5,2) COMMENT '湿度（部分仓有）',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -94,11 +95,35 @@ INSERT INTO users (username, password, phone, real_name, user_type, status) VALU
 -- 密码都是：123456
 
 INSERT INTO cabinets (cabinet_code, location, status, total_compartments, latitude, longitude) VALUES
-('CAB001', '北京市朝阳区XX街道XX号', 1, 8, 39.904200, 116.407400),
-('CAB002', '北京市海淀区XX街道XX号', 1, 8, 39.989600, 116.316800);
+('CAB001', '北京市朝阳区建国门外大街1号', 1, 8, 39.904200, 116.407400),
+('CAB002', '北京市海淀区中关村大街1号', 1, 8, 39.989600, 116.316800),
+('CAB003', '北京市朝阳区三里屯太古里', 1, 8, 39.934800, 116.455200),
+('CAB004', '北京市西城区西单大悦城', 0, 8, 39.910800, 116.372500),
+('CAB005', '北京市丰台区北京南站', 1, 8, 39.865100, 116.378900);
 
-INSERT INTO compartments (cabinet_id, compartment_no, status, has_item) VALUES
-(1, 1, 1, 0), (1, 2, 1, 0), (1, 3, 1, 0), (1, 4, 1, 0),
-(1, 5, 1, 0), (1, 6, 1, 0), (1, 7, 1, 0), (1, 8, 1, 0),
-(2, 1, 1, 0), (2, 2, 1, 0), (2, 3, 1, 0), (2, 4, 1, 0),
-(2, 5, 1, 0), (2, 6, 1, 0), (2, 7, 1, 0), (2, 8, 1, 0);
+INSERT INTO compartments (cabinet_id, compartment_no, status, has_item, size_type) VALUES
+-- CAB001: 正常混合配置
+(1, 1, 1, 0, 2), (1, 2, 1, 0, 2),
+(1, 3, 1, 0, 1), (1, 4, 1, 0, 1), (1, 5, 1, 0, 1),
+(1, 6, 1, 0, 0), (1, 7, 1, 0, 0), (1, 8, 1, 0, 0),
+
+-- CAB002: 部分占用
+(2, 1, 1, 1, 2), (2, 2, 1, 0, 2), -- 1号占用
+(2, 3, 1, 1, 1), (2, 4, 1, 0, 1), (2, 5, 1, 0, 1), -- 3号占用
+(2, 6, 1, 0, 0), (2, 7, 1, 0, 0), (2, 8, 1, 0, 0),
+
+-- CAB003: 全大号仓
+(3, 1, 1, 0, 2), (3, 2, 1, 0, 2), (3, 3, 1, 0, 2), (3, 4, 1, 0, 2),
+(3, 5, 1, 0, 2), (3, 6, 1, 0, 2), (3, 7, 1, 0, 2), (3, 8, 1, 0, 2),
+
+-- CAB004: 维护中（整柜禁用）
+(4, 1, 0, 0, 1), (4, 2, 0, 0, 1), (4, 3, 0, 0, 1), (4, 4, 0, 0, 1),
+(4, 5, 0, 0, 1), (4, 6, 0, 0, 1), (4, 7, 0, 0, 1), (4, 8, 0, 0, 1),
+
+-- CAB005: 混合故障与占用
+(5, 1, 0, 0, 2), -- 故障
+(5, 2, 1, 1, 2), -- 占用
+(5, 3, 1, 0, 1), (5, 4, 1, 0, 1),
+(5, 5, 1, 0, 0), (5, 6, 1, 0, 0),
+(5, 7, 0, 0, 0), -- 故障
+(5, 8, 1, 1, 0); -- 占用

@@ -25,6 +25,9 @@ public class Compartment {
     @Column(name = "has_item", nullable = false)
     private Integer hasItem; // 0-无，1-有
 
+    @Column(name = "size_type", nullable = false)
+    private Integer sizeType; // 0-小, 1-中, 2-大
+
     @Column(precision = 5, scale = 2)
     private BigDecimal temperature;
 

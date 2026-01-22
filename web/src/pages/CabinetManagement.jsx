@@ -170,6 +170,25 @@ function CabinetManagement() {
       key: 'compartmentNo'
     },
     {
+      title: '尺寸类型',
+      dataIndex: 'sizeType',
+      key: 'sizeType',
+      render: (sizeType) => {
+        const sizeMap = {
+          0: { label: '小号', color: 'orange', tip: '适合存放信件、钥匙、小饰品等' },
+          1: { label: '中号', color: 'blue', tip: '适合存放鞋盒、背包、书籍等' },
+          2: { label: '大号', color: 'purple', tip: '适合存放行李箱、大包裹等' }
+        }
+        const info = sizeMap[sizeType] || { label: '未知', color: 'default', tip: '' }
+        return (
+          <div title={info.tip}>
+            <Tag color={info.color}>{info.label}</Tag>
+            <span style={{ fontSize: '12px', color: '#999' }}>{info.tip}</span>
+          </div>
+        )
+      }
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',

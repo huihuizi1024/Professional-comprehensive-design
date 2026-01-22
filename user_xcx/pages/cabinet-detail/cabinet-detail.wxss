@@ -93,10 +93,17 @@
 }
 
 .compartment-number {
-  font-size: 36rpx;
+  font-size: 32rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 10rpx;
+  margin-bottom: 6rpx;
+}
+
+.compartment-size {
+  font-size: 20rpx;
+  color: #666;
+  margin-bottom: 6rpx;
+  text-align: center;
 }
 
 .compartment-status {
