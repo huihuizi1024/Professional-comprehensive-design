@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
+import { message } from 'antd'
 import api from '../utils/api'
 
 const AuthContext = createContext()
@@ -387,6 +388,9 @@ function buildUserFromStorage({ token, userInfo }) {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
+  const idleTimerRef = useRef(null)
+  const lastActivityRef = useRef(0)
+  const idleTimeoutMs = 10 * 60 * 1000
 
   useEffect(() => {
     const applyAuthFromStorage = () => {
@@ -453,6 +457,68 @@ export function AuthProvider({ children }) {
     setUser(null)
     delete api.defaults.headers.common['Authorization']
   }
+
+  useEffect(() => {
+    if (!user) {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current)
+        idleTimerRef.current = null
+      }
+      return
+    }
+
+    const clearIdleTimer = () => {
+      if (idleTimerRef.current) {
+        clearTimeout(idleTimerRef.current)
+        idleTimerRef.current = null
+      }
+    }
+
+    const scheduleIdleTimer = () => {
+      clearIdleTimer()
+      idleTimerRef.current = setTimeout(() => {
+        if (!localStorage.getItem('token')) return
+        logout()
+        message.warning('登录已超时，请重新登录')
+      }, idleTimeoutMs)
+    }
+
+    const recordActivity = () => {
+      const now = Date.now()
+      if (now - lastActivityRef.current < 1000) return
+      lastActivityRef.current = now
+      localStorage.setItem('lastActivityAt', String(now))
+      scheduleIdleTimer()
+    }
+
+    lastActivityRef.current = Date.now()
+    localStorage.setItem('lastActivityAt', String(lastActivityRef.current))
+    scheduleIdleTimer()
+
+    const events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart']
+    events.forEach((eventName) => window.addEventListener(eventName, recordActivity, true))
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        recordActivity()
+      }
+    }
+    document.addEventListener('visibilitychange', onVisibilityChange)
+
+    const onStorage = (e) => {
+      if (e.key === 'lastActivityAt') {
+        scheduleIdleTimer()
+      }
+    }
+    window.addEventListener('storage', onStorage)
+
+    return () => {
+      events.forEach((eventName) => window.removeEventListener(eventName, recordActivity, true))
+      document.removeEventListener('visibilitychange', onVisibilityChange)
+      window.removeEventListener('storage', onStorage)
+      clearIdleTimer()
+    }
+  }, [user])
 
   return (
     <AuthContext.Provider value={{ user, login, logout, loading }}>
