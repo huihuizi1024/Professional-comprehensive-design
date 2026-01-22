@@ -21,7 +21,15 @@ public class CabinetService {
     private final ExpressOrderRepository expressOrderRepository;
 
     public List<Cabinet> getAllCabinets() {
-        return cabinetRepository.findAll();
+        List<Cabinet> cabinets = cabinetRepository.findAll();
+        cabinets.forEach(cabinet -> {
+            long count = compartmentRepository.findByCabinetIdAndStatus(cabinet.getId(), 1)
+                    .stream()
+                    .filter(c -> c.getHasItem() == 0)
+                    .count();
+            cabinet.setAvailableCompartments((int) count);
+        });
+        return cabinets;
     }
 
     public Cabinet getCabinetById(Long id) {

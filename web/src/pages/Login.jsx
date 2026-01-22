@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Button, message, Tabs } from 'antd'
+import { Form, Input, Button, message, Tabs, Modal, Tag } from 'antd'
 import { UserOutlined, LockOutlined, RocketOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -46,10 +46,23 @@ function Login() {
     try {
       const response = await api.post('/auth/sms/send', { phone: String(phone).trim() })
       const code = response.data?.data?.code
-      message.success('验证码已发送')
+      
+      // Mock SMS handling: display code to user
       if (code) {
-        message.info(`验证码：${code}`)
+        Modal.info({
+          title: '【虚拟短信】',
+          content: (
+            <div>
+              <p>您的验证码是：<Tag color="blue" style={{ fontSize: '16px' }}>{code}</Tag></p>
+              <p style={{ color: '#999', fontSize: '12px' }}>（开发环境模拟发送，请勿泄露）</p>
+            </div>
+          ),
+          okText: '我已记下'
+        })
+      } else {
+        message.success('验证码已发送')
       }
+      
       setSmsCountdown(60)
     } catch (error) {
       message.error(error.response?.data?.message || '验证码发送失败')

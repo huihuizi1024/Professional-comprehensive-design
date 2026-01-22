@@ -40,6 +40,9 @@ public class Cabinet {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Transient
+    private Integer availableCompartments;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

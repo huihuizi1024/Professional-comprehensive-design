@@ -50,6 +50,7 @@ public class AuthService {
         Map<String, Object> result = new HashMap<>();
         result.put("userId", user.getId());
         result.put("username", user.getUsername());
+        result.put("phone", user.getPhone());
         result.put("userType", user.getUserType());
         result.put("token", jwtUtil.generateToken(user.getId(), user.getUsername()));
 
@@ -73,6 +74,7 @@ public class AuthService {
         Map<String, Object> result = new HashMap<>();
         result.put("userId", user.getId());
         result.put("username", user.getUsername());
+        result.put("phone", user.getPhone());
         result.put("userType", user.getUserType());
         result.put("token", jwtUtil.generateToken(user.getId(), user.getUsername()));
 
