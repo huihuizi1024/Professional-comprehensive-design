@@ -1,6 +1,6 @@
 <navigation-bar title="快递柜详情" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
-  <view class="container" wx:if="{{cabinet}}">
+  <view class="detail-container" wx:if="{{cabinet}}">
     <view class="cabinet-header">
       <view class="cabinet-name">{{cabinet.name}}</view>
       <view class="cabinet-info">
@@ -20,7 +20,20 @@
     </view>
 
     <view class="section">
-      <view class="section-title">格口列表</view>
+      <view class="section-header">
+        <view class="section-title">格口状态</view>
+        <view class="legend">
+          <view class="legend-item">
+            <view class="dot free"></view>
+            <text>空闲</text>
+          </view>
+          <view class="legend-item">
+            <view class="dot occupied"></view>
+            <text>占用</text>
+          </view>
+        </view>
+      </view>
+      
       <view class="compartment-grid">
         <view 
           class="compartment-item status-{{item.hasItem}}" 
@@ -31,31 +44,13 @@
           data-has-item="{{item.hasItem}}"
           bindtap="onCompartmentTap"
         >
-          <view class="compartment-number">{{item.compartmentNo}}</view>
-          <view class="compartment-status">
-            {{item.hasItem === 0 ? '空闲' : '占用'}}
+          <view class="compartment-content">
+            <view class="compartment-number">{{item.compartmentNo || item.number || index + 1}}</view>
+            <view class="compartment-status">
+              {{item.hasItem === 0 ? '点击存件' : '已占用'}}
+            </view>
           </view>
-        </view>
-      </view>
-    </view>
-
-    <view class="section">
-      <view class="section-title">可用格口</view>
-      <view class="available-list">
-        <view 
-          class="available-item" 
-          wx:for="{{availableCompartments}}" 
-          wx:key="id"
-          data-id="{{item.id}}"
-          data-status="{{item.status}}"
-          bindtap="onCompartmentTap"
-        >
-          <view class="compartment-number">{{item.compartmentNo}}</view>
-          <text class="tap-hint">点击存件</text>
-        </view>
-        
-        <view wx:if="{{availableCompartments.length === 0}}" class="empty">
-          <text class="empty-text">暂无可用格口</text>
+          <view class="hover-mask" wx:if="{{item.hasItem === 0}}"></view>
         </view>
       </view>
     </view>

@@ -1,154 +1,182 @@
 .scrollarea {
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #f7f7f7;
 }
 
 .container {
-  padding: 15rpx;
+  display: block;
+  height: auto;
+  padding: 20rpx;
+  padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
 }
 
-.user-section {
+/* 用户信息卡片 (Banner样式) - 紧凑版 */
+.user-banner {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 15rpx;
-  padding: 30rpx 20rpx;
+  border-radius: 24rpx;
+  padding: 40rpx 30rpx;
   display: flex;
   align-items: center;
-  margin-bottom: 15rpx;
-  box-shadow: 0 4rpx 20rpx rgba(102, 126, 234, 0.3);
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(118, 75, 162, 0.25);
+  transition: transform 0.2s;
+  color: #fff;
 }
 
-.user-avatar {
-  width: 80rpx;
-  height: 80rpx;
+.user-banner:active {
+  transform: scale(0.98);
+}
+
+.user-avatar-box {
+  width: 110rpx;
+  height: 110rpx;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20rpx;
+  margin-right: 30rpx;
+  overflow: hidden;
+  border: 4rpx solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
 }
 
 .avatar-icon {
-  font-size: 40rpx;
+  font-size: 56rpx;
+  color: #fff;
 }
 
-.user-info {
+.user-info-box {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .user-name {
-  font-size: 28rpx;
+  font-size: 38rpx;
   color: #fff;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 8rpx;
+  text-shadow: 0 2rpx 4rpx rgba(0,0,0,0.1);
 }
 
 .user-phone {
-  font-size: 24rpx;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(0,0,0,0.1);
+  padding: 4rpx 14rpx;
+  border-radius: 16rpx;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.user-desc {
+  font-size: 26rpx;
   color: rgba(255, 255, 255, 0.8);
 }
 
-.btn-logout {
-  width: 120rpx;
-  height: 50rpx;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 22rpx;
-  border-radius: 25rpx;
-  border: none;
-  padding: 0;
-  line-height: 50rpx;
+.user-arrow {
+  font-size: 40rpx;
+  color: rgba(255, 255, 255, 0.6);
+  margin-left: 16rpx;
 }
 
-.btn-logout::after {
-  border: none;
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 12rpx;
-}
-
-.btn-login {
-  width: 90rpx;
-  height: 50rpx;
+/* 宫格布局卡片 - 紧凑版 */
+.service-card {
   background-color: #fff;
-  color: #667eea;
-  font-size: 22rpx;
-  border-radius: 25rpx;
-  border: none;
-  padding: 0;
-  line-height: 50rpx;
+  border-radius: 24rpx;
+  padding: 24rpx 10rpx 10rpx 10rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 20rpx;
 }
 
-.btn-login::after {
-  border: none;
-}
-
-.btn-register {
-  width: 90rpx;
-  height: 50rpx;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  font-size: 22rpx;
-  border-radius: 25rpx;
-  border: none;
-  padding: 0;
-  line-height: 50rpx;
-}
-
-.btn-register::after {
-  border: none;
-}
-
-.menu-section {
-  background-color: #fff;
-  border-radius: 15rpx;
-  margin-bottom: 15rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
-}
-
-.menu-content {
-  padding: 5rpx 0;
-}
-
-.menu-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25rpx 30rpx;
-  border-bottom: 1rpx solid #f5f5f5;
-  transition: background-color 0.2s ease;
-}
-
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.menu-item:active {
-  background-color: #f8f8f8;
-}
-
-.menu-item-left {
-  display: flex;
-  align-items: center;
-}
-
-.menu-icon {
-  font-size: 32rpx;
-  margin-right: 24rpx;
-  width: 36rpx;
-  text-align: center;
-}
-
-.menu-text {
-  font-size: 28rpx;
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
   color: #333;
+  margin-bottom: 20rpx;
+  padding-left: 20rpx;
 }
 
-.menu-arrow {
-  font-size: 32rpx;
-  color: #ccc;
-  line-height: 1;
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.grid-item {
+  width: 33.33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 0;
+  margin-bottom: 8rpx;
+}
+
+.grid-item:active {
+  opacity: 0.7;
+}
+
+.icon-box {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  font-size: 36rpx;
+  transition: all 0.2s;
+}
+
+/* 优化图标配色 */
+.color-blue { background-color: #e6f7ff; color: #1890ff; }
+.color-orange { background-color: #fff7e6; color: #fa8c16; }
+.color-green { background-color: #f6ffed; color: #52c41a; }
+.color-purple { background-color: #f9f0ff; color: #722ed1; }
+.color-red { background-color: #fff1f0; color: #f5222d; }
+.color-grey { background-color: #f5f5f5; color: #595959; }
+
+.grid-text {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 整合在卡片内的退出按钮 */
+.logout-box {
+  margin-top: 10rpx;
+  padding: 0 20rpx;
+}
+
+.divider {
+  height: 1rpx;
+  background-color: #f0f0f0;
+  margin: 10rpx 0 20rpx 0;
+}
+
+.btn-logout-text {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background-color: transparent;
+  color: #ff4d4f;
+  font-size: 30rpx;
+  font-weight: 500;
+  border: none;
+  border-radius: 12rpx;
+}
+
+.btn-logout-text::after {
+  border: none;
+}
+
+.btn-logout-text:active {
+  background-color: #f5f5f5;
 }

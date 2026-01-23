@@ -1,68 +1,64 @@
 <navigation-bar title="个人中心" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
-    <view class="user-section" wx:if="{{isLoggedIn && userInfo}}">
-      <view class="user-avatar">
-        <text class="avatar-icon">👤</text>
+    <!-- 用户信息卡片 -->
+    <view class="user-banner" bindtap="{{isLoggedIn ? 'goToEditProfile' : 'goToLogin'}}">
+      <view class="user-avatar-box">
+        <text class="avatar-icon" wx:if="{{!userInfo.avatarUrl}}">👤</text>
+        <image class="avatar-img" wx:else src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
       </view>
-      <view class="user-info">
-        <view class="user-name">{{userInfo.username}}</view>
-        <view class="user-phone">{{userInfo.phone}}</view>
+      <view class="user-info-box">
+        <block wx:if="{{isLoggedIn && userInfo}}">
+          <view class="user-name">{{userInfo.username}}</view>
+          <view class="user-phone">{{userInfo.phone}}</view>
+        </block>
+        <block wx:else>
+          <view class="user-name">登录/注册</view>
+          <view class="user-desc">登录后享受更多服务</view>
+        </block>
       </view>
-      <button class="btn-logout" bindtap="handleLogout">退出登录</button>
+      <view class="user-arrow">›</view>
     </view>
 
-    <view class="user-section" wx:if="{{!isLoggedIn}}">
-      <view class="user-avatar">
-        <text class="avatar-icon">👤</text>
-      </view>
-      <view class="user-info">
-        <view class="user-name">未登录</view>
-        <view class="user-phone">登录后享受更多服务</view>
-      </view>
-      <view class="auth-buttons">
-        <button class="btn-login" bindtap="goToLogin">登录</button>
-        <button class="btn-register" bindtap="goToRegister">注册</button>
-      </view>
-    </view>
-
-    <view class="menu-section" wx:if="{{isLoggedIn}}">
-      <view class="menu-content">
-        <view class="menu-item" bindtap="goToSendExpress">
-          <view class="menu-item-left">
-            <text class="menu-icon">📤</text>
-            <text class="menu-text">发快递</text>
-          </view>
-          <text class="menu-arrow">›</text>
+    <!-- 功能菜单 - 宫格布局 -->
+    <view class="service-card">
+      <view class="card-title">我的服务</view>
+      <view class="grid-container">
+        <view class="grid-item" bindtap="goToOrders" wx:if="{{isLoggedIn}}">
+          <view class="icon-box color-blue">📋</view>
+          <text class="grid-text">我的订单</text>
         </view>
 
-        <view class="menu-item" bindtap="goToEditProfile">
-          <view class="menu-item-left">
-            <text class="menu-icon">✏️</text>
-            <text class="menu-text">修改信息</text>
-          </view>
-          <text class="menu-arrow">›</text>
+        <view class="grid-item" bindtap="goToAddress" wx:if="{{isLoggedIn}}">
+          <view class="icon-box color-orange">📍</view>
+          <text class="grid-text">地址管理</text>
+        </view>
+
+        <view class="grid-item" bindtap="handleContact">
+          <view class="icon-box color-red">📞</view>
+          <text class="grid-text">联系客服</text>
+        </view>
+
+        <view class="grid-item" bindtap="goToHelp">
+          <view class="icon-box color-green">❓</view>
+          <text class="grid-text">帮助中心</text>
+        </view>
+
+        <view class="grid-item" bindtap="handleAbout">
+          <view class="icon-box color-purple">ℹ️</view>
+          <text class="grid-text">关于我们</text>
+        </view>
+
+        <view class="grid-item" bindtap="goToSettings">
+          <view class="icon-box color-grey">⚙️</view>
+          <text class="grid-text">设置</text>
         </view>
       </view>
-    </view>
-
-    <view class="menu-section">
-      <view class="menu-content">
-        <view class="menu-item" bindtap="handleAbout">
-          <view class="menu-item-left">
-            <text class="menu-icon">ℹ️</text>
-            <text class="menu-text">关于我们</text>
-          </view>
-          <text class="menu-arrow">›</text>
-        </view>
-
-        <view class="menu-item" bindtap="handleContact">
-          <view class="menu-item-left">
-            <text class="menu-icon">📞</text>
-            <text class="menu-text">联系客服</text>
-          </view>
-          <text class="menu-arrow">›</text>
-        </view>
+      
+      <!-- 退出登录按钮 (整合在卡片内) -->
+      <view class="logout-box" wx:if="{{isLoggedIn}}">
+        <view class="divider"></view>
+        <button class="btn-logout-text" bindtap="handleLogout">退出登录</button>
       </view>
     </view>
   </view>

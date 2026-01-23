@@ -114,5 +114,27 @@ Page({
       content: '客服电话：400-123-4567\n工作时间：9:00-18:00',
       showCancel: false
     })
+  },
+
+  goToAddress() {
+    if (!this.data.isLoggedIn) {
+      this.showLoginTip()
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/address/address'
+    })
+  },
+
+  goToHelp() {
+    wx.navigateTo({
+      url: '/pages/help/help'
+    })
+  },
+
+  goToSettings() {
+    wx.navigateTo({
+      url: '/pages/settings/settings'
+    })
   }
 })

@@ -28,12 +28,12 @@
         "text": "快递柜"
       },
       {
-        "pagePath": "pages/pick-up/pick-up",
-        "text": "取件"
+        "pagePath": "pages/send-express/send-express",
+        "text": "发快递"
       },
       {
-        "pagePath": "pages/orders/orders",
-        "text": "订单"
+        "pagePath": "pages/pick-up/pick-up",
+        "text": "取件"
       },
       {
         "pagePath": "pages/profile/profile",

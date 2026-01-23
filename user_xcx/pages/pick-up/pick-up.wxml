@@ -1,46 +1,56 @@
-<navigation-bar title="取件" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="pick-up-card">
-      <view class="card-header">
-        <text class="icon">📦</text>
-        <text class="title">取件码取件</text>
+<view class="page-container">
+  <navigation-bar title="取件" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+  
+  <scroll-view class="scrollarea" scroll-y type="list">
+    <view class="container">
+      <view class="pick-up-card">
+        <view class="card-header">
+          <text class="icon">📦</text>
+          <text class="title">取件码取件</text>
+        </view>
+        
+        <view class="input-section">
+          <text class="label">请输入6位取件码</text>
+          <input 
+            class="pick-code-input" 
+            type="number" 
+            placeholder="输入取件码" 
+            value="{{pickCode}}"
+            bindinput="onPickCodeInput"
+            maxlength="6"
+            focus
+          />
+        </view>
+
+        <view class="button-group">
+          <button class="btn-pickup" bindtap="handlePickUp" loading="{{loading}}">确认取件</button>
+          <view class="secondary-btns">
+            <button class="btn-query" bindtap="handleQuery">查询快递</button>
+            <button class="btn-scan" bindtap="handleScan">扫码取件</button>
+          </view>
+        </view>
       </view>
-      
-      <view class="input-section">
-        <text class="label">请输入6位取件码</text>
-        <input 
-          class="pick-code-input" 
-          type="number" 
-          placeholder="输入取件码" 
-          value="{{pickCode}}"
-          bindinput="onPickCodeInput"
-          maxlength="6"
-          focus
-        />
+
+      <view class="tips">
+        <view class="tips-title">取件说明</view>
+        <view class="tips-item">1. 请输入正确的6位取件码</view>
+        <view class="tips-item">2. 取件码由快递员在存件时提供</view>
+        <view class="tips-item">3. 点击"确认取件"后格口将自动打开</view>
+        <view class="tips-item">4. 请及时取出快递并关闭格口</view>
       </view>
-
-      <view class="button-group">
-        <button class="btn-query" bindtap="handleQuery">查询快递</button>
-        <button class="btn-pickup" bindtap="handlePickUp" loading="{{loading}}">确认取件</button>
-        <button class="btn-scan" bindtap="handleScan">扫码取件</button>
     </view>
-    </view>
+  </scroll-view>
 
-    <view class="tips">
-      <view class="tips-title">取件说明</view>
-      <view class="tips-item">1. 请输入正确的6位取件码</view>
-      <view class="tips-item">2. 取件码由快递员在存件时提供</view>
-      <view class="tips-item">3. 点击"确认取件"后格口将自动打开</view>
-      <view class="tips-item">4. 请及时取出快递并关闭格口</view>
-    </view>
-
-    <view class="help-section">
-      <view class="help-title">遇到问题？</view>
-      <view class="help-item">
+  <view class="footer-section">
+    <view class="help-card">
+      <view class="help-header">
         <text class="help-icon">📞</text>
+        <text class="help-title">遇到问题？</text>
+      </view>
+      <view class="help-content">
         <text class="help-text">联系客服：400-123-4567</text>
+        <button class="btn-call" size="mini" bindtap="handleCall">拨打</button>
       </view>
     </view>
   </view>
-</scroll-view>
+</view>

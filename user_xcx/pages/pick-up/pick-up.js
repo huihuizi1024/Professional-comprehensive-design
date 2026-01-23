@@ -98,23 +98,32 @@ Page({
           const scanData = JSON.parse(res.result)
           cabinetId = scanData.cabinetId
         } catch (e) {
-          // 如果不是 JSON，尝试从字符串中提取 cabinetId
-          const match = res.result.match(/cabinet_(\d+)/)
-          if (match && match[1]) {
-            cabinetId = match[1]
+          // 不是JSON，尝试直接解析字符串
+          if (res.result.includes('cabinet_')) {
+            cabinetId = res.result.split('cabinet_')[1]
           }
         }
-        
+
         if (cabinetId) {
-          this.setData({ cabinetId: cabinetId })
-          this.loadUserOrdersInCabinet(cabinetId)
+          this.setData({ cabinetId })
+          wx.navigateTo({
+            url: `/pages/cabinet-detail/cabinet-detail?id=${cabinetId}`
+          })
         } else {
-          wx.showToast({ title: '无效的快递柜二维码', icon: 'none' })
+          // 如果扫码结果是取件码
+          if (/^\d{6}$/.test(res.result)) {
+            this.setData({ pickCode: res.result })
+          } else {
+            wx.showToast({ title: '无法识别的二维码', icon: 'none' })
+          }
         }
-      },
-      fail: (error) => {
-        wx.showToast({ title: '扫码失败', icon: 'none' })
       }
+    })
+  },
+
+  handleCall() {
+    wx.makePhoneCall({
+      phoneNumber: '400-123-4567'
     })
   },
 

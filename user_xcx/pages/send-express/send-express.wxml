@@ -1,151 +1,153 @@
-<navigation-bar title="发快递" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="form-section">
-      <!-- 快递柜选择 -->
-      <view class="form-item">
-        <text class="form-label">选择快递柜</text>
-        <view class="select-wrapper" bindtap="openCabinetList">
-          <text class="select-text">{{selectedCabinet ? selectedCabinet.name + ' - ' + selectedCabinet.address : '请选择快递柜'}}</text>
-          <text class="select-arrow">▼</text>
+<view class="page-container">
+  <navigation-bar title="发快递" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
+  <scroll-view class="scrollarea" scroll-y type="list">
+    <view class="container">
+      <view class="form-section">
+        <!-- 快递柜选择 -->
+        <view class="form-item">
+          <text class="form-label">选择快递柜</text>
+          <view class="select-wrapper" bindtap="openCabinetList">
+            <text class="select-text">{{selectedCabinet ? selectedCabinet.name + ' - ' + selectedCabinet.address : '请选择快递柜'}}</text>
+            <text class="select-arrow">▼</text>
+          </view>
         </view>
-      </view>
 
-      <!-- 格口选择 -->
-      <view class="form-item">
-        <text class="form-label">选择格口</text>
-        <view class="select-wrapper" bindtap="openCompartmentList">
-          <text class="select-text">{{compartmentId ? '格口 ' + compartmentId : '请先选择快递柜'}}</text>
-          <text class="select-arrow">▼</text>
+        <!-- 格口选择 -->
+        <view class="form-item">
+          <text class="form-label">选择格口</text>
+          <view class="select-wrapper" bindtap="openCompartmentList">
+            <text class="select-text">{{compartmentId ? '格口 ' + compartmentId : '请先选择快递柜'}}</text>
+            <text class="select-arrow">▼</text>
+          </view>
         </view>
-      </view>
 
-      <view class="divider">发件人信息</view>
+        <view class="divider">发件人信息</view>
 
-      <!-- 发件人姓名 -->
-      <view class="form-item">
-        <text class="form-label">发件人姓名</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入发件人姓名" 
-          value="{{senderName}}" 
-          bindinput="onSenderNameInput"
-        />
-      </view>
+        <!-- 发件人姓名 -->
+        <view class="form-item">
+          <text class="form-label">发件人姓名</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入发件人姓名" 
+            value="{{senderName}}" 
+            bindinput="onSenderNameInput"
+          />
+        </view>
 
-      <!-- 发件人手机号 -->
-      <view class="form-item">
-        <text class="form-label">发件人手机号</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入发件人手机号" 
-          value="{{senderPhone}}" 
-          bindinput="onSenderPhoneInput"
-          type="number"
-        />
-      </view>
+        <!-- 发件人手机号 -->
+        <view class="form-item">
+          <text class="form-label">发件人手机号</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入发件人手机号" 
+            value="{{senderPhone}}" 
+            bindinput="onSenderPhoneInput"
+            type="number"
+          />
+        </view>
 
-      <view class="divider">收件人信息</view>
+        <view class="divider">收件人信息</view>
 
-      <!-- 收件人姓名 -->
-      <view class="form-item">
-        <text class="form-label">收件人姓名</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入收件人姓名" 
-          value="{{receiverName}}" 
-          bindinput="onReceiverNameInput"
-        />
-      </view>
+        <!-- 收件人姓名 -->
+        <view class="form-item">
+          <text class="form-label">收件人姓名</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入收件人姓名" 
+            value="{{receiverName}}" 
+            bindinput="onReceiverNameInput"
+          />
+        </view>
 
-      <!-- 收件人手机号 -->
-      <view class="form-item">
-        <text class="form-label">收件人手机号</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入收件人手机号" 
-          value="{{receiverPhone}}" 
-          bindinput="onReceiverPhoneInput"
-          type="number"
-        />
-      </view>
+        <!-- 收件人手机号 -->
+        <view class="form-item">
+          <text class="form-label">收件人手机号</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入收件人手机号" 
+            value="{{receiverPhone}}" 
+            bindinput="onReceiverPhoneInput"
+            type="number"
+          />
+        </view>
 
-      <!-- 收件人地址 -->
-      <view class="form-item">
-        <text class="form-label">收件人地址</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入收件人详细地址" 
-          value="{{receiverAddress}}" 
-          bindinput="onReceiverAddressInput"
-        />
-      </view>
+        <!-- 收件人地址 -->
+        <view class="form-item">
+          <text class="form-label">收件人地址</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入收件人详细地址" 
+            value="{{receiverAddress}}" 
+            bindinput="onReceiverAddressInput"
+          />
+        </view>
 
-      <!-- 快递公司 -->
-      <view class="form-item">
-        <text class="form-label">快递公司</text>
-        <input 
-          class="form-input" 
-          placeholder="请输入快递公司名称" 
-          value="{{expressCompany}}" 
-          bindinput="onExpressCompanyInput"
-        />
+        <!-- 快递公司 -->
+        <view class="form-item">
+          <text class="form-label">快递公司</text>
+          <input 
+            class="form-input" 
+            placeholder="请输入快递公司名称" 
+            value="{{expressCompany}}" 
+            bindinput="onExpressCompanyInput"
+          />
+        </view>
+
+        <button 
+          class="btn-submit" 
+          loading="{{loading}}" 
+          disabled="{{loading}}" 
+          bindtap="handleSubmit"
+        >
+          确认提交
+        </button>
       </view>
     </view>
+  </scroll-view>
 
-    <button 
-      class="btn-submit" 
-      loading="{{loading}}" 
-      disabled="{{loading}}" 
-      bindtap="handleSubmit"
-    >
-      确认提交
-    </button>
-
-    <!-- 快递柜选择弹窗 -->
-    <view class="modal" wx:if="{{showCabinetList}}" bindtap="closeModal">
-      <view class="modal-content" catchtap="">
-        <view class="modal-header">
-          <text class="modal-title">选择快递柜</text>
-          <text class="modal-close" bindtap="closeModal">×</text>
-        </view>
-        <scroll-view class="modal-scroll" scroll-y>
-          <view 
-            class="modal-item" 
-            wx:for="{{cabinets}}" 
-            wx:key="id"
-            data-cabinet-id="{{item.id}}"
-            bindtap="selectCabinet"
-          >
-            <view class="modal-item-name">{{item.name}}</view>
-            <view class="modal-item-address">{{item.address}}</view>
-          </view>
-        </scroll-view>
+  <!-- 快递柜选择弹窗 -->
+  <view class="modal" wx:if="{{showCabinetList}}" bindtap="closeModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">选择快递柜</text>
+        <text class="modal-close" bindtap="closeModal">×</text>
       </view>
-    </view>
-
-    <!-- 格口选择弹窗 -->
-    <view class="modal" wx:if="{{showCompartmentList}}" bindtap="closeModal">
-      <view class="modal-content" catchtap="">
-        <view class="modal-header">
-          <text class="modal-title">选择可用格口</text>
-          <text class="modal-close" bindtap="closeModal">×</text>
+      <scroll-view class="modal-scroll" scroll-y>
+        <view 
+          class="modal-item" 
+          wx:for="{{cabinets}}" 
+          wx:key="id"
+          data-cabinet-id="{{item.id}}"
+          bindtap="selectCabinet"
+        >
+          <view class="modal-item-name">{{item.name}}</view>
+          <view class="modal-item-address">{{item.address}}</view>
         </view>
-        <scroll-view class="modal-scroll" scroll-y>
-          <view 
-            class="modal-item compartment-item" 
-            wx:for="{{availableCompartments}}" 
-            wx:key="id"
-            data-compartment-id="{{item.id}}"
-            bindtap="selectCompartment"
-          >
-            <view class="compartment-info">
-              <text class="compartment-number">格口 {{item.compartmentNo}}</text>
-              <text class="compartment-status">可用</text>
-            </view>
-          </view>
-        </scroll-view>
-      </view>
+      </scroll-view>
     </view>
   </view>
-</scroll-view>
+
+  <!-- 格口选择弹窗 -->
+  <view class="modal" wx:if="{{showCompartmentList}}" bindtap="closeModal">
+    <view class="modal-content" catchtap="">
+      <view class="modal-header">
+        <text class="modal-title">选择可用格口</text>
+        <text class="modal-close" bindtap="closeModal">×</text>
+      </view>
+      <scroll-view class="modal-scroll" scroll-y>
+        <view 
+          class="modal-item compartment-item" 
+          wx:for="{{availableCompartments}}" 
+          wx:key="id"
+          data-compartment-id="{{item.id}}"
+          bindtap="selectCompartment"
+        >
+          <view class="compartment-info">
+            <text class="compartment-number">格口 {{item.compartmentNo}}</text>
+            <text class="compartment-status">可用</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>
