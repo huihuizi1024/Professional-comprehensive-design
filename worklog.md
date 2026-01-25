@@ -225,10 +225,9 @@ cd "e:\professional_design\project3\Professional-comprehensive-design\server\bac
 - ✅ 所有页面无空白或报错问题
 
 ### 剩余问题
-- 地址管理功能需后端API支持
-- 部分页面样式需进一步优化
-- 功能测试覆盖率需提升
+- 地址管理功能还没搞好
 - 人脸识别功能还有问题
+- 我的订单里快递公司显示问题
 
 
 
