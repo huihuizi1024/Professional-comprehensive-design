@@ -158,6 +158,10 @@
   padding: 20rpx 30rpx;
   background-color: #fafafa;
   border-top: 2rpx solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  align-items: center;
 }
 
 .pick-code {
@@ -177,6 +181,56 @@
   color: #667eea;
   font-weight: bold;
   letter-spacing: 5rpx;
+}
+
+.order-actions {
+  display: flex;
+  gap: 20rpx;
+  width: 100%;
+  justify-content: center;
+}
+
+.order-actions .btn-pickup {
+  flex: 1;
+  height: 70rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 26rpx;
+  border-radius: 35rpx;
+  border: none;
+  margin: 0;
+}
+
+.order-actions .btn-pickup::after {
+  border: none;
+}
+
+.order-actions .btn-face {
+  flex: 1;
+  height: 70rpx;
+  background-color: #fff;
+  color: #667eea;
+  font-size: 26rpx;
+  border-radius: 35rpx;
+  border: 2rpx solid #667eea;
+}
+
+.order-actions .btn-face::after {
+  border: none;
+}
+
+.order-actions .btn-delete {
+  flex: 1;
+  height: 70rpx;
+  background-color: #fff;
+  color: #f44336;
+  font-size: 26rpx;
+  border-radius: 35rpx;
+  border: 2rpx solid #f44336;
+}
+
+.order-actions .btn-delete::after {
+  border: none;
 }
 
 .empty {

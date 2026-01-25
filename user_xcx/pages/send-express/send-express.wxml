@@ -10,13 +10,14 @@
             <text class="select-text">{{selectedCabinet ? selectedCabinet.name + ' - ' + selectedCabinet.address : '请选择快递柜'}}</text>
             <text class="select-arrow">▼</text>
           </view>
+          <button class="btn-scan" bindtap="handleScan">扫码选择快递柜</button>
         </view>
 
         <!-- 格口选择 -->
         <view class="form-item">
           <text class="form-label">选择格口</text>
           <view class="select-wrapper" bindtap="openCompartmentList">
-            <text class="select-text">{{compartmentId ? '格口 ' + compartmentId : '请先选择快递柜'}}</text>
+            <text class="select-text">{{compartmentNo ? '格口 ' + compartmentNo : '请先选择快递柜'}}</text>
             <text class="select-arrow">▼</text>
           </view>
         </view>

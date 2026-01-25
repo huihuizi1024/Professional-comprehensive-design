@@ -98,38 +98,46 @@ Page({
         // 确保取件码存在
         const pickCode = res.data.pickCode || '未知取件码'
         
-        // 先显示取件码
+        // 显示存件成功提示
         wx.showToast({
-          title: `存件成功，取件码：${pickCode}`,
+          title: '存件成功',
           icon: 'success',
-          duration: 3000, // 显示3秒
-          success: () => {
-            // 3秒后自动返回
-            setTimeout(() => {
-              wx.navigateBack()
-            }, 3000)
-          }
+          duration: 1500 // 显示1.5秒
         })
         
-        // 如果用户选择分享，则显示分享选项
+        // 显示分享取件码模态框
         setTimeout(() => {
           wx.showModal({
-            title: '是否分享取件码？',
-            content: `取件码：${pickCode}`,
+            title: '取件码',
+            content: `您的取件码：${pickCode}\n\n是否分享给收件人？`,
             showCancel: true,
             cancelText: '取消',
             confirmText: '分享',
             success: (result) => {
               if (result.confirm) {
+                // 如果用户选择分享，先分享再返回
                 this.sharePickCode(pickCode)
+                setTimeout(() => {
+                  // 通知上一页更新数据
+                  this.notifyPreviousPage()
+                  // 分享完成后返回上一页
+                  wx.navigateBack()
+                }, 1500)
+              } else {
+                // 如果用户选择取消，直接返回上一页
+                // 通知上一页更新数据
+                this.notifyPreviousPage()
+                wx.navigateBack()
               }
             }
           })
-        }, 1000) // 1秒后显示分享选项
+        }, 1500) // 1.5秒后显示分享选项
       }
     } catch (error) {
       wx.hideLoading()
       this.setData({ loading: false })
+      console.error('存件失败:', error)
+      wx.showToast({ title: '存件失败，请重试', icon: 'none' })
     }
   },
 
@@ -145,5 +153,21 @@ Page({
         wx.showToast({ title: '复制失败', icon: 'none' })
       }
     })
+  },
+
+  // 通知上一页更新数据
+  notifyPreviousPage() {
+    // 获取当前页面栈
+    const pages = getCurrentPages()
+    if (pages.length > 1) {
+      // 获取上一页
+      const prevPage = pages[pages.length - 2]
+      if (prevPage) {
+        // 调用上一页的刷新数据方法
+        if (typeof prevPage.loadCabinetDetail === 'function') {
+          prevPage.loadCabinetDetail()
+        }
+      }
+    }
   }
 })

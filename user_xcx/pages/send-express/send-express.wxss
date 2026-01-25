@@ -115,6 +115,25 @@
   border: none;
 }
 
+.btn-scan {
+  margin-top: 20rpx;
+  width: 100%;
+  height: 70rpx;
+  background-color: #fff;
+  color: #667eea;
+  font-size: 26rpx;
+  border-radius: 35rpx;
+  border: 2rpx solid #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+
+.btn-scan::after {
+  border: none;
+}
+
 /* 弹窗样式 */
 .modal {
   position: fixed;

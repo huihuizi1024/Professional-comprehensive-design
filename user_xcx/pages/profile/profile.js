@@ -41,7 +41,7 @@ Page({
       this.showLoginTip()
       return
     }
-    wx.switchTab({
+    wx.navigateTo({
       url: '/pages/orders/orders'
     })
   },
@@ -127,14 +127,20 @@ Page({
   },
 
   goToHelp() {
-    wx.navigateTo({
-      url: '/pages/help/help'
+    // 帮助中心页面正在开发中
+    wx.showModal({
+      title: '提示',
+      content: '帮助中心功能正在开发中，敬请期待！',
+      showCancel: false
     })
   },
 
   goToSettings() {
-    wx.navigateTo({
-      url: '/pages/settings/settings'
+    // 设置页面正在开发中
+    wx.showModal({
+      title: '提示',
+      content: '设置功能正在开发中，敬请期待！',
+      showCancel: false
     })
   }
 })
