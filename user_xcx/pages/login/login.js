@@ -51,12 +51,22 @@ Page({
         
         app.setToken(token)
         app.setUserId(userId)
-        
+
         const userInfo = {
           id: userId,
           username: username,
           userType: userType
         }
+
+        try {
+          const meRes = await service.user.getMe()
+          if (meRes.code === 200 && meRes.data) {
+            userInfo.username = meRes.data.username || userInfo.username
+            userInfo.phone = meRes.data.phone || ''
+            userInfo.realName = meRes.data.realName || ''
+          }
+        } catch (e) {}
+
         app.setUserInfo(userInfo)
 
         wx.showToast({

@@ -252,15 +252,37 @@ Page({
   },
 
   // 自动导入发件人信息
-  autoImportSenderInfo() {
-    const userInfo = app.globalData.userInfo
-    if (userInfo) {
-      // 自动填充用户信息作为发件人信息
-      this.setData({
-        senderName: userInfo.username || '',
-        senderPhone: userInfo.phone || ''
-      })
+  async autoImportSenderInfo() {
+    const token = app.globalData.token
+    if (!token) {
+      return
     }
+
+    try {
+      const res = await service.user.getMe()
+      if (res.code === 200 && res.data) {
+        const realName = res.data.realName || ''
+        const phone = res.data.phone || ''
+
+        this.setData({
+          senderName: realName || res.data.username || '',
+          senderPhone: phone
+        })
+
+        const mergedUserInfo = {
+          ...(app.globalData.userInfo || {}),
+          id: res.data.userId || (app.globalData.userInfo && app.globalData.userInfo.id) || app.globalData.userId,
+          username: res.data.username,
+          phone: phone,
+          realName: realName
+        }
+        app.setUserInfo(mergedUserInfo)
+
+        if (!realName) {
+          wx.showToast({ title: '请先完善真实姓名，便于自动填充', icon: 'none' })
+        }
+      }
+    } catch (error) {}
   },
 
   // 扫码选择快递柜
