@@ -4,6 +4,7 @@ Page({
   data: {
     addresses: [],
     loading: false,
+    saving: false,
     showModal: false,
     editingAddress: null,
     formData: {
@@ -14,14 +15,6 @@ Page({
       district: '',
       detail: '',
       isDefault: false
-    },
-    rules: {
-      name: [{ required: true, message: '请输入收货人姓名' }],
-      phone: [
-        { required: true, message: '请输入手机号码' },
-        { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的手机号码' }
-      ],
-      detail: [{ required: true, message: '请输入详细地址' }]
     }
   },
 
@@ -39,14 +32,14 @@ Page({
     
     // 模拟从后端获取地址数据
     setTimeout(() => {
-      // 实际开发中应该从数据库或API获取
+      // 优先从本地存储获取，实际开发中应该从数据库或API获取
       const addresses = wx.getStorageSync('addresses') || []
       
       this.setData({
         addresses,
         loading: false
       })
-    }, 500)
+    }, 300)
   },
 
   // 打开新增地址模态框
@@ -103,10 +96,13 @@ Page({
     })
   },
 
-  // 切换默认地址
-  toggleDefault() {
+  // Switch开关变化处理
+  onSwitchChange(e) {
+    const { field } = e.currentTarget.dataset
+    const { value } = e.detail
+    
     this.setData({
-      'formData.isDefault': !this.data.formData.isDefault
+      [`formData.${field}`]: value
     })
   },
 
@@ -135,50 +131,61 @@ Page({
       return
     }
     
-    let updatedAddresses = [...addresses]
-    
-    if (formData.isDefault) {
-      // 如果设置为默认地址，先取消其他地址的默认状态
-      updatedAddresses = updatedAddresses.map(item => ({
-        ...item,
-        isDefault: false
-      }))
-    }
-    
-    if (editingAddress) {
-      // 编辑现有地址
-      updatedAddresses = updatedAddresses.map(item => {
-        if (item.id === editingAddress.id) {
-          return {
-            ...item,
-            ...formData
-          }
-        }
-        return item
-      })
-    } else {
-      // 新增地址
-      const newAddress = {
-        id: Date.now(), // 临时使用时间戳作为ID，实际应该由后端生成
-        ...formData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+    this.setData({ saving: true })
+
+    // 模拟网络请求延迟
+    setTimeout(() => {
+      let updatedAddresses = [...addresses]
+      
+      if (formData.isDefault) {
+        // 如果设置为默认地址，先取消其他地址的默认状态
+        updatedAddresses = updatedAddresses.map(item => ({
+          ...item,
+          isDefault: false
+        }))
       }
-      updatedAddresses.push(newAddress)
-    }
-    
-    // 保存到本地存储（实际开发中应该保存到后端）
-    wx.setStorageSync('addresses', updatedAddresses)
-    
-    this.setData({
-      addresses: updatedAddresses,
-      showModal: false
-    })
-    
-    wx.showToast({ 
-      title: editingAddress ? '地址更新成功' : '地址添加成功',
-      icon: 'success'
-    })
+      
+      if (editingAddress) {
+        // 编辑现有地址
+        updatedAddresses = updatedAddresses.map(item => {
+          if (item.id === editingAddress.id) {
+            return {
+              ...item,
+              ...formData,
+              updatedAt: new Date().toISOString()
+            }
+          }
+          return item
+        })
+      } else {
+        // 新增地址
+        // 如果是第一个地址，默认设为默认地址
+        const isFirst = updatedAddresses.length === 0
+        
+        const newAddress = {
+          id: Date.now(), // 临时使用时间戳作为ID
+          ...formData,
+          isDefault: isFirst || formData.isDefault,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+        updatedAddresses.push(newAddress)
+      }
+      
+      // 保存到本地存储
+      wx.setStorageSync('addresses', updatedAddresses)
+      
+      this.setData({
+        addresses: updatedAddresses,
+        showModal: false,
+        saving: false
+      })
+      
+      wx.showToast({ 
+        title: editingAddress ? '地址更新成功' : '地址添加成功',
+        icon: 'success'
+      })
+    }, 500)
   },
 
   // 删除地址
@@ -192,7 +199,8 @@ Page({
         if (res.confirm) {
           let updatedAddresses = this.data.addresses.filter(item => item.id !== id)
           
-          // 保存到本地存储（实际开发中应该保存到后端）
+          // 如果删除的是默认地址，且还有其他地址，将第一个设为默认（可选逻辑，这里暂时不自动设置）
+          
           wx.setStorageSync('addresses', updatedAddresses)
           
           this.setData({
@@ -217,7 +225,6 @@ Page({
       isDefault: item.id === id
     }))
     
-    // 保存到本地存储（实际开发中应该保存到后端）
     wx.setStorageSync('addresses', updatedAddresses)
     
     this.setData({
@@ -230,7 +237,7 @@ Page({
     })
   },
 
-  // 编辑地址
+  // 编辑地址入口
   editAddress(e) {
     this.openEditModal(e)
   }

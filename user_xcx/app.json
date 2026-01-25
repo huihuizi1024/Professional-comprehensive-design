@@ -10,7 +10,8 @@
     "pages/orders/orders",
     "pages/profile/profile",
     "pages/send-express/send-express",
-    "pages/edit-profile/edit-profile"
+    "pages/edit-profile/edit-profile",
+    "pages/address/address"
   ],
   "window": {
     "navigationBarTextStyle": "black",

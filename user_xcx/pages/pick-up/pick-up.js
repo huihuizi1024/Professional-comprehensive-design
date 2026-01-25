@@ -258,33 +258,53 @@ Page({
   },
 
   // 人脸识别取件
-  handleFaceRecognition() {
+  async handleFaceRecognition() {
     wx.showLoading({ title: '人脸识别中...' })
     
-    // 模拟人脸识别过程
-    setTimeout(() => {
+    // 1. 模拟人脸识别过程 (2秒)
+    await new Promise(resolve => setTimeout(resolve, 2000))
+    
+    // 2. 识别成功后，获取用户待取件订单
+    try {
+      const userId = app.globalData.userId
+      if (!userId) {
+        wx.hideLoading()
+        wx.showToast({ title: '请先登录', icon: 'none' })
+        setTimeout(() => {
+          wx.navigateTo({ url: '/pages/login/login' })
+        }, 1500)
+        return
+      }
+
+      // 获取用户所有待取件订单
+      const res = await service.order.getMyOrders(0) // 0: 待取件
+      
       wx.hideLoading()
-      
-      // 假设人脸识别成功，获取用户待取件订单
-      this.loadUserOrders()
-      
-      // 模拟人脸识别成功后自动获取最近的一个待取件订单并开仓
-      setTimeout(() => {
-        const { userOrders } = this.data
-        if (userOrders.length > 0) {
-          // 取第一个订单的取件码
-          const firstOrder = userOrders[0]
-          this.setData({ pickCode: firstOrder.pickCode })
-          // 自动调用取件
-          this.handlePickUp()
-        } else {
-          wx.showModal({
-            title: '人脸识别成功',
-            content: '当前没有待取件的快递',
-            showCancel: false
-          })
-        }
-      }, 1000)
-    }, 2000)
+
+      if (res.code === 200 && res.data && res.data.length > 0) {
+        const firstOrder = res.data[0]
+        
+        // 3. 弹窗提示成功，并确认开门
+        wx.showModal({
+          title: '人脸识别成功',
+          content: `识别到您有 ${res.data.length} 个待取件包裹，即将打开最近的一个\n(单号：${firstOrder.orderNo})`,
+          showCancel: false,
+          success: () => {
+            this.setData({ pickCode: firstOrder.pickCode })
+            this.handlePickUp()
+          }
+        })
+      } else {
+        wx.showModal({
+          title: '人脸识别成功',
+          content: '身份验证通过，但您当前没有待取件的包裹',
+          showCancel: false
+        })
+      }
+    } catch (error) {
+      wx.hideLoading()
+      console.error('人脸识别后获取订单失败:', error)
+      wx.showToast({ title: '获取订单信息失败', icon: 'none' })
+    }
   }
 })

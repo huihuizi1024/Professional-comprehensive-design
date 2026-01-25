@@ -44,7 +44,7 @@
         bindtap="onOrderTap"
       >
         <view class="order-header">
-          <view class="order-company">{{item.expressCompany || '未知快递公司'}}</view>
+          <view class="order-company">{{item.expressCompany || '顺丰速运'}}</view>
           <view class="order-status status-{{item.status}}">
             {{item.status === 0 ? '待取件' : item.status === 1 ? '已取件' : '已过期'}}
           </view>

@@ -2,7 +2,7 @@
 <scroll-view class="scrollarea" scroll-y type="list">
   <view class="container">
     <!-- 用户信息卡片 -->
-    <view class="user-banner" bindtap="{{isLoggedIn ? 'goToEditProfile' : 'goToLogin'}}">
+    <view class="user-banner" bindtap="{{isLoggedIn ? '' : 'goToLogin'}}">
       <view class="user-avatar-box">
         <text class="avatar-icon" wx:if="{{!userInfo.avatarUrl}}">👤</text>
         <image class="avatar-img" wx:else src="{{userInfo.avatarUrl}}" mode="aspectFill"></image>
@@ -17,19 +17,19 @@
           <view class="user-desc">登录后享受更多服务</view>
         </block>
       </view>
-      <view class="user-arrow">›</view>
+      <view class="user-arrow" wx:if="{{!isLoggedIn}}">›</view>
     </view>
 
     <!-- 功能菜单 - 宫格布局 -->
     <view class="service-card">
       <view class="card-title">我的服务</view>
       <view class="grid-container">
-        <view class="grid-item" bindtap="goToOrders" wx:if="{{isLoggedIn}}">
+        <view class="grid-item" bindtap="goToOrders">
           <view class="icon-box color-blue">📋</view>
           <text class="grid-text">我的订单</text>
         </view>
 
-        <view class="grid-item" bindtap="goToAddress" wx:if="{{isLoggedIn}}">
+        <view class="grid-item" bindtap="goToAddress">
           <view class="icon-box color-orange">📍</view>
           <text class="grid-text">地址管理</text>
         </view>

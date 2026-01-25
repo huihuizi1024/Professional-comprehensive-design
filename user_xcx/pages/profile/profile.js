@@ -136,11 +136,12 @@ Page({
   },
 
   goToSettings() {
-    // 设置页面正在开发中
-    wx.showModal({
-      title: '提示',
-      content: '设置功能正在开发中，敬请期待！',
-      showCancel: false
+    if (!this.data.isLoggedIn) {
+      this.showLoginTip()
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/edit-profile/edit-profile'
     })
   }
 })
