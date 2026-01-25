@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS express_orders (
     compartment_id BIGINT NOT NULL COMMENT '仓门ID',
     sender_name VARCHAR(50) COMMENT '发件人姓名',
     sender_phone VARCHAR(20) COMMENT '发件人手机号',
+    express_company VARCHAR(50) COMMENT '快递公司',
     receiver_name VARCHAR(50) NOT NULL COMMENT '收件人姓名',
     receiver_phone VARCHAR(20) NOT NULL COMMENT '收件人手机号',
     receiver_user_id BIGINT COMMENT '收件人用户ID',

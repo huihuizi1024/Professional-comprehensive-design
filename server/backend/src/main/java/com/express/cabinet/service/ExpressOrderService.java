@@ -112,6 +112,12 @@ public class ExpressOrderService {
             throw new RuntimeException("收件人不能为空");
         }
         order.setReceiverName(order.getReceiverName().trim());
+
+        if (order.getExpressCompany() != null) {
+            String expressCompany = order.getExpressCompany().trim();
+            order.setExpressCompany(expressCompany.isEmpty() ? null : expressCompany);
+        }
+
         if (order.getReceiverPhone() == null || order.getReceiverPhone().trim().isEmpty()) {
             throw new RuntimeException("收件人手机号不能为空");
         }

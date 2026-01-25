@@ -30,6 +30,9 @@ public class ExpressOrder {
     @Column(name = "sender_phone", length = 20)
     private String senderPhone;
 
+    @Column(name = "express_company", length = 50)
+    private String expressCompany;
+
     @Column(name = "receiver_name", nullable = false, length = 50)
     private String receiverName;
 
