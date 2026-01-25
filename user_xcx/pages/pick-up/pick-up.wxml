@@ -25,10 +25,8 @@
         <view class="button-group">
           <button class="btn-pickup" bindtap="handlePickUp" loading="{{loading}}">确认取件</button>
           <button class="btn-face" bindtap="handleFaceRecognition">人脸识别取件</button>
-          <view class="secondary-btns">
-            <button class="btn-query" bindtap="handleQuery">查询快递</button>
-            <button class="btn-scan" bindtap="handleScan">扫码取件</button>
-          </view>
+          <button class="btn-query" bindtap="handleQuery">查询快递</button>
+          <button class="btn-scan" bindtap="handleScan">扫码取件</button>
         </view>
       </view>
 
