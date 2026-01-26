@@ -1,0 +1,42 @@
+<navigation-bar title="工作台" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="page-container">
+    <view class="header-section">
+      <view class="welcome-box">
+        <text class="welcome-title">工作台</text>
+        <text class="welcome-subtitle">高效处理每一份托付</text>
+      </view>
+    </view>
+    
+    <view class="main-content">
+      <view class="section-title">常用功能</view>
+      <view class="card-grid">
+        <view class="action-card primary" bindtap="scanCabinet">
+          <view class="card-icon-box">
+            <text class="icon">📦</text>
+          </view>
+          <view class="card-info">
+            <text class="label">投递快递</text>
+            <text class="desc">扫码投递到快递柜</text>
+          </view>
+          <text class="arrow">›</text>
+        </view>
+        
+        <view class="action-card" bindtap="viewOrders">
+          <view class="card-icon-box blue">
+            <text class="icon">🚚</text>
+          </view>
+          <view class="card-info">
+            <text class="label">待取件</text>
+            <text class="desc">查看超时或退回件</text>
+          </view>
+          <text class="arrow">›</text>
+        </view>
+      </view>
+      
+      <view class="logout-section">
+        <button class="btn-logout" bindtap="logout">退出登录</button>
+      </view>
+    </view>
+  </view>
+</scroll-view>

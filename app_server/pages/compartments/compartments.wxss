@@ -1,0 +1,81 @@
+page {
+  background-color: #f7f7f7;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow: hidden;
+}
+
+.container {
+  padding: 30rpx;
+}
+
+.header-tip {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+  padding-left: 10rpx;
+}
+
+.compartment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+}
+
+.compartment-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
+  border: 1rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.compartment-card:active {
+  background-color: #f0f7ff;
+  border-color: #667eea;
+}
+
+.card-icon {
+  font-size: 48rpx;
+  margin-bottom: 16rpx;
+}
+
+.card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 12rpx;
+}
+
+.card-tag {
+  font-size: 22rpx;
+  color: #667eea;
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}

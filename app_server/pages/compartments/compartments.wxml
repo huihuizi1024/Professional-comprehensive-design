@@ -1,0 +1,25 @@
+<navigation-bar title="选择仓门" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="header-tip">请选择一个可用仓门进行投递</view>
+    
+    <view class="compartment-grid">
+      <view
+        class="compartment-card"
+        wx:for="{{compartments}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectCompartment"
+      >
+        <view class="card-icon">🚪</view>
+        <view class="card-title">仓门 {{item.compartmentNo || item.id}}</view>
+        <view class="card-tag">{{item.size || '标准'}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{compartments.length === 0}}" class="empty-state">
+      <view class="empty-icon">😕</view>
+      <text>当前柜体暂无可用仓门</text>
+    </view>
+  </view>
+</scroll-view>

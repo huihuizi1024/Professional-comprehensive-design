@@ -1,0 +1,36 @@
+<navigation-bar title="选择快递柜" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="header-box">
+      <text class="header-title">请选择投递的快递柜</text>
+      <text class="header-desc">您可以扫描柜体二维码或手动输入编号</text>
+    </view>
+
+    <!-- 扫码区域 -->
+    <view class="scan-section">
+      <view class="scan-card" bindtap="scanCabinet">
+        <view class="scan-icon">📷</view>
+        <view class="scan-text">扫描快递柜二维码</view>
+      </view>
+    </view>
+
+    <!-- 分割线 -->
+    <view class="divider">
+      <view class="line"></view>
+      <text>或手动输入</text>
+      <view class="line"></view>
+    </view>
+
+    <!-- 手动输入区域 -->
+    <view class="input-section">
+      <view class="input-box">
+        <input
+          class="input"
+          placeholder="请输入编号（如 CAB001）"
+          bindinput="onInputCode"
+        />
+      </view>
+      <button class="confirm-btn" bindtap="confirmInput">确认进入</button>
+    </view>
+  </view>
+</scroll-view>
