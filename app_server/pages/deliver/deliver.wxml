@@ -1,0 +1,54 @@
+<navigation-bar title="快递投递" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    
+    <view class="info-card">
+      <view class="info-title">当前投递位置</view>
+      <view class="info-grid">
+        <view class="info-item">
+          <text class="label">柜体编号</text>
+          <text class="value">{{cabinetId}}</text>
+        </view>
+        <view class="info-item">
+          <text class="label">仓门编号</text>
+          <text class="value highlight">{{compartmentId}}号</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-card">
+      <view class="form-item">
+        <text class="label">快递单号</text>
+        <input
+          class="input"
+          placeholder="请输入或扫描快递单号"
+          bindinput="onOrderNo"
+        />
+        <!-- Optional: Add scan icon here if supported -->
+      </view>
+
+      <view class="form-item">
+        <text class="label">收件人姓名</text>
+        <input
+          class="input"
+          placeholder="请输入收件人姓名"
+          value="{{receiverName}}"
+          bindinput="onName"
+        />
+      </view>
+
+      <view class="form-item">
+        <text class="label">收件人手机号</text>
+        <input
+          class="input"
+          placeholder="请输入收件人手机号"
+          type="number"
+          value="{{receiverPhone}}"
+          bindinput="onPhone"
+        />
+      </view>
+
+      <button class="submit-btn" bindtap="deliver">确认投递</button>
+    </view>
+  </view>
+</scroll-view>

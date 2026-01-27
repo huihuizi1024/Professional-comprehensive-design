@@ -1,0 +1,97 @@
+page {
+  background-color: #f7f7f7;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollarea {
+  flex: 1;
+  overflow: hidden;
+}
+
+.container {
+  padding: 20rpx 30rpx;
+}
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.order-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.cabinet-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.compartment-tag {
+  font-size: 24rpx;
+  color: #667eea;
+  background-color: rgba(102, 126, 234, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+}
+
+.order-content {
+  margin-bottom: 30rpx;
+}
+
+.info-row {
+  display: flex;
+  margin-bottom: 10rpx;
+  font-size: 28rpx;
+}
+
+.info-row .label {
+  color: #999;
+  width: 140rpx;
+}
+
+.info-row .value {
+  color: #333;
+  flex: 1;
+}
+
+.order-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-pickup {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  font-size: 28rpx;
+  padding: 10rpx 40rpx;
+  border-radius: 30rpx;
+  margin: 0;
+  line-height: 2;
+}
+
+.btn-pickup::after {
+  border: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 100rpx 0;
+  color: #999;
+  font-size: 28rpx;
+}

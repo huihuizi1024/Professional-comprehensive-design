@@ -1,0 +1,32 @@
+<navigation-bar title="待取件订单" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list">
+  <view class="container">
+    <view class="order-list">
+      <view wx:for="{{orders}}" wx:key="id" class="order-card">
+        <view class="order-header">
+          <text class="cabinet-name">柜体：{{item.cabinetId}}</text>
+          <text class="compartment-tag">{{item.compartmentId}}号格口</text>
+        </view>
+        
+        <view class="order-content">
+          <view class="info-row">
+            <text class="label">发件人</text>
+            <text class="value">{{item.senderName}}</text>
+          </view>
+          <view class="info-row">
+            <text class="label">联系电话</text>
+            <text class="value">{{item.senderPhone}}</text>
+          </view>
+        </view>
+
+        <view class="order-footer">
+          <button class="btn-pickup" data-id="{{item.compartmentId}}" bindtap="pickup">开仓取件</button>
+        </view>
+      </view>
+
+      <view wx:if="{{orders.length === 0}}" class="empty-state">
+        <text>暂无待取件订单</text>
+      </view>
+    </view>
+  </view>
+</scroll-view>
