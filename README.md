@@ -191,6 +191,51 @@ npm run dev
 | courier1 | 123456 | 快递员（userType=1） | 快递员账号 |
 | user1 | 123456 | 普通用户（userType=0） | 普通用户账号 |
 
+## 权限与角色
+
+### 角色定义（后端判定逻辑）
+
+- 未登录：未携带 `Authorization: Bearer <token>`
+- 普通用户：`userType=0`
+- 快递员：`userType=1`
+- 管理员：`username=admin`（注意：当前后端以用户名判断管理员权限，不以 `userType` 区分）
+
+### 鉴权规则
+
+- 除 `POST /api/auth/login`、`POST /api/auth/register`（以及预留的短信发送接口 `POST /api/auth/sms/send`）外，其它接口都需要登录（携带 token）。
+- token 校验失败会返回 `code=401`（例如未登录、token 过期、token 无效）。
+
+### 接口权限划分（按后端实际实现）
+
+- **管理员专用**（仅 `username=admin`）
+  - 用户管理：
+    - `GET /api/users/admin/list`
+    - `POST /api/users/admin`
+    - `PUT /api/users/admin/{id}`
+  - 订单全量与高级查询：
+    - `POST /api/orders`
+    - `GET /api/orders/user/{userId}`
+    - `GET /api/orders/cabinet/{cabinetId}`
+    - `GET /api/orders/status/{status}`
+- **快递员专用**（仅 `userType=1`）
+  - 我的投递单：`GET /api/orders/courier/me`
+  - 快递员投递：`POST /api/orders/courier/deliver`
+- **任意已登录用户可访问**
+  - 登录态：`GET /api/auth/me`、`PUT /api/users/me`
+  - 快递柜：`/api/cabinets/**`
+  - 统计：`GET /api/stats`
+- **订单可见性规则**
+  - 管理员：可查看全部订单与全部字段（`GET /api/orders`、`GET /api/orders/phone/{phone}` 等）
+  - 快递员：仅可查看自己投递的订单
+    - `GET /api/orders`：返回自己的投递单
+    - `GET /api/orders/phone/{phone}`：仅在自己的投递单中按手机号筛选
+    - `GET /api/orders/pick-code/{pickCode}`、`POST /api/orders/verify-pick-code`：仅可操作自己投递的订单
+  - 普通用户：仅可查看自己的订单
+    - `GET /api/orders`：返回自己的订单
+    - `GET /api/orders/me`：返回自己的订单（支持 `status` 筛选）
+    - `GET /api/orders/pick-code/{pickCode}`、`POST /api/orders/verify-pick-code`：仅可查看/核验自己的订单
+    - `POST /api/orders/pick-up`：仅可取走自己的订单
+
 ## 文档
 
 - API 接口文档：[`API.md`](./API.md)

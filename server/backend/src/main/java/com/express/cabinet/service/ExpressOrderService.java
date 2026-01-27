@@ -6,6 +6,7 @@ import com.express.cabinet.entity.Cabinet;
 import com.express.cabinet.repository.CabinetRepository;
 import com.express.cabinet.repository.CompartmentRepository;
 import com.express.cabinet.repository.ExpressOrderRepository;
+import com.express.cabinet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class ExpressOrderService {
     private final ExpressOrderRepository expressOrderRepository;
     private final CompartmentRepository compartmentRepository;
     private final CabinetRepository cabinetRepository;
+    private final UserRepository userRepository;
     private final Random random = new Random();
 
     public List<ExpressOrder> getAllOrders() {
@@ -50,6 +53,19 @@ public class ExpressOrderService {
             return getOrdersByCourierId(courierId);
         }
         return expressOrderRepository.findByCourierIdAndStatus(courierId, status);
+    }
+
+    public List<ExpressOrder> getOrdersByCourierIdAndReceiverPhone(Long courierId, String receiverPhone) {
+        if (courierId == null) {
+            throw new RuntimeException("快递员ID不能为空");
+        }
+        if (receiverPhone == null || receiverPhone.trim().isEmpty()) {
+            throw new RuntimeException("手机号不能为空");
+        }
+        String phone = receiverPhone.trim();
+        return expressOrderRepository.findByCourierId(courierId).stream()
+                .filter(o -> o.getReceiverPhone() != null && o.getReceiverPhone().equals(phone))
+                .collect(Collectors.toList());
     }
 
     public List<ExpressOrder> getOrdersByCabinetId(Long cabinetId) {
@@ -118,6 +134,10 @@ public class ExpressOrderService {
         order.setReceiverPhone(order.getReceiverPhone().trim());
         if (order.getOrderType() == null) {
             throw new RuntimeException("订单类型不能为空");
+        }
+
+        if (order.getReceiverUserId() == null && order.getReceiverPhone() != null) {
+            userRepository.findByPhone(order.getReceiverPhone()).ifPresent(u -> order.setReceiverUserId(u.getId()));
         }
 
         Cabinet cabinet = cabinetRepository.findById(order.getCabinetId())
