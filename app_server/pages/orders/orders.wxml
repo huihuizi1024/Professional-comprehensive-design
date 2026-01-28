@@ -9,14 +9,28 @@
         </view>
         
         <view class="order-content">
-          <view class="info-row">
-            <text class="label">发件人</text>
-            <text class="value">{{item.senderName}}</text>
-          </view>
-          <view class="info-row">
-            <text class="label">联系电话</text>
-            <text class="value">{{item.senderPhone}}</text>
-          </view>
+          <!-- 快递入柜(0)：显示收件人信息 -->
+          <block wx:if="{{item.orderType === 0}}">
+            <view class="info-row">
+              <text class="label">收件人</text>
+              <text class="value">{{item.receiverName || '未知'}}</text>
+            </view>
+            <view class="info-row">
+              <text class="label">联系电话</text>
+              <text class="value">{{item.receiverPhone || '未知'}}</text>
+            </view>
+          </block>
+          <!-- 用户寄件(2)或寄存(1)：显示发件人信息 -->
+          <block wx:else>
+            <view class="info-row">
+              <text class="label">寄件人</text>
+              <text class="value">{{item.senderName || '未知'}}</text>
+            </view>
+            <view class="info-row">
+              <text class="label">联系电话</text>
+              <text class="value">{{item.senderPhone || '未知'}}</text>
+            </view>
+          </block>
         </view>
 
         <view class="order-footer">
