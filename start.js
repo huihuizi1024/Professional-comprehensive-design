@@ -248,9 +248,9 @@ async function getContainerRunning(containerName) {
 async function ensureLocalMySqlReady() {
   const host = 'localhost'
   const port = '3306'
-  const user = 'root'
-  const password = 'root'
-  const database = 'express_cabinet'
+  const user = process.env.DB_USER || 'root'
+  const password = process.env.DB_PASSWORD || 'root'
+  const database = process.env.DB_NAME || 'express_cabinet'
 
   logStep('检查本地 MySQL 环境')
   const version = await spawnCapture('mysql', ['--version'])
