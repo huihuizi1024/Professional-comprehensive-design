@@ -68,7 +68,7 @@ function Dashboard() {
         title={<span style={{ color: 'var(--text-secondary)' }}>{title}</span>}
         value={value}
         prefix={React.cloneElement(prefix, { style: { color } })}
-        valueStyle={{ color: '#fff', fontFamily: 'JetBrains Mono', fontWeight: 'bold' }}
+        valueStyle={{ color: 'var(--text-primary)', fontFamily: 'JetBrains Mono', fontWeight: 'bold' }}
         suffix={suffix}
       />
       <div style={{ marginTop: '16px' }}>
@@ -76,7 +76,7 @@ function Dashboard() {
           percent={70} 
           showInfo={false} 
           strokeColor={color} 
-          trailColor="rgba(255,255,255,0.1)" 
+          trailColor="#f0f0f0" 
           size="small"
         />
       </div>
@@ -103,7 +103,7 @@ function Dashboard() {
             title="在线柜组"
             value={stats.enabledCabinets}
             prefix={<AppstoreOutlined />}
-            color="#00f3ff"
+            color="#1890ff"
             suffix="组"
           />
         </Col>
@@ -112,7 +112,7 @@ function Dashboard() {
             title="总订单流"
             value={stats.totalOrders}
             prefix={<FileTextOutlined />}
-            color="#7000ff"
+            color="#722ed1"
             suffix="单"
           />
         </Col>
@@ -121,7 +121,7 @@ function Dashboard() {
             title="已交付"
             value={stats.completedOrders}
             prefix={<CheckCircleOutlined />}
-            color="#00ff9d"
+            color="#52c41a"
             suffix="单"
           />
         </Col>
@@ -130,7 +130,7 @@ function Dashboard() {
             title="待处理"
             value={stats.pendingOrders}
             prefix={<ClockCircleOutlined />}
-            color="#ff0055"
+            color="#faad14"
             suffix="单"
           />
         </Col>
@@ -142,7 +142,7 @@ function Dashboard() {
             title="禁用柜组"
             value={stats.disabledCabinets}
             prefix={<StopOutlined />}
-            color="#ff9900"
+            color="#ff4d4f"
             suffix="组"
           />
         </Col>
@@ -151,7 +151,7 @@ function Dashboard() {
             title="仓门故障"
             value={stats.faultCompartments}
             prefix={<WarningOutlined />}
-            color="#ff0055"
+            color="#ff4d4f"
             suffix="个"
           />
         </Col>
@@ -160,7 +160,7 @@ function Dashboard() {
             title="在库仓门"
             value={stats.occupiedCompartments}
             prefix={<DatabaseOutlined />}
-            color="#00ff9d"
+            color="#13c2c2"
             suffix="个"
           />
         </Col>
@@ -169,7 +169,7 @@ function Dashboard() {
             title="日用电量"
             value={stats.totalPowerConsumption}
             prefix={<ThunderboltOutlined />}
-            color="#00f3ff"
+            color="#1890ff"
             suffix="度"
           />
         </Col>
@@ -179,24 +179,25 @@ function Dashboard() {
         <Col span={24}>
           <div className="tech-card" style={{ padding: '24px', minHeight: '300px' }}>
              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px', gap: '8px' }}>
-                <DatabaseOutlined style={{ color: 'var(--primary-neon)' }} />
-                <h3 style={{ margin: 0, color: '#fff' }}>系统运行日志</h3>
+                <DatabaseOutlined style={{ color: '#1890ff' }} />
+                <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>系统运行日志</h3>
              </div>
              <div style={{ 
-               background: 'rgba(0,0,0,0.3)', 
+               background: '#f5f5f5', 
                padding: '16px', 
                borderRadius: '4px',
                fontFamily: 'JetBrains Mono',
                color: 'var(--text-secondary)',
                height: '200px',
-               overflowY: 'auto'
+               overflowY: 'auto',
+               border: '1px solid #e8e8e8'
              }}>
                <p>[系统] 正在初始化核心模块...</p>
                <p>[网络] 已连接至服务器 localhost:8080</p>
                <p>[认证] 用户 {api.defaults.headers?.common?.Authorization ? '已验证' : '需要检查'}</p>
                <p>[数据] 已获取 {stats.totalCabinets} 条柜组记录</p>
                <p>[数据] 已获取 {stats.totalOrders} 条订单记录</p>
-               <p style={{ color: 'var(--primary-neon)' }}>[就绪] 系统运行正常。</p>
+               <p style={{ color: '#52c41a' }}>[就绪] 系统运行正常。</p>
              </div>
           </div>
         </Col>

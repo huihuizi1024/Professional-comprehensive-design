@@ -71,6 +71,10 @@ module.exports = {
     getMyOrders(status) {
       return api.get('/orders/me', { status })
     },
+
+    getMySentOrders(status) {
+      return api.get('/orders/me/sent', { status })
+    },
     
     getByPickCode(pickCode) {
       return api.get(`/orders/pick-code/${pickCode}`)

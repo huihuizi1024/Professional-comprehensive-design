@@ -126,13 +126,13 @@ Page({
   },
 
   goToPickUp() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/pick-up/pick-up'
     })
   },
 
   goToOrders() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/orders/orders'
     })
   }

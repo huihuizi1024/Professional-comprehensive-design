@@ -21,6 +21,20 @@
       </view>
     </view>
 
+    <!-- 范围筛选 -->
+    <view class="filter-section scope-filter">
+      <view 
+        class="filter-item" 
+        wx:for="{{scopeOptions}}" 
+        wx:key="value"
+        data-scope="{{item.value}}"
+        class="filter-item {{currentScope === item.value ? 'active' : ''}}"
+        bindtap="onScopeChange"
+      >
+        {{item.text}}
+      </view>
+    </view>
+
     <!-- 状态筛选 -->
     <view class="filter-section">
       <view 

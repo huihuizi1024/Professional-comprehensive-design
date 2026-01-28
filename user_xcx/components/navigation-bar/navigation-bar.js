@@ -92,9 +92,23 @@ Component({
     back() {
       const data = this.data
       if (data.delta) {
-        wx.navigateBack({
-          delta: data.delta
-        })
+        const pages = getCurrentPages()
+        if (pages.length > 1) {
+          wx.navigateBack({
+            delta: data.delta
+          })
+        } else {
+          // 只有一个页面时，返回到首页
+          wx.switchTab({
+            url: '/pages/cabinets/cabinets',
+            fail: () => {
+              // 如果不是 TabBar 页面，尝试 reLaunch
+              wx.reLaunch({
+                url: '/pages/cabinets/cabinets'
+              })
+            }
+          })
+        }
       }
       this.triggerEvent('back', { delta: data.delta }, {})
     }

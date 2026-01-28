@@ -1,81 +1,86 @@
 .scrollarea {
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: var(--bg-color);
 }
 
 .container {
-  padding: 20rpx;
+  padding: 30rpx;
   display: flex;
   flex-direction: column;
   min-height: calc(100vh - 88rpx);
 }
 
 .pick-up-card {
-  background-color: #fff;
+  background-color: var(--card-bg);
   border-radius: 20rpx;
-  padding: 30rpx 20rpx;
-  margin-bottom: 20rpx;
-  box-shadow: 0 5rpx 20rpx rgba(0, 0, 0, 0.1);
+  padding: 40rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
 }
 
 .card-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 50rpx;
+  margin-bottom: 60rpx;
 }
 
 .card-header .icon {
-  font-size: 60rpx;
+  font-size: 64rpx;
   margin-right: 20rpx;
 }
 
 .card-header .title {
   font-size: 36rpx;
-  color: #333;
-  font-weight: bold;
+  color: var(--text-main);
+  font-weight: 600;
 }
 
 .input-section {
-  margin-bottom: 50rpx;
+  margin-bottom: 60rpx;
 }
 
 .input-section .label {
   display: block;
   font-size: 28rpx;
-  color: #666;
-  margin-bottom: 20rpx;
+  color: var(--text-regular);
+  margin-bottom: 24rpx;
   text-align: center;
 }
 
 .pick-code-input {
   width: 100%;
-  height: 100rpx;
-  background-color: #f5f5f5;
-  border-radius: 15rpx;
+  height: 110rpx;
+  background-color: var(--bg-color);
+  border-radius: 16rpx;
   padding: 0 30rpx;
-  font-size: 40rpx;
+  font-size: 44rpx;
   text-align: center;
-  letter-spacing: 10rpx;
+  letter-spacing: 12rpx;
   box-sizing: border-box;
   font-weight: bold;
-  color: #333;
+  color: var(--text-main);
+  border: 2rpx solid var(--border-color);
 }
 
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 15rpx;
+  gap: 20rpx;
 }
 
 .btn-query {
   flex: 1;
   height: 90rpx;
-  background-color: #f5f5f5;
-  color: #667eea;
+  background-color: var(--primary-light);
+  color: var(--primary-color);
   font-size: 30rpx;
   border-radius: 45rpx;
   border: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-query::after {
@@ -85,62 +90,91 @@
 .btn-pickup {
   flex: 1;
   height: 90rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-color);
   color: #fff;
   font-size: 30rpx;
   border-radius: 45rpx;
   border: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(24, 144, 255, 0.2);
 }
 
 .btn-pickup::after {
   border: none;
 }
 
+.btn-scan {
+  flex: 1;
+  height: 90rpx;
+  background-color: #fff;
+  color: var(--text-main);
+  font-size: 30rpx;
+  border-radius: 45rpx;
+  border: 2rpx solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-scan::after {
+  border: none;
+}
+
 .tips {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: #fff;
   border-radius: 20rpx;
   padding: 30rpx;
-  margin-bottom: 20rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
 }
 
 .tips-title {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: bold;
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-weight: 600;
   margin-bottom: 20rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid var(--primary-color);
+  line-height: 1;
 }
 
 .tips-item {
   font-size: 26rpx;
-  color: #666;
+  color: var(--text-regular);
   line-height: 1.8;
-  margin-bottom: 10rpx;
-  padding-left: 20rpx;
+  margin-bottom: 12rpx;
 }
 
 .help-section {
-  background-color: rgba(255, 255, 255, 0.95);
+  background-color: #fff;
   border-radius: 20rpx;
   padding: 30rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
 }
 
 .help-title {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: bold;
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-weight: 600;
   margin-bottom: 20rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid var(--primary-color);
+  line-height: 1;
 }
 
 .help-item {
   display: flex;
   align-items: center;
   font-size: 26rpx;
-  color: #666;
+  color: var(--text-regular);
 }
 
 .help-icon {
   font-size: 32rpx;
-  margin-right: 15rpx;
+  margin-right: 16rpx;
 }
 
 .help-text {
