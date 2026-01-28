@@ -27,10 +27,10 @@ function Login() {
     setLoading(true)
     try {
       await login(values.loginName, values.password)
-      message.success('身份验证通过 / ACCESS GRANTED')
+      message.success('登录成功')
       navigate('/')
     } catch (error) {
-      message.error(error.response?.data?.message || '身份验证失败 / ACCESS DENIED')
+      message.error(error.response?.data?.message || '登录失败')
     } finally {
       setLoading(false)
     }
@@ -96,7 +96,7 @@ function Login() {
       justifyContent: 'center', 
       alignItems: 'center', 
       minHeight: '100vh',
-      background: 'radial-gradient(circle at center, #112240 0%, #0a192f 100%)',
+      background: 'linear-gradient(135deg, #1890ff 0%, #40a9ff 100%)',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -108,20 +108,23 @@ function Login() {
         transform: 'translate(-50%, -50%)',
         width: '600px',
         height: '600px',
-        background: 'radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%)',
         pointerEvents: 'none'
       }} />
 
       <div className="tech-card" style={{ 
         width: 400, 
         padding: '40px', 
-        borderRadius: '8px',
+        borderRadius: '16px',
         position: 'relative',
-        zIndex: 1
+        zIndex: 1,
+        background: '#fff',
+        border: 'none',
+        boxShadow: '0 10px 40px rgba(0,0,0,0.1)'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <RocketOutlined style={{ fontSize: '48px', color: 'var(--primary-neon)', marginBottom: '16px' }} />
-          <h2 style={{ color: '#fff', margin: 0, letterSpacing: '2px' }}>智能快递柜系统</h2>
+          <RocketOutlined style={{ fontSize: '48px', color: '#1890ff', marginBottom: '16px' }} />
+          <h2 style={{ color: '#333', margin: 0, fontWeight: 600 }}>智能快递柜系统</h2>
         </div>
 
         <Tabs
@@ -145,9 +148,8 @@ function Login() {
                     rules={[{ required: true, message: '请输入手机号或用户名' }]}
                   >
                     <Input
-                      prefix={<UserOutlined style={{ color: 'var(--primary-neon)' }} />}
+                      prefix={<UserOutlined style={{ color: '#1890ff' }} />}
                       placeholder="手机号或用户名"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
@@ -156,9 +158,8 @@ function Login() {
                     rules={[{ required: true, message: '请输入密码' }]}
                   >
                     <Input.Password
-                      prefix={<LockOutlined style={{ color: 'var(--primary-neon)' }} />}
+                      prefix={<LockOutlined style={{ color: '#1890ff' }} />}
                       placeholder="密码"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
@@ -170,11 +171,9 @@ function Login() {
                       loading={loading}
                       style={{
                         height: '48px',
-                        background: 'var(--primary-neon)',
-                        borderColor: 'var(--primary-neon)',
-                        color: '#0a192f',
-                        fontWeight: 'bold',
-                        letterSpacing: '1px'
+                        background: '#1890ff',
+                        borderColor: '#1890ff',
+                        fontWeight: 'bold'
                       }}
                     >
                       登录
@@ -202,9 +201,8 @@ function Login() {
                     ]}
                   >
                     <Input
-                      prefix={<UserOutlined style={{ color: 'var(--primary-neon)' }} />}
+                      prefix={<UserOutlined style={{ color: '#1890ff' }} />}
                       placeholder="手机号"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
@@ -214,13 +212,13 @@ function Login() {
                   >
                     <Input
                       placeholder="验证码"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                       addonAfter={
                         <Button
                           type="link"
                           onClick={handleSendSms}
                           loading={smsLoading}
                           disabled={smsCountdown > 0}
+                          style={{ color: '#1890ff' }}
                         >
                           {smsCountdown > 0 ? `${smsCountdown}s` : '获取验证码'}
                         </Button>
@@ -233,9 +231,8 @@ function Login() {
                     rules={[{ required: true, message: '请输入密码' }]}
                   >
                     <Input.Password
-                      prefix={<LockOutlined style={{ color: 'var(--primary-neon)' }} />}
+                      prefix={<LockOutlined style={{ color: '#1890ff' }} />}
                       placeholder="密码"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
@@ -255,16 +252,14 @@ function Login() {
                     ]}
                   >
                     <Input.Password
-                      prefix={<LockOutlined style={{ color: 'var(--primary-neon)' }} />}
+                      prefix={<LockOutlined style={{ color: '#1890ff' }} />}
                       placeholder="确认密码"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
                   <Form.Item name="realName">
                     <Input
                       placeholder="姓名（可选）"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }}
                     />
                   </Form.Item>
 
@@ -276,11 +271,9 @@ function Login() {
                       loading={loading}
                       style={{
                         height: '48px',
-                        background: 'var(--primary-neon)',
-                        borderColor: 'var(--primary-neon)',
-                        color: '#0a192f',
-                        fontWeight: 'bold',
-                        letterSpacing: '1px'
+                        background: '#1890ff',
+                        borderColor: '#1890ff',
+                        fontWeight: 'bold'
                       }}
                     >
                       注册并登录
@@ -292,7 +285,7 @@ function Login() {
           ]}
         />
         
-        <div style={{ textAlign: 'center', color: 'rgba(255,255,255,0.3)', fontSize: '12px', fontFamily: 'JetBrains Mono' }}>
+        <div style={{ textAlign: 'center', color: '#999', fontSize: '12px', marginTop: '20px' }}>
           <p>默认账号: admin / 123456</p>
         </div>
       </div>

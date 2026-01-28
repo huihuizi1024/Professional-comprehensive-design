@@ -30,33 +30,35 @@ Page({
     return true
   },
 
+  // 确认取件
   async handlePickUp() {
-    if (!this.validatePickCode()) {
+    if (!this.data.pickCode) {
+      wx.showToast({ title: '请输入取件码', icon: 'none' })
       return
     }
 
-    this.setData({ loading: true })
-    wx.showLoading({ title: '取件中...' })
-
+    wx.showLoading({ title: '处理中...' })
     try {
       const res = await service.order.pickUp(this.data.pickCode)
-
       wx.hideLoading()
-      this.setData({ loading: false })
       
       if (res.code === 200) {
         wx.showModal({
           title: '取件成功',
-          content: `格口 ${res.data.compartmentNo} 已打开，请取出快递`,
+          content: '请取出您的包裹并关闭柜门',
           showCancel: false,
-          success: () => {
-            this.setData({ pickCode: '' })
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateBack({
+                delta: 1
+              })
+            }
           }
         })
       }
     } catch (error) {
       wx.hideLoading()
-      this.setData({ loading: false })
+      wx.showToast({ title: '取件失败，请重试', icon: 'none' })
     }
   },
 

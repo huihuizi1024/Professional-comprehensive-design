@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -44,6 +45,17 @@ public class ExpressOrderService {
         return expressOrderRepository.findByReceiverUserIdAndStatus(userId, status);
     }
 
+    public List<ExpressOrder> getSentExpressOrdersBySenderPhoneAndStatus(String senderPhone, Integer status) {
+        if (senderPhone == null || senderPhone.trim().isEmpty()) {
+            throw new RuntimeException("发件人手机号不能为空");
+        }
+        String phone = senderPhone.trim();
+        if (status == null) {
+            return expressOrderRepository.findBySenderPhoneAndOrderType(phone, 2);
+        }
+        return expressOrderRepository.findBySenderPhoneAndOrderTypeAndStatus(phone, 2, status);
+    }
+
     public List<ExpressOrder> getOrdersByCourierId(Long courierId) {
         return expressOrderRepository.findByCourierId(courierId);
     }
@@ -66,6 +78,41 @@ public class ExpressOrderService {
         return expressOrderRepository.findByCourierId(courierId).stream()
                 .filter(o -> o.getReceiverPhone() != null && o.getReceiverPhone().equals(phone))
                 .collect(Collectors.toList());
+    }
+
+    public List<ExpressOrder> getAvailableSendOrders(Integer status, String receiverPhone) {
+        Integer s = status == null ? 0 : status;
+        List<ExpressOrder> orders = expressOrderRepository.findByOrderTypeAndStatusAndCourierIdIsNull(2, s);
+        if (receiverPhone == null || receiverPhone.trim().isEmpty()) {
+            return orders;
+        }
+        String phone = receiverPhone.trim();
+        return orders.stream()
+                .filter(o -> o.getReceiverPhone() != null && o.getReceiverPhone().equals(phone))
+                .collect(Collectors.toList());
+    }
+
+    public List<ExpressOrder> mergeOrders(List<ExpressOrder> first, List<ExpressOrder> second) {
+        List<ExpressOrder> result = new ArrayList<>();
+        if (first != null) {
+            result.addAll(first);
+        }
+        if (second != null) {
+            for (ExpressOrder o : second) {
+                if (o == null) continue;
+                boolean exists = false;
+                for (ExpressOrder r : result) {
+                    if (r != null && r.getId() != null && r.getId().equals(o.getId())) {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists) {
+                    result.add(o);
+                }
+            }
+        }
+        return result;
     }
 
     public List<ExpressOrder> getOrdersByCabinetId(Long cabinetId) {

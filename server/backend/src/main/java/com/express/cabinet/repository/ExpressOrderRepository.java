@@ -13,8 +13,11 @@ public interface ExpressOrderRepository extends JpaRepository<ExpressOrder, Long
     List<ExpressOrder> findByReceiverPhone(String receiverPhone);
     List<ExpressOrder> findByReceiverUserId(Long receiverUserId);
     List<ExpressOrder> findByReceiverUserIdAndStatus(Long receiverUserId, Integer status);
+    List<ExpressOrder> findBySenderPhoneAndOrderType(String senderPhone, Integer orderType);
+    List<ExpressOrder> findBySenderPhoneAndOrderTypeAndStatus(String senderPhone, Integer orderType, Integer status);
     List<ExpressOrder> findByCourierId(Long courierId);
     List<ExpressOrder> findByCourierIdAndStatus(Long courierId, Integer status);
+    List<ExpressOrder> findByOrderTypeAndStatusAndCourierIdIsNull(Integer orderType, Integer status);
     List<ExpressOrder> findByCabinetId(Long cabinetId);
     List<ExpressOrder> findByStatus(Integer status);
     long countByStatus(Integer status);

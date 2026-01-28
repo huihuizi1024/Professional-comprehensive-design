@@ -7,13 +7,18 @@ Page({
     loading: false,
     currentTab: 0,
     currentStatus: null,
+    currentScope: 'received',
     searchKeyword: '',
     statusOptions: [
       { value: null, text: '全部订单' },
       { value: 0, text: '待取件' },
       { value: 1, text: '已取件' },
       { value: 2, text: '已过期' }
-    ]
+    ],
+    scopeOptions: [
+      { value: 'received', text: '我收到的' },
+      { value: 'sent', text: '我发出的' }
+    ],
   },
 
   onLoad() {
@@ -39,19 +44,16 @@ Page({
             url: '/pages/login/login'
           })
         }, 1500)
+        this.setData({ loading: false })
         return
       }
 
-      // 使用getByUserId API获取所有订单，然后在前端进行筛选
-      const res = await service.order.getByUserId(userId)
+      const res = this.data.currentScope === 'sent'
+        ? await service.order.getMySentOrders(status)
+        : await service.order.getMyOrders(status)
       
       if (res.code === 200) {
         let filteredOrders = res.data
-        
-        // 按状态筛选
-        if (status !== null && status !== undefined) {
-          filteredOrders = filteredOrders.filter(order => order.status === status)
-        }
         
         // 搜索功能
         if (this.data.searchKeyword) {
@@ -71,8 +73,14 @@ Page({
       }
     } catch (error) {
       this.setData({ loading: false })
-      wx.showToast({ title: '获取订单失败', icon: 'none' })
+      wx.showToast({ title: error?.message || error?.data?.message || '获取订单失败', icon: 'none' })
     }
+  },
+
+  onScopeChange(e) {
+    const scope = e.currentTarget.dataset.scope
+    this.setData({ currentScope: scope })
+    this.loadOrders()
   },
 
   onStatusChange(e) {
@@ -116,7 +124,7 @@ Page({
   },
 
   goToPickUp() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/pick-up/pick-up'
     })
   },

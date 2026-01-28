@@ -95,7 +95,9 @@ Page({
         
         wx.showToast({ title: '更新成功', icon: 'success' })
         setTimeout(() => {
-          wx.navigateBack()
+          wx.navigateBack({
+            delta: 1
+          })
         }, 1500)
       }
     } catch (error) {

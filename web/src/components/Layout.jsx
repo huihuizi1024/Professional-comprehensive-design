@@ -30,24 +30,24 @@ function Layout() {
     {
       key: '/',
       icon: <DashboardOutlined />,
-      label: '态势感知', // Renamed from "Dashboard" for tech feel
+      label: '仪表盘',
     },
     ...(!isUser ? [{
       key: '/cabinets',
       icon: <AppstoreOutlined />,
-      label: '智能柜组', // Renamed from "Cabinet Management"
+      label: '快递柜管理',
     }] : []),
     {
       key: '/orders',
       icon: <FileTextOutlined />,
-      label: '物流追踪', // Renamed from "Order Management"
+      label: '订单管理',
     },
     ...(isAdmin
       ? [
           {
             key: '/users',
             icon: <TeamOutlined />,
-            label: '用户/骑手'
+            label: '用户管理'
           }
         ]
       : [])
@@ -56,7 +56,7 @@ function Layout() {
   const handleLogout = () => {
     logout()
     navigate('/login')
-    message.success('系统断开连接')
+    message.success('已退出登录')
   }
 
   const userMenuItems = [
@@ -68,13 +68,13 @@ function Layout() {
   ]
 
   return (
-    <AntLayout style={{ minHeight: '100vh', background: 'transparent' }}>
+    <AntLayout style={{ minHeight: '100vh' }}>
       <Sider 
-        width={220} 
-        style={{ 
-          background: 'rgba(17, 34, 64, 0.5)', 
-          backdropFilter: 'blur(10px)',
-          borderRight: '1px solid rgba(255, 255, 255, 0.05)'
+        width={240} 
+        theme="light"
+        style={{
+          boxShadow: '2px 0 8px 0 rgba(29,35,41,.05)',
+          zIndex: 10
         }}
       >
         <div style={{ 
@@ -83,10 +83,10 @@ function Layout() {
           alignItems: 'center', 
           justifyContent: 'center',
           color: colorPrimary,
-          fontSize: '18px',
+          fontSize: '20px',
           fontWeight: 'bold',
           letterSpacing: '1px',
-          textShadow: `0 0 10px ${colorPrimary}`
+          borderBottom: '1px solid #f0f0f0'
         }}>
           <RocketOutlined style={{ marginRight: 8, fontSize: '24px' }} />
           智能快递柜
@@ -96,21 +96,22 @@ function Layout() {
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={({ key }) => navigate(key)}
-          style={{ background: 'transparent', borderRight: 0 }}
+          style={{ borderRight: 0, marginTop: 16 }}
         />
       </Sider>
-      <AntLayout style={{ background: 'transparent' }}>
+      <AntLayout>
         <Header style={{ 
-          background: 'rgba(10, 25, 47, 0.8)', 
-          backdropFilter: 'blur(10px)',
+          background: colorBgContainer, 
           padding: '0 24px', 
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+          boxShadow: '0 1px 4px rgba(0,21,41,.08)',
+          zIndex: 9
         }}>
-          <div style={{ color: '#fff', fontSize: '16px', opacity: 0.8 }}>
-            <span style={{ color: colorPrimary }}>●</span> 系统运行正常
+          <div style={{ color: '#666', fontSize: '14px' }}>
+            <span style={{ color: colorPrimary, marginRight: 8 }}>●</span> 
+            {new Date().toLocaleDateString()}
           </div>
           <Dropdown 
             menu={{ 
@@ -124,32 +125,31 @@ function Layout() {
             placement="bottomRight"
           >
             <div style={{ 
-              color: '#ccd6f6', 
               cursor: 'pointer', 
               display: 'flex', 
               alignItems: 'center', 
               gap: '12px',
-              padding: '4px 12px',
-              border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '4px',
-              background: 'rgba(255,255,255,0.05)'
-            }}>
+              padding: '6px 16px',
+              borderRadius: '20px',
+              transition: 'all 0.3s',
+            }}
+            className="hover:bg-gray-100"
+            >
               <Avatar size="small" icon={<UserOutlined />} style={{ backgroundColor: colorPrimary }} />
-              <span style={{ fontFamily: 'JetBrains Mono' }}>{user?.username}</span>
+              <span style={{ color: '#333', fontWeight: 500 }}>{user?.username}</span>
             </div>
           </Dropdown>
         </Header>
-        <Content style={{ margin: '24px 24px 0', overflow: 'initial' }}>
+        <Content style={{ margin: '24px', overflow: 'initial', minHeight: 280 }}>
           <Outlet />
         </Content>
         <div style={{ 
           textAlign: 'center', 
           padding: '24px', 
-          color: 'rgba(255,255,255,0.3)', 
-          fontFamily: 'JetBrains Mono', 
+          color: '#999', 
           fontSize: '12px' 
         }}>
-          智能快递柜综合应用系统 ©2026 技术支持：REACT
+          智能快递柜综合应用系统 ©2026
         </div>
       </AntLayout>
     </AntLayout>

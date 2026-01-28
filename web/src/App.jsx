@@ -47,22 +47,24 @@ function App() {
     <BrowserRouter>
       <ConfigProvider
         theme={{
-          algorithm: theme.darkAlgorithm,
+          algorithm: theme.defaultAlgorithm,
           token: {
-            colorPrimary: '#00f3ff', // Neon Blue
-            colorBgContainer: '#112240',
-            colorBgLayout: '#0a192f',
-            borderRadius: 2,
+            colorPrimary: '#1890ff',
+            colorBgContainer: '#ffffff',
+            colorBgLayout: '#f0f2f5',
+            colorText: '#1f1f1f',
+            colorTextSecondary: '#595959',
+            borderRadius: 8,
             fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
           },
           components: {
             Layout: {
-              headerBg: '#0a192f',
-              siderBg: '#112240',
+              headerBg: '#ffffff',
+              siderBg: '#ffffff',
             },
             Menu: {
-              darkItemBg: '#112240',
-              itemSelectedBg: 'rgba(0, 243, 255, 0.1)',
+              itemSelectedBg: 'rgba(24, 144, 255, 0.12)',
+              itemSelectedColor: '#1890ff',
             }
           }
         }}

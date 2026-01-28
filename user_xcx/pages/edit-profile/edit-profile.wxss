@@ -1,56 +1,65 @@
+.scrollarea {
+  height: 100vh;
+  background-color: var(--bg-color);
+}
+
 .container {
-  padding: 0 20rpx;
-  background-color: #f5f5f5;
-  min-height: 100vh;
+  padding: 30rpx;
 }
 
 .form-section {
-  background-color: #fff;
-  margin-bottom: 20rpx;
-  padding: 20rpx;
-  border-radius: 10rpx;
+  background-color: var(--card-bg);
+  border-radius: 20rpx;
+  padding: 50rpx 40rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.05);
+  margin-bottom: 40rpx;
 }
 
 .form-item {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
 
 .form-label {
+  display: block;
   font-size: 28rpx;
-  color: #333;
-  margin-bottom: 10rpx;
+  color: var(--text-main);
+  margin-bottom: 16rpx;
   font-weight: 500;
 }
 
 .form-input {
   width: 100%;
-  height: 80rpx;
-  border: 2rpx solid #e0e0e0;
-  border-radius: 8rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
-  color: #333;
-  background-color: #fff;
-}
-
-.form-input:focus {
-  border-color: #07c160;
+  height: 90rpx;
+  background-color: var(--bg-color);
+  border-radius: 12rpx;
+  padding: 0 24rpx;
+  font-size: 30rpx;
+  box-sizing: border-box;
+  color: var(--text-main);
+  border: 2rpx solid var(--border-color);
 }
 
 .btn-submit {
-  background-color: #07c160;
+  width: 100%;
+  height: 90rpx;
+  background: var(--primary-color);
   color: #fff;
-  border: none;
-  border-radius: 8rpx;
-  height: 88rpx;
-  line-height: 88rpx;
   font-size: 32rpx;
-  margin: 40rpx 20rpx;
+  border-radius: 45rpx;
+  border: none;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 20rpx rgba(24, 144, 255, 0.3);
 }
 
 .btn-submit::after {
   border: none;
+}
+
+.btn-submit[disabled] {
+  background-color: #d9d9d9;
+  box-shadow: none;
+  color: #fff;
 }

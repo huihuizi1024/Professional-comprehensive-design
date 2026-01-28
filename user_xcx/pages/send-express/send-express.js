@@ -1,5 +1,4 @@
 const service = require('../../utils/service.js')
-const app = getApp()
 
 Page({
   data: {
@@ -194,7 +193,6 @@ Page({
         senderPhone: this.data.senderPhone,
         receiverName: this.data.receiverName,
         receiverPhone: this.data.receiverPhone,
-        receiverUserId: app.globalData.userId,
         expressCompany: this.data.expressCompany,
         cabinetId: this.data.cabinetId,
         compartmentId: this.data.compartmentId,
@@ -205,16 +203,23 @@ Page({
       wx.hideLoading()
       this.setData({ loading: false })
       
-      if (res.code === 200) {
-        wx.showModal({
-          title: '发快递成功',
-          content: `已成功下单，快递员将在2小时内取件\n订单号：${res.data.orderNo}\n取件码：${res.data.pickCode}`,
-          showCancel: false,
-          success: () => {
-            wx.navigateBack()
-          }
-        })
+      if (res.code !== 200) {
+        wx.showToast({ title: res.message || '发快递失败', icon: 'none' })
+        return
       }
+
+      wx.showModal({
+        title: '发快递成功',
+        content: `已成功下单，快递员将在2小时内取件\n订单号：${res.data.orderNo}\n取件码：${res.data.pickCode}`,
+        showCancel: false,
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateBack({
+              delta: 1
+            })
+          }
+        }
+      })
     } catch (error) {
       wx.hideLoading()
       this.setData({ loading: false })

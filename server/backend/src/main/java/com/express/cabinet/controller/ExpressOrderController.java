@@ -29,7 +29,9 @@ public class ExpressOrderController {
         Long userId = (Long) request.getAttribute(JwtAuthInterceptor.REQ_ATTR_USER_ID);
         User user = userService.getById(userId);
         if (user.getUserType() != null && user.getUserType() == 1) {
-            return ApiResponse.success(expressOrderService.getOrdersByCourierId(userId));
+            List<ExpressOrder> available = expressOrderService.getAvailableSendOrders(null, null);
+            List<ExpressOrder> mine = expressOrderService.getOrdersByCourierId(userId);
+            return ApiResponse.success(expressOrderService.mergeOrders(available, mine));
         }
         return ApiResponse.success(expressOrderService.getOrdersByReceiverUserId(userId));
     }
@@ -44,7 +46,9 @@ public class ExpressOrderController {
         if (courier.getUserType() == null || courier.getUserType() != 1) {
             throw new ForbiddenException("仅管理员或快递员可访问该接口");
         }
-        return ApiResponse.success(expressOrderService.getOrdersByCourierIdAndReceiverPhone(userId, phone));
+        List<ExpressOrder> available = expressOrderService.getAvailableSendOrders(null, phone);
+        List<ExpressOrder> mine = expressOrderService.getOrdersByCourierIdAndReceiverPhone(userId, phone);
+        return ApiResponse.success(expressOrderService.mergeOrders(available, mine));
     }
 
     @GetMapping("/user/{userId}")
@@ -59,6 +63,16 @@ public class ExpressOrderController {
     public ApiResponse<List<ExpressOrder>> getMyOrders(HttpServletRequest request, @RequestParam(required = false) Integer status) {
         Long userId = (Long) request.getAttribute(JwtAuthInterceptor.REQ_ATTR_USER_ID);
         return ApiResponse.success(expressOrderService.getOrdersByReceiverUserIdAndStatus(userId, status));
+    }
+
+    @GetMapping("/me/sent")
+    public ApiResponse<List<ExpressOrder>> getMySentExpressOrders(HttpServletRequest request, @RequestParam(required = false) Integer status) {
+        Long userId = (Long) request.getAttribute(JwtAuthInterceptor.REQ_ATTR_USER_ID);
+        User user = userService.getById(userId);
+        if (user.getStatus() != null && user.getStatus() == 0) {
+            throw new ForbiddenException("账号已被禁用");
+        }
+        return ApiResponse.success(expressOrderService.getSentExpressOrdersBySenderPhoneAndStatus(user.getPhone(), status));
     }
 
     @GetMapping("/courier/me")
@@ -143,10 +157,50 @@ public class ExpressOrderController {
     @PostMapping
     public ApiResponse<ExpressOrder> createOrder(HttpServletRequest request, @RequestBody ExpressOrder order) {
         try {
-            if (!isAdmin(request)) {
-                throw new ForbiddenException("仅管理员可访问该接口");
+            if (isAdmin(request)) {
+                return ApiResponse.success("创建订单成功", expressOrderService.createOrder(order));
+            }
+
+            Long userId = (Long) request.getAttribute(JwtAuthInterceptor.REQ_ATTR_USER_ID);
+            User user = userService.getById(userId);
+            if (user.getStatus() != null && user.getStatus() == 0) {
+                throw new ForbiddenException("账号已被禁用");
+            }
+
+            if (order != null && order.getOrderType() != null && order.getOrderType() == 0) {
+                throw new ForbiddenException("仅快递员或管理员可创建入柜订单");
+            }
+
+            if (order != null) {
+                order.setId(null);
+                order.setCourierId(null);
+                order.setReceiverUserId(null);
+
+                String senderPhone = order.getSenderPhone();
+                if (senderPhone == null || senderPhone.trim().isEmpty()) {
+                    order.setSenderPhone(user.getPhone());
+                } else {
+                    senderPhone = senderPhone.trim();
+                    if (user.getPhone() != null && !user.getPhone().equals(senderPhone)) {
+                        throw new ForbiddenException("发件人手机号必须为本人绑定手机号");
+                    }
+                    order.setSenderPhone(senderPhone);
+                }
+
+                String senderName = order.getSenderName();
+                if (senderName == null || senderName.trim().isEmpty()) {
+                    String fallbackName = user.getRealName();
+                    if (fallbackName == null || fallbackName.trim().isEmpty()) {
+                        fallbackName = user.getUsername();
+                    }
+                    order.setSenderName(fallbackName == null ? null : fallbackName.trim());
+                } else {
+                    order.setSenderName(senderName.trim());
+                }
             }
             return ApiResponse.success("创建订单成功", expressOrderService.createOrder(order));
+        } catch (ForbiddenException e) {
+            return ApiResponse.error(403, e.getMessage());
         } catch (Exception e) {
             return ApiResponse.error(e.getMessage());
         }
