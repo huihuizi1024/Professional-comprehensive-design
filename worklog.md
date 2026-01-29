@@ -224,10 +224,10 @@ cd "e:\professional_design\project3\Professional-comprehensive-design\server\bac
 - ✅ 存件功能正常，格口状态实时更新
 - ✅ 所有页面无空白或报错问题
 
-### 剩余问题
+### 剩余问题（已修复）
 - 地址管理功能还没搞好
 - 人脸识别功能还有问题
 - 我的订单里快递公司显示问题
 
-
-
+## 1月26日-29日 项目开发基本结束
+把代码熟悉，小修小补，准备答辩
