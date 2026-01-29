@@ -34,7 +34,7 @@
         </view>
 
         <view class="order-footer">
-          <button class="btn-pickup" data-id="{{item.compartmentId}}" bindtap="pickup">开仓取件</button>
+          <button class="btn-pickup" data-id="{{item.compartmentId}}" data-pickcode="{{item.pickCode}}" bindtap="pickup">开仓取件</button>
         </view>
       </view>
 
