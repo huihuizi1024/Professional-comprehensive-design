@@ -1,6 +1,13 @@
-<navigation-bar title="首页" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <text>Welcome</text>
+<navigation-bar title="快递员端" back="{{false}}" color="black" background="#f7f7f7"></navigation-bar>
+<view class="splash-container">
+  <view class="logo">
+    <text class="logo-icon">🚚</text>
   </view>
-</scroll-view>
+  <view class="title">快递员工作台</view>
+  <view class="subtitle">高效投递，便捷管理</view>
+  <view class="loading">
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+    <view class="loading-dot"></view>
+  </view>
+</view>

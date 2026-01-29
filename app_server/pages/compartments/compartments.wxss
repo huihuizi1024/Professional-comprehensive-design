@@ -1,13 +1,6 @@
-page {
-  background-color: #f7f7f7;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .scrollarea {
-  flex: 1;
-  overflow: hidden;
+  height: 100vh;
+  background-color: var(--bg-color);
 }
 
 .container {
@@ -16,7 +9,7 @@ page {
 
 .header-tip {
   font-size: 28rpx;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 30rpx;
   padding-left: 10rpx;
 }
@@ -28,21 +21,21 @@ page {
 }
 
 .compartment-card {
-  background-color: #fff;
+  background-color: var(--card-bg);
   border-radius: 16rpx;
   padding: 30rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
   border: 1rpx solid transparent;
   transition: all 0.2s;
 }
 
 .compartment-card:active {
-  background-color: #f0f7ff;
-  border-color: #667eea;
+  background-color: var(--primary-light);
+  border-color: var(--primary-color);
 }
 
 .card-icon {
@@ -53,14 +46,14 @@ page {
 .card-title {
   font-size: 30rpx;
   font-weight: bold;
-  color: #333;
+  color: var(--text-main);
   margin-bottom: 12rpx;
 }
 
 .card-tag {
   font-size: 22rpx;
-  color: #667eea;
-  background-color: rgba(102, 126, 234, 0.1);
+  color: var(--primary-color);
+  background-color: var(--primary-light);
   padding: 4rpx 16rpx;
   border-radius: 20rpx;
 }
@@ -71,7 +64,7 @@ page {
   align-items: center;
   justify-content: center;
   padding-top: 200rpx;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 28rpx;
 }
 

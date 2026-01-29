@@ -1,13 +1,6 @@
-page {
-  background-color: #f7f7f7;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
 .scrollarea {
-  flex: 1;
-  overflow: hidden;
+  height: 100vh;
+  background-color: var(--bg-color);
 }
 
 .container {
@@ -17,14 +10,14 @@ page {
 .order-list {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  gap: 24rpx;
 }
 
 .order-card {
-  background-color: #fff;
+  background-color: var(--card-bg);
   border-radius: 16rpx;
   padding: 30rpx;
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
 }
 
 .order-header {
@@ -33,19 +26,19 @@ page {
   align-items: center;
   margin-bottom: 20rpx;
   padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid var(--border-color);
 }
 
 .cabinet-name {
   font-size: 30rpx;
   font-weight: bold;
-  color: #333;
+  color: var(--text-main);
 }
 
 .compartment-tag {
   font-size: 24rpx;
-  color: #667eea;
-  background-color: rgba(102, 126, 234, 0.1);
+  color: var(--primary-color);
+  background-color: var(--primary-light);
   padding: 4rpx 12rpx;
   border-radius: 6rpx;
 }
@@ -56,17 +49,17 @@ page {
 
 .info-row {
   display: flex;
-  margin-bottom: 10rpx;
+  margin-bottom: 12rpx;
   font-size: 28rpx;
 }
 
 .info-row .label {
-  color: #999;
+  color: var(--text-secondary);
   width: 140rpx;
 }
 
 .info-row .value {
-  color: #333;
+  color: var(--text-main);
   flex: 1;
 }
 
@@ -76,13 +69,15 @@ page {
 }
 
 .btn-pickup {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--primary-color);
   color: #fff;
   font-size: 28rpx;
   padding: 10rpx 40rpx;
   border-radius: 30rpx;
   margin: 0;
   line-height: 2;
+  font-weight: 500;
+  box-shadow: 0 4rpx 12rpx rgba(24, 144, 255, 0.3);
 }
 
 .btn-pickup::after {
@@ -92,6 +87,6 @@ page {
 .empty-state {
   text-align: center;
   padding: 100rpx 0;
-  color: #999;
+  color: var(--text-secondary);
   font-size: 28rpx;
 }
