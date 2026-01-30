@@ -3,17 +3,3 @@
 **/.DS_Store
 **/.idea/
 **/*.class
-**/.vscode/
-**/.settings/
-**/.project
-**/bin/
-
-# Maven Wrapper
-**/.mvn/wrapper/maven-wrapper.jar
-
-# Logs
-*.log
-
-# OS temporary files
-Thumbs.db
-desktop.ini
