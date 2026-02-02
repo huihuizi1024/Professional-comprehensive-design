@@ -1,0 +1,69 @@
+<navigation-bar title="快递柜详情" back="{{true}}" color="black" background="#f7f7f7"></navigation-bar>
+<scroll-view class="scrollarea" scroll-y type="list" refresher-enabled="{{true}}" bindrefresherrefresh="onPullDownRefresh" refresher-triggered="{{loading}}">
+  <view class="container" wx:if="{{cabinet}}">
+    <view class="cabinet-header">
+      <view class="cabinet-name">{{cabinet.name}}</view>
+      <view class="cabinet-info">
+        <view class="info-row">
+          <text class="label">编号：</text>
+          <text class="value">{{cabinet.code}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">地址：</text>
+          <text class="value">{{cabinet.address}}</text>
+        </view>
+        <view class="info-row">
+          <text class="label">状态：</text>
+          <text class="value status-{{cabinet.status}}">{{cabinet.status === 1 ? '正常' : '维护中'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">格口列表</view>
+      <view class="compartment-grid">
+        <view 
+          class="compartment-item status-{{item.hasItem}}" 
+          wx:for="{{compartments}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-status="{{item.status}}"
+          data-has-item="{{item.hasItem}}"
+          bindtap="onCompartmentTap"
+        >
+          <view class="compartment-number">{{item.compartmentNo}}号</view>
+          <view class="compartment-size" wx:if="{{item.sizeType === 0}}">小号 (信件/钥匙)</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 1}}">中号 (鞋盒/背包)</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 2}}">大号 (行李/大件)</view>
+          <view class="compartment-status">
+            {{item.hasItem === 0 ? '空闲' : '占用'}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">可用格口</view>
+      <view class="available-list">
+        <view 
+          class="available-item" 
+          wx:for="{{availableCompartments}}" 
+          wx:key="id"
+          data-id="{{item.id}}"
+          data-status="{{item.status}}"
+          bindtap="onCompartmentTap"
+        >
+          <view class="compartment-number">{{item.compartmentNo}}号</view>
+          <view class="compartment-size" wx:if="{{item.sizeType === 0}}">小号</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 1}}">中号</view>
+          <view class="compartment-size" wx:elif="{{item.sizeType === 2}}">大号</view>
+          <text class="tap-hint">点击存件</text>
+        </view>
+        
+        <view wx:if="{{availableCompartments.length === 0}}" class="empty">
+          <text class="empty-text">暂无可用格口</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</scroll-view>
